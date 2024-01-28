@@ -45,6 +45,7 @@ public class RobotContainer {
   // The driver's controller
   // final Joystick m_driverController = new Joystick(OIConstants.kDriverControllerPort);
   final XboxController m_driverController = new XboxController(OIConstants.kDriverControllerPort);
+  final XboxController m_coDriverController = new XboxController(OIConstants.kCoDriverControllerPort);
 
   SendableChooser<Command> m_autonChooser = new SendableChooser<>();
 

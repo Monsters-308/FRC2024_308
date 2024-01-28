@@ -138,6 +138,7 @@ public final class Constants {
 
   public static final class OIConstants {
     public static final int kDriverControllerPort = 0;
+    public static final int kCoDriverControllerPort = 1;
     public static final double kDriveDeadband = 0.05;
   }
 
@@ -161,9 +162,8 @@ public final class Constants {
   }
 
   public static final class VisionConstants {
-
     //How many degrees is your limelight rotated from perfectly vertical
-    public static final double kLimelightMountAngle = 0; //NOTE: we should really take into account the rotation of the robot using the pitch of the NavX - Noah
+    public static final double kLimelightMountAngle = 0; 
 
     //Limelight lens height from floor in inches
     public static final double kLimelightLensHeight = 20;
@@ -189,5 +189,25 @@ public final class Constants {
      * that doesn't use the green lights so we don't blind everybody.
      */
     public static final int kDefaultPipeline = kAprilTagPipeline;
+  }
+
+  public static final class ArmConstants {
+
+  }
+
+  public static final class HangingConstants {
+    
+  }
+
+  public static final class IntakeConstants {
+    
+  }
+
+  public static final class ShooterConstants {
+    
+  }
+
+  public static final class ShooterPivotConstants {
+    
   }
 }
