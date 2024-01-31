@@ -200,7 +200,14 @@ public final class Constants {
   }
 
   public static final class IntakeConstants {
-    
+    public static final int kIntakeMotorCanID = 4; // Change
+
+    // Positive intakes the piece, negative retracts the piece
+    public static final boolean kIntakeMotorInverted = false; // Change
+    public static final int kIntakeMotorCurrentLimit = 35; // Change
+
+    public static final int kDigitalSensorPin = 5; // Change
+    public static final boolean kSensorInverted = true; // Change
   }
 
   public static final class ShooterConstants {
