@@ -39,7 +39,6 @@ public class RobotGotoAngle extends Command {
         m_xSpeed = xSpeed;
         m_ySpeed = ySpeed;
 
-        // The getHeading() function says that the values are from -180 to 180, but shuffleboard was saying otherwise. needs testing
         pidController.enableContinuousInput(-180, 180);
 
         pidController.setTolerance(HeadingConstants.kHeadingTolerance);

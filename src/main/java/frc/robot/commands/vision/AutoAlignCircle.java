@@ -5,8 +5,11 @@ import frc.robot.subsystems.DriveSubsystem;
 //Import subsystem(s) this command interacts with below
 
 import frc.robot.subsystems.VisionSubsystem;
+import frc.utils.OdometryUtils;
 import edu.wpi.first.math.controller.PIDController;
-
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.VisionConstants;
 
 //Import this so you can make this class a command
@@ -66,7 +69,9 @@ public class AutoAlignCircle extends Command {
         double targets = m_visionSubsystem.getTV();
         double rotate = 0;
         double orbitSpeed = 0.2; // Adjust this value to control the orbit speed
-        double distanceFromTarget = m_visionSubsystem.getReflectiveTapeDistance();
+        Translation2d pos1 = m_driveSubsystem.getPose().getTranslation();
+        Translation2d pos2 = new Translation2d(FieldConstants.kSpeakerX, FieldConstants.kSpeakerY);
+       // Rotation2d distanceFromTarget = OdometryUtils.getDistacnePosToPos(pos1, pos2);
 
         if (targets > 0) {
             if (x > VisionConstants.kRotationTolerance){
@@ -76,7 +81,8 @@ public class AutoAlignCircle extends Command {
                 rotate = -VisionConstants.kRotationSpeed;
             }
 
-            double forwardSpeed = distanceController.calculate(distanceFromTarget);
+            //double forwardSpeed = distanceController.calculate(distanceFromTarget);
+            double forwardSpeed = 0; //needs to be implemengted
 
             // Drive the robot with orbit control
             m_driveSubsystem.drive(

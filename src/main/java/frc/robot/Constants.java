@@ -63,11 +63,6 @@ public final class Constants {
   }
 
   public static final class ModuleConstants {
-    // The MAXSwerve module can be configured with one of three pinion gears: 12T, 13T, or 14T.
-    // This changes the drive speed of the module (a pinion gear with more teeth will result in a
-    // robot that drives faster).
-    //public static final int kDrivingMotorPinionTeeth = 14; //done
-
     // Inverts the turning encoder.
     public static final boolean kTurningEncoderInverted = false;
 
@@ -75,9 +70,6 @@ public final class Constants {
     public static final double kDrivingMotorFreeSpeedRps = NeoMotorConstants.kFreeSpeedRpm / 60;
     public static final double kWheelDiameterMeters = Units.inchesToMeters(4);
     public static final double kWheelCircumferenceMeters = kWheelDiameterMeters * Math.PI;
-
-    // 45 teeth on the wheel's bevel gear, 22 teeth on the first-stage spur gear, 15 teeth on the bevel pinion
-    //public static final double kDrivingMotorReduction = (45.0 * 22) / (kDrivingMotorPinionTeeth * 15);
 
     // The L1 MK4 and MK4i modules have a gear ratio of 8.14:1 on the drive wheels.
     public static final double kDrivingMotorReduction = 8.14;
@@ -110,17 +102,22 @@ public final class Constants {
     public static final double kTurningMinOutput = -1;
     public static final double kTurningMaxOutput = 1;
 
-    //inversion of drive motors
+    // Inversion of drive motors
+    // This will vary depending on how your wheels are oriented when you zero them.
     public static final boolean kLeftFrontInverted = true;
     public static final boolean kLeftRearInverted = true;
     public static final boolean kRightFrontInverted = true;
     public static final boolean kRightRearInverted = false;
 
+    // Inversion of turning motors
+    // Unless oriented differently, all of your turning motors should spin in the same direction.
+    public static final boolean kTurningMotorsInverted = true;
+
     public static final IdleMode kDrivingMotorIdleMode = IdleMode.kBrake;
     public static final IdleMode kTurningMotorIdleMode = IdleMode.kBrake;
 
     //TODO: probably not super important, but we should look into how to properly calculate current limits.
-    public static final int kDrivingMotorCurrentLimit = 40; // amps
+    public static final int kDrivingMotorCurrentLimit = 35; // amps
     public static final int kTurningMotorCurrentLimit = 20; // amps
   }
 
@@ -140,6 +137,16 @@ public final class Constants {
     public static final int kDriverControllerPort = 0;
     public static final int kCoDriverControllerPort = 1;
     public static final double kDriveDeadband = 0.05;
+  }
+
+  public static final class FieldConstants{
+    /** X axis: long side */
+    public static final double kFieldWidthMeters = 16.52;
+    /** Y axis: short side */
+    public static final double KFieldHeightMeters = 8.2;
+    
+    public static final double kSpeakerX = 20;
+    public static final double kSpeakerY = 20;
   }
 
   public static final class AutoConstants {
@@ -162,6 +169,7 @@ public final class Constants {
   }
 
   public static final class VisionConstants {
+
     //How many degrees is your limelight rotated from perfectly vertical
     public static final double kLimelightMountAngle = 0; 
 
@@ -169,8 +177,10 @@ public final class Constants {
     public static final double kLimelightLensHeight = 20;
 
     //Height of reflective tape poles in inches
-    public static final double kTopReflectiveTapeHeight = 24;
+    public static final double kSpeakerHeightFromLimelightHeightInches = 71.25;
     public static final double kBottomReflectiveTapeHeight = 24;
+    public static final double kLimelightDistanceFromCenterInches = 4.5;
+    
 
     public static final double kTopPoleDesiredDistance = 24;
     public static final double kDistanceTolerance = 2;

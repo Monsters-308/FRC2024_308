@@ -37,8 +37,6 @@ public class SwerveUtils {
      * @return The angle from -180 to 180 degrees
      */
     public static double angleConstrain(double degrees){
-        return degrees <= 180 ? 
-            degrees
-            : degrees - 360;
+        return MathUtil.inputModulus(degrees, -180, 180);
     }
 }

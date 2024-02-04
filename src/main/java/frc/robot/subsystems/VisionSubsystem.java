@@ -8,31 +8,30 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class VisionSubsystem extends SubsystemBase {
     final private NetworkTableEntry ty;
     final private NetworkTableEntry tx; 
-    //final private NetworkTableEntry tl;
     final private NetworkTableEntry tv;
     final private NetworkTable limelightTable = NetworkTableInstance.getDefault().getTable("limelight");
 
-    //Field for april tag detection
+    // Field to visualize april tag detection
     private final Field2d m_field = new Field2d();
-    
+
+    private final ShuffleboardTab visionTab = Shuffleboard.getTab("Vision");
 
     public VisionSubsystem(){
         ty = limelightTable.getEntry("ty");
         tx = limelightTable.getEntry("tx");
-        //TODO: what is tl and why is it not configured properly?
-        //tl = limelightTable.getEntry("ty");
         tv = limelightTable.getEntry("tv");
 
         setPipeline(VisionConstants.kDefaultPipeline);
 
-        Shuffleboard.getTab("Vision").addInteger("Pipeline", () -> getPipeline());
-        Shuffleboard.getTab("Vision").addDouble("Distance", () -> getReflectiveTapeDistance());
-        Shuffleboard.getTab("Vision").add(m_field);
+        visionTab.addInteger("Pipeline", () -> getPipeline());
+        visionTab.add(m_field);
     }
 
     //tv = valid targets
@@ -62,43 +61,11 @@ public class VisionSubsystem extends SubsystemBase {
         return ty.getDouble(0.0);
     }
     
-    // public double getTL(){
-    //     return tl.getDouble(0.0);
-    // }
-    
     /**
      * Returns the number of valid targets detected by the limelight. Returns 0 if no targets are found.
      */
     public int getTV(){
         return (int)tv.getDouble(0);
-    }
-
-    /**
-     * Returns the distance between the robot and the reflective tape goal. Returns 0 if no targets can be found.
-     */
-    public double getReflectiveTapeDistance(){
-        //Check for no targets
-        if(getTV() == 0){
-            return 0;
-        }
-        
-        final double targetOffsetAngle_Vertical = getY();
-
-        // distance from the target to the floor
-        final double goalHeightInches;
-
-        if(targetOffsetAngle_Vertical > 0){
-            goalHeightInches = VisionConstants.kTopReflectiveTapeHeight;
-        }
-        else{
-            goalHeightInches = VisionConstants.kBottomReflectiveTapeHeight;
-        }
-
-        final double angleToGoalDegrees = VisionConstants.kLimelightMountAngle + targetOffsetAngle_Vertical;
-        final double angleToGoalRadians = angleToGoalDegrees * (Math.PI / 180.0);
-
-        //calculate distance
-        return (goalHeightInches - VisionConstants.kLimelightLensHeight) / Math.tan(angleToGoalRadians);
     }
 
     /**
@@ -114,8 +81,9 @@ public class VisionSubsystem extends SubsystemBase {
              * and converting them to a robot pose object. Once you do that I'll figure out how
              * to use this object for correcting the odometry.
              */
-            //TODO: implement this function
-            return new Pose2d(0, 0, new Rotation2d(0));
+            double [] robotPosArrary = limelightTable.getEntry("targetpose_robotspace").getDoubleArray(new double[6]);
+            SmartDashboard.putNumber("robotposarr0", robotPosArrary[0]);
+            return new Pose2d(robotPosArrary[0], robotPosArrary[1], new Rotation2d(robotPosArrary[2]));
         }
         return null;
     }
@@ -123,6 +91,9 @@ public class VisionSubsystem extends SubsystemBase {
 
     @Override
     public void periodic(){
-        m_field.setRobotPose(getRobotPosition());
+        Pose2d limelightPose = getRobotPosition();
+        if(limelightPose != null){
+            m_field.setRobotPose(limelightPose);
+        }
     }
 }

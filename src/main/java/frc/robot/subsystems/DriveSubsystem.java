@@ -4,7 +4,6 @@
 
 package frc.robot.subsystems;
 
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -14,6 +13,8 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.util.WPIUtilJNI;
 
+import java.util.Map;
+
 import com.kauailabs.navx.frc.AHRS;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
@@ -21,12 +22,15 @@ import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
 
 import edu.wpi.first.wpilibj.SPI;
-
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.HeadingConstants;
 import frc.robot.Constants.ModuleConstants;
+import frc.utils.OdometryUtils;
 import frc.utils.SwerveUtils;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.shuffleboard.SimpleWidget;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -64,13 +68,17 @@ public class DriveSubsystem extends SubsystemBase {
   private double m_prevTime = WPIUtilJNI.now() * 1e-6;
   private ChassisSpeeds m_prevTarget = new ChassisSpeeds();
 
-  //Field for odometry
+  // Field for odometry
   private final Field2d m_field = new Field2d();
+
+  // Shuffleboard objects
+  private final ShuffleboardTab swerveTab = Shuffleboard.getTab("Swerve");
+  private final SimpleWidget AllianceWidget;
 
   // Odometry class for tracking robot pose
   private final SwerveDriveOdometry m_odometry = new SwerveDriveOdometry(
       DriveConstants.kDriveKinematics,
-      Rotation2d.fromDegrees(m_gyro.getAngle() * (HeadingConstants.kGyroReversed ? -1.0 : 1.0)),
+      Rotation2d.fromDegrees(getGyroAngle()),
       new SwerveModulePosition[] {
           m_frontLeft.getPosition(),
           m_frontRight.getPosition(),
@@ -85,16 +93,16 @@ public class DriveSubsystem extends SubsystemBase {
     m_gyro.enableLogging(true);
 
     // Shuffleboard values
-    Shuffleboard.getTab("Swerve").addDouble("Robot Heading", () -> getHeading());
+    swerveTab.addDouble("Robot Heading", () -> getHeading());
     
-    Shuffleboard.getTab("Swerve").addDouble("frontLeft angle", () -> SwerveUtils.angleConstrain(m_frontLeft.getPosition().angle.getDegrees()));
-    Shuffleboard.getTab("Swerve").addDouble("frontRight angle", () -> SwerveUtils.angleConstrain(m_frontRight.getPosition().angle.getDegrees()));
-    Shuffleboard.getTab("Swerve").addDouble("rearLeft angle", () -> SwerveUtils.angleConstrain(m_rearLeft.getPosition().angle.getDegrees()));
-    Shuffleboard.getTab("Swerve").addDouble("rearRight angle", () -> SwerveUtils.angleConstrain(m_rearRight.getPosition().angle.getDegrees()));
-    Shuffleboard.getTab("Swerve").add("Field", m_field);
+    swerveTab.addDouble("frontLeft angle", () -> SwerveUtils.angleConstrain(m_frontLeft.getPosition().angle.getDegrees()));
+    swerveTab.addDouble("frontRight angle", () -> SwerveUtils.angleConstrain(m_frontRight.getPosition().angle.getDegrees()));
+    swerveTab.addDouble("rearLeft angle", () -> SwerveUtils.angleConstrain(m_rearLeft.getPosition().angle.getDegrees()));
+    swerveTab.addDouble("rearRight angle", () -> SwerveUtils.angleConstrain(m_rearRight.getPosition().angle.getDegrees()));
+    swerveTab.add("Field", m_field);
     
-    Shuffleboard.getTab("Swerve").addDouble("robot X", () -> getPose().getX());
-    Shuffleboard.getTab("Swerve").addDouble("robot Y", () -> getPose().getY());
+    swerveTab.addDouble("robot X", () -> getPose().getX());
+    swerveTab.addDouble("robot Y", () -> getPose().getY());
     
     // Configure the AutoBuilder
     AutoBuilder.configureHolonomic(
@@ -110,16 +118,19 @@ public class DriveSubsystem extends SubsystemBase {
             Math.hypot(DriveConstants.kTrackWidth / 2, DriveConstants.kWheelBase / 2), // Drive base radius in meters. Distance from robot center to furthest module.
             new ReplanningConfig() // Default path replanning config. See the API for the options here
         ),
-        () -> false, // Parameter for whether to invert the paths or not (set to false for now)
+        // Parameter for whether to invert the paths for red alliance (returns false if alliance is invalid)
+        () -> OdometryUtils.getAlliance() == Alliance.Red, 
         this // Reference to this subsystem to set requirements
     );
+
+    AllianceWidget = swerveTab.add("Alliance", true);
   }
 
   @Override
   public void periodic() {
     // Update the odometry in the periodic block
     m_odometry.update(
-        Rotation2d.fromDegrees(m_gyro.getAngle() * (HeadingConstants.kGyroReversed ? -1.0 : 1.0)),
+        Rotation2d.fromDegrees(getGyroAngle()),
         new SwerveModulePosition[] {
             m_frontLeft.getPosition(),
             m_frontRight.getPosition(),
@@ -128,7 +139,35 @@ public class DriveSubsystem extends SubsystemBase {
         });
     
     // Update field widget
-    m_field.setRobotPose(getPose());
+    if (OdometryUtils.getAlliance() == Alliance.Red) {
+      m_field.setRobotPose(OdometryUtils.redWidgetFlip(getPose()));
+    }
+    else {
+      m_field.setRobotPose(getPose());
+    }
+
+    // Widget that shows color of alliance
+    if (OdometryUtils.getAlliance(true) == null) {
+      AllianceWidget.withProperties(Map.of(
+          "Color when true", "Gray"
+        ));
+    }
+    else {
+      switch (OdometryUtils.getAlliance(false)) {
+        case Blue:
+          AllianceWidget.withProperties(Map.of(
+            "Color when true", "Blue"
+          ));
+          break;
+        
+        case Red:
+          AllianceWidget.withProperties(Map.of(
+            "Color when true", "Red"
+          ));
+          break;
+      }  
+    }
+    
   }
 
   /**
@@ -147,7 +186,7 @@ public class DriveSubsystem extends SubsystemBase {
    */
   public void resetOdometry(Pose2d pose) {
     m_odometry.resetPosition(
-        Rotation2d.fromDegrees(m_gyro.getAngle() * (HeadingConstants.kGyroReversed ? -1.0 : 1.0)),
+        Rotation2d.fromDegrees(getGyroAngle()),
         new SwerveModulePosition[] {
             m_frontLeft.getPosition(),
             m_frontRight.getPosition(),
@@ -176,7 +215,7 @@ public class DriveSubsystem extends SubsystemBase {
 
     // Get the target chassis speeds relative to the robot
     final ChassisSpeeds targetVel = (fieldRelative ?
-      ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, Rotation2d.fromDegrees(m_gyro.getRate() * (HeadingConstants.kGyroReversed ? -1.0 : 1.0)))
+      ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, Rotation2d.fromDegrees(getGyroAngle()))
         : new ChassisSpeeds(xSpeed, ySpeed, rot)
     );
 
@@ -254,8 +293,6 @@ public class DriveSubsystem extends SubsystemBase {
    * @param angle The angle (in degrees) to set the robot's heading to.
    */
   public void setHeading(double angle) {
-    //The angle adjustment may not be cleared by m_gyro.reset(). Double check in testing
-    //m_gyro.setAngleAdjustment((angle-getHeading()) * (HeadingConstants.kGyroReversed ? -1.0 : 1.0));
     m_odometry.resetPosition(
       new Rotation2d(Math.toRadians(angle)), 
       new SwerveModulePosition[] {
@@ -274,11 +311,20 @@ public class DriveSubsystem extends SubsystemBase {
    * @return the robot's heading in degrees, from -180 to 180
    */
   public double getHeading() {
-    //double angle = Rotation2d.fromDegrees(m_gyro.getAngle() * (HeadingConstants.kGyroReversed ? -1.0 : 1.0)).getDegrees();
-    //return MathUtil.inputModulus(angle, -180, 180);
-    return m_odometry.getPoseMeters().getRotation().getDegrees(); //NOTE: this is not constrained
-    //return Rotation2d.fromDegrees(m_gyro.getAngle()).getDegrees();
+    return SwerveUtils.angleConstrain(
+      m_odometry.getPoseMeters().getRotation().getDegrees()
+    );
   }
+
+  /**
+   * Returns the gyro's angle adjusted for inversion.
+   * @apiNote This may not be the same as getHeading() and is not constrained.
+   * @return The angle of the gyro adjusted for inversion.
+   */
+  private double getGyroAngle() {
+    return m_gyro.getAngle() * (HeadingConstants.kGyroReversed ? -1.0 : 1.0);
+
+  } 
 
   /**
    * Returns the turn rate of the robot.
@@ -290,7 +336,7 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   /**
-   * A function fed into pathplanner to make it work.
+   * Used by pathplanner to figure out how quickly the robot is moving.
    * 
    * @return The robot-relative translational speeds
    */
@@ -300,9 +346,9 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   /**
-   * Another function fed into pathplanner to make it work.
+   * Used by pathplanner to control the robot.
    * 
-   * @return The robot-relative translational speeds
+   * @param speeds The velocities to move the chassis at.
    */
   private void driveRobotRelative(ChassisSpeeds speeds){
     // This takes the velocities and converts them into precentages (-1 to 1)

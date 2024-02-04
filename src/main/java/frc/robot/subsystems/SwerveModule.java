@@ -99,7 +99,7 @@ public class SwerveModule {
     m_turningSparkMax.setSmartCurrentLimit(ModuleConstants.kTurningMotorCurrentLimit);
 
     // Inverting turning motor
-    m_turningSparkMax.setInverted(true);
+    m_turningSparkMax.setInverted(ModuleConstants.kTurningMotorsInverted);
     // Inverting drive motor
     m_drivingSparkMax.setInverted(invertDrive);
 
