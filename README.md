@@ -1,11 +1,7 @@
-# swerve-base
+# FRC2024_308
 
-This is a template used by 308 and 7178 for programming swerve drive for FRC. This template was originally built off of the
-MaxSwerve template code (which is why there's a license from Rev) and has been modified to work with MK4/MK4i swerve modules with NEOs, SRX Mag Encoders, and 
-a NavX.
+This is 308's robot code for the 2024 FRC game Crescendo. In this game, robots must pick up orange foam rings called "notes" and score them in 3 different types of goals. In addition, they
+also have to hang from a metal chain at the end of the match. As always, our code is open-source and free to view.
 
-## Features
-- Field-centric drive
-- Odometry pose estimation
-- Limelight 3 support
-- Pathplanner support
+## Description
+[Insert robot description here once our design is finalized]
