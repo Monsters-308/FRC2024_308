@@ -60,6 +60,7 @@ public class OdometryUtils {
         return distance;
     }
 
+
     /**
      * Returns the Alliance color.
      * @param nullable (Optional) Whether null should be returned if the alliance is invalid. 

@@ -71,7 +71,8 @@ public class VisionSubsystem extends SubsystemBase {
     /**
      * Uses whatever april tag is in front of it to estimate the robot's position on the field. 
      * Returns null if no april tag is in view.
-     * @return The position of the robot, or null.
+     * @return The position of the robot, or null. 
+     * returns Pose2d object containing: x, y, z
      */
     public Pose2d getRobotPosition(){
         
