@@ -6,29 +6,25 @@ package frc.robot.commands.drive;
 
 import edu.wpi.first.wpilibj2.command.Command;
 
-import java.util.function.DoubleSupplier;
-import frc.robot.subsystems.VisionSubsystem;
-import frc.utils.OdometryUtils;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.Constants.HeadingConstants;
-import frc.robot.Constants.OIConstants;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.utils.SwerveUtils;
 
 public class RobotGotoFieldPos extends Command {
 
     private final DriveSubsystem m_driveSubsystem;
-    private final VisionSubsystem m_visionSubsystem;
 
-    private final PIDController pidControllerX = new PIDController(HeadingConstants.kHeadingP, 
-                                                                  HeadingConstants.kHeadingI, 
-                                                                  HeadingConstants.kHeadingD);
-    private final PIDController pidControllerY = new PIDController(HeadingConstants.kHeadingP, 
-                                                                  HeadingConstants.kHeadingI, 
-                                                                  HeadingConstants.kHeadingD);
-    private final PIDController pidControllerZ = new PIDController(HeadingConstants.kHeadingP, 
+    private final PIDController pidControllerX = new PIDController(HeadingConstants.kTranslationP, 
+                                                                  HeadingConstants.kTranslationI, 
+                                                                  HeadingConstants.kTranslationD);
+    private final PIDController pidControllerY = new PIDController(HeadingConstants.kTranslationP, 
+                                                                  HeadingConstants.kTranslationI, 
+                                                                  HeadingConstants.kTranslationD);
+    private final PIDController pidControllerAngle = new PIDController(HeadingConstants.kHeadingP, 
                                                                   HeadingConstants.kHeadingI, 
                                                                   HeadingConstants.kHeadingD);
     private boolean m_complete = false;
@@ -38,17 +34,25 @@ public class RobotGotoFieldPos extends Command {
     /** 
      * Uses PID to make the robot go to a certain postion relative to the field.  
      */
-    public RobotGotoFieldPos(DriveSubsystem driveSubsystem, VisionSubsystem visionSubsystem, Pose2d desiredRobotoPos) {
+    public RobotGotoFieldPos(DriveSubsystem driveSubsystem, Pose2d desiredRobotoPos) {
         m_driveSubsystem = driveSubsystem;
-        m_visionSubsystem = visionSubsystem;
 
         m_desiredRobotoPos = desiredRobotoPos;
 
-        pidControllerX.setTolerance(HeadingConstants.kHeadingTolerance);
-        pidControllerY.setTolerance(HeadingConstants.kHeadingTolerance);
-        pidControllerZ.setTolerance(HeadingConstants.kHeadingTolerance);
+        pidControllerX.setTolerance(HeadingConstants.kTranslationTolerance);
+        pidControllerY.setTolerance(HeadingConstants.kTranslationTolerance);
+        pidControllerAngle.setTolerance(HeadingConstants.kHeadingTolerance);
+
+        pidControllerAngle.enableContinuousInput(-180, 180);
 
         addRequirements(m_driveSubsystem);
+    }
+
+    /** 
+     * Uses PID to make the robot go to a certain postion relative to the field.  
+     */
+    public RobotGotoFieldPos(DriveSubsystem driveSubsystem, double xPosition, double yPosition, double angle) {
+        this(driveSubsystem, new Pose2d(xPosition, yPosition, new Rotation2d(angle)));
     }
 
     /*
@@ -63,12 +67,11 @@ public class RobotGotoFieldPos extends Command {
         m_complete = false;
         pidControllerX.reset();
         pidControllerY.reset();
-        pidControllerZ.reset();
+        pidControllerAngle.reset();
 
         pidControllerX.setSetpoint(m_desiredRobotoPos.getX());
-        pidControllerY.setSetpoint(m_desiredRobotoPos.getX());
-        pidControllerZ.setSetpoint(m_driveSubsystem.getHeading());
-
+        pidControllerY.setSetpoint(m_desiredRobotoPos.getY());
+        pidControllerAngle.setSetpoint(SwerveUtils.angleConstrain(m_desiredRobotoPos.getRotation().getDegrees()));
     }
 
     /*
@@ -79,29 +82,28 @@ public class RobotGotoFieldPos extends Command {
     // When not overridden, this function is blank.
     @Override
     public void execute() {
-        Pose2d pos = m_visionSubsystem.getRobotPosition();
+        Pose2d currentPos = m_driveSubsystem.getPose();
 
-        double x = pidControllerX.calculate(pos.getTranslation().getX());
-        double y = pidControllerY.calculate(pos.getTranslation().getY());
-        double z = pidControllerZ.calculate(m_driveSubsystem.getHeading());
+        double xSpeed = pidControllerX.calculate(currentPos.getTranslation().getX());
+        double ySpeed = pidControllerY.calculate(currentPos.getTranslation().getY());
+        double angleSpeed = pidControllerAngle.calculate(m_driveSubsystem.getHeading());
 
-        x = MathUtil.clamp(x, HeadingConstants.kHeadingMinOutput, HeadingConstants.kHeadingMaxOutput);
-        y = MathUtil.clamp(y, HeadingConstants.kHeadingMinOutput, HeadingConstants.kHeadingMaxOutput);
-        z = MathUtil.clamp(z, HeadingConstants.kHeadingMinOutput, HeadingConstants.kHeadingMaxOutput);
+        xSpeed = MathUtil.clamp(xSpeed, HeadingConstants.kTranslationMinOutput, HeadingConstants.kTranslationMaxOutput);
+        ySpeed = MathUtil.clamp(ySpeed, HeadingConstants.kTranslationMinOutput, HeadingConstants.kTranslationMaxOutput);
+        angleSpeed = MathUtil.clamp(angleSpeed, HeadingConstants.kHeadingMinOutput, HeadingConstants.kHeadingMaxOutput);
 
 
         m_driveSubsystem.drive(
-            x,
-            y,
-            z,
+            xSpeed,
+            ySpeed,
+            angleSpeed,
             true, false
         );
         
-        if(pidControllerX.atSetpoint() && pidControllerY.atSetpoint() && pidControllerZ.atSetpoint()){
+        if(pidControllerX.atSetpoint() && pidControllerY.atSetpoint() && pidControllerAngle.atSetpoint()){
             m_complete = true;
         }
     }
-
 
     /*
      * This function is called once when the command ends.

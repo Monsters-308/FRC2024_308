@@ -10,6 +10,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.units.Unit;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
@@ -131,6 +132,14 @@ public final class Constants {
     public static final double kHeadingMinOutput = -0.5;
     public static final double kHeadingMaxOutput = 0.5;
     public static final double kHeadingTolerance = 1;
+
+    // TODO: remove the old auton constants and put these in there
+    public static final double kTranslationP = 5;
+    public static final double kTranslationI = 0;
+    public static final double kTranslationD = 0;
+    public static final double kTranslationMinOutput = -0.5;
+    public static final double kTranslationMaxOutput = 0.5;
+    public static final double kTranslationTolerance = Units.inchesToMeters(3);
   }
 
   public static final class OIConstants {

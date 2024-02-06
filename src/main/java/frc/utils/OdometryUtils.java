@@ -41,6 +41,7 @@ public class OdometryUtils {
 
         return new Rotation2d(angle);
     }
+
     /**
      * Calculates the distance that point A is from point B
      * This will be used for auto-aiming.
@@ -59,7 +60,6 @@ public class OdometryUtils {
 
         return distance;
     }
-
 
     /**
      * Returns the Alliance color.
