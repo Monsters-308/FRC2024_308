@@ -89,7 +89,6 @@ public class VisionSubsystem extends SubsystemBase {
         return null;
     }
 
-
     @Override
     public void periodic(){
         Pose2d limelightPose = getRobotPosition();

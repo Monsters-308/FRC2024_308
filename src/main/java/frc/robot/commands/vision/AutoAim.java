@@ -32,6 +32,9 @@ public class AutoAim extends Command {
     private final PIDController angleController = new PIDController(HeadingConstants.kHeadingP, 
                                                                   HeadingConstants.kHeadingI, 
                                                                   HeadingConstants.kHeadingD);
+    private final PIDController pivotController = new PIDController(HeadingConstants.kHeadingP, 
+                                                                  HeadingConstants.kHeadingI, 
+                                                                  HeadingConstants.kHeadingD);
 
     //If you want to contoll whether or not the command has ended, you should store it in some sort of variable:
     private boolean m_complete = false;
@@ -64,6 +67,7 @@ public class AutoAim extends Command {
     public void initialize(){
         m_visionSubsystem.setPipeline(VisionConstants.kAprilTagPipeline);
         angleController.reset();
+        pivotController.reset();
         m_complete = false;
     }
 
@@ -109,6 +113,24 @@ public class AutoAim extends Command {
             
     }
 
+    public void shooterPivotToCrosshair(){
+        double xCrosshairDistance = m_visionSubsystem.getX();
+        double yCrosshairDistance = m_visionSubsystem.getY();
+        //Translation2d pos1 = m_driveSubsystem.getPose().getTranslation(); // Position of robot on field
+        Translation2d pos1 = new Translation2d(0, 0); //assuming the limelight has crosshair offset setup
+        Translation2d pos2 = new Translation2d(xCrosshairDistance, yCrosshairDistance); //speaker position 
+
+        Rotation2d angleToTarget = OdometryUtils.anglePoseToPose(pos1, pos2); // Angle to make robot face speacker
+
+
+        //here we need to calculate the angle required to make a shot
+
+
+        //pivotController.setSetpoint(0);
+        //double rotation = angleController.calculate(yCrosshairDistance);
+
+        
+    }
     /*This function is called once when the command ends.
      * A command ends either when you tell it to end with the "isFinished()" function below, or when it is interupted.
      * Whether a command is interrupted or not is determined by "boolean interrupted."
