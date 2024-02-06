@@ -6,7 +6,6 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkAbsoluteEncoder.Type;
 import com.revrobotics.SparkPIDController;
 
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -41,12 +40,12 @@ public class ShooterPivotSubsystem extends SubsystemBase {
     // to 10 degrees will go through 0 rather than the other direction which is a
     // longer route.
     // no PID wrapping for a linear motion...?
+    // Linear? You're right though that in this situation it's unnecessary - Noah
     shooterPivotMotorPIDController.setPositionPIDWrappingEnabled(false);
-    shooterPivotMotorPIDController.setPositionPIDWrappingMinInput(ShooterPivotConstants.kTurningEncoderPositionPIDMinInput);
-    shooterPivotMotorPIDController.setPositionPIDWrappingMaxInput(ShooterPivotConstants.kTurningEncoderPositionPIDMaxInput);
+    //shooterPivotMotorPIDController.setPositionPIDWrappingMinInput(ShooterPivotConstants.kTurningEncoderPositionPIDMinInput);
+    //shooterPivotMotorPIDController.setPositionPIDWrappingMaxInput(ShooterPivotConstants.kTurningEncoderPositionPIDMaxInput);
 
-    // Set the PID gains for the turning motor. Note these are example gains, and you
-    // may need to tune them for your own robot!
+    // Set the PID gains for the turning motor.
     shooterPivotMotorPIDController.setP(ShooterPivotConstants.kTurningP);
     shooterPivotMotorPIDController.setI(ShooterPivotConstants.kTurningI);
     shooterPivotMotorPIDController.setD(ShooterPivotConstants.kTurningD);
@@ -65,6 +64,7 @@ public class ShooterPivotSubsystem extends SubsystemBase {
     shooterPivotMotor.burnFlash();
 
 
+    pivotTab.addDouble("Pivot Angle", () -> getPosition());
   }
 
     /**

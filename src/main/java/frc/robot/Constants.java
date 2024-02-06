@@ -235,7 +235,8 @@ public final class Constants {
 
   public static final class ShooterPivotConstants {
     public static final int kShooterPivotMotor = 10; // Change
-    public static final double kTurningEncoderPositionFactor = (2 * Math.PI); // radians
+    
+    public static final double kTurningEncoderPositionFactor = (2 * Math.PI); // radians //TODO: this is assuming that the native unit for the encoder is revolutions. Double check
     public static final double kTurningEncoderVelocityFactor = (2 * Math.PI) / 60.0; // radians per second
 
     public static final double kTurningEncoderPositionPIDMinInput = 0; // radians
