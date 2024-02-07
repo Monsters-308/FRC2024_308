@@ -29,6 +29,9 @@ public class IntakeSubsystem extends SubsystemBase {
     // Set to brake mode (So amp notes don't fall out)
     m_intakeMotor.setIdleMode(IdleMode.kBrake);
 
+    // Set inverted
+    m_intakeMotor.setInverted(IntakeConstants.kIntakeMotorInverted);
+
     // Save the motor controller's configuration
     m_intakeMotor.burnFlash();
 

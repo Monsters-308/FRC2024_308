@@ -10,7 +10,6 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.units.Unit;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
@@ -154,8 +153,8 @@ public final class Constants {
     /** Y axis: short side */
     public static final double KFieldHeightMeters = 8.2;
     
-    public static final double kSpeakerX = 20;
-    public static final double kSpeakerY = 20;
+    public static final double kSpeakerX = 20; // Change
+    public static final double kSpeakerY = 20; // Change
   }
 
   public static final class AutoConstants {
@@ -215,7 +214,18 @@ public final class Constants {
   }
 
   public static final class HangingConstants {
-    
+    public static final int kRightArmCanID = 17;
+    public static final int kRightArmUpperLimit = 8;
+    public static final int kRightArmLowerLimit = 9;
+
+    public static final int kLeftArmCanID = 18;
+    public static final int kLeftArmUpperLimit = 8;
+    public static final int kLeftArmLowerLimit = 9;
+
+    // Forwards should be extension, Reverse should be retraction
+    public static final boolean kHangingMotorInverted = false;
+    public static final int kHangingMotorCurrentLimit = 35;
+
   }
 
   public static final class IntakeConstants {
