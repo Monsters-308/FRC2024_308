@@ -32,10 +32,7 @@ public class AutoAim extends Command {
     private final PIDController angleController = new PIDController(HeadingConstants.kHeadingP, 
                                                                   HeadingConstants.kHeadingI, 
                                                                   HeadingConstants.kHeadingD);
-    private final PIDController pivotController = new PIDController(HeadingConstants.kHeadingP, 
-                                                                  HeadingConstants.kHeadingI, 
-                                                                  HeadingConstants.kHeadingD);
-
+    
     //If you want to contoll whether or not the command has ended, you should store it in some sort of variable:
     private boolean m_complete = false;
     private final DoubleSupplier m_xSpeed;
@@ -53,11 +50,6 @@ public class AutoAim extends Command {
         addRequirements(m_visionSubsystem, m_driveSubsystem);
     }
 
-
-
-    /*Like Robot.java, there are a series of functions that you can override to give the command functionality. */
-    
-
     /*This function is called once when the command is schedueled.
      * If you are overriding "isFinished()", you should probably use this to set m_complete to false in case a command object is 
      * called a second time.
@@ -67,14 +59,13 @@ public class AutoAim extends Command {
     public void initialize(){
         m_visionSubsystem.setPipeline(VisionConstants.kAprilTagPipeline);
         angleController.reset();
-        pivotController.reset();
         m_complete = false;
     }
 
     /*This function is called repeatedly when the schedueler's "run()" function is called.
      * Once you want the function to end, you should set m_complete to true.
      */
-   @Override
+    @Override
     public void execute(){
         double angle = m_driveSubsystem.getHeading(); //navx
         
@@ -93,7 +84,7 @@ public class AutoAim extends Command {
             1. Get absolute encoder value from the shooter 
             2. Move the shooter to meet that pot value, do this by using PID to go to the angleToTarget
             3. Shoot the note at the fastest possible speed, lets see how it works
-            */
+        */
         double encoderValue = 0;
         double offset = 1; 
         double speedAngleChange = 0;
@@ -101,7 +92,7 @@ public class AutoAim extends Command {
 
         double rotation = angleController.calculate(angle); //speed needed to rotate robot to set point
 
-        rotation = MathUtil.clamp(rotation, HeadingConstants.kHeadingMinOutput, HeadingConstants.kHeadingMaxOutput); // clamp value (speed limiter)
+        rotation = MathUtil.clamp(rotation, -HeadingConstants.kHeadingMaxOutput, HeadingConstants.kHeadingMaxOutput); // clamp value (speed limiter)
 
         
         m_driveSubsystem.drive(
@@ -127,10 +118,9 @@ public class AutoAim extends Command {
 
 
         //pivotController.setSetpoint(0);
-        //double rotation = angleController.calculate(yCrosshairDistance);
-
-        
+        //double rotation = angleController.calculate(yCrosshairDistance);        
     }
+
     /*This function is called once when the command ends.
      * A command ends either when you tell it to end with the "isFinished()" function below, or when it is interupted.
      * Whether a command is interrupted or not is determined by "boolean interrupted."

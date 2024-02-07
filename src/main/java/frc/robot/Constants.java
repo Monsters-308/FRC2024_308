@@ -34,10 +34,8 @@ public final class Constants {
     public static final double kRotationalSlewRate = 2.0 * kMaxAngularSpeed;        // radians per second^2
 
     // Chassis configuration
-    public static final double kTrackWidth = Units.inchesToMeters(21);
-    // Distance between centers of right and left wheels on robot
-    public static final double kWheelBase = Units.inchesToMeters(21);
-    // Distance between front and back wheels on robot
+    public static final double kTrackWidth = Units.inchesToMeters(21); // Distance between centers of right and left wheels on robot
+    public static final double kWheelBase = Units.inchesToMeters(21); // Distance between front and back wheels on robot
     public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKinematics(
         new Translation2d(kWheelBase / 2, kTrackWidth / 2),
         new Translation2d(kWheelBase / 2, -kTrackWidth / 2),
@@ -62,9 +60,8 @@ public final class Constants {
     public static final int kRearRightTurningCanId = 7;
   }
 
+  // This is specifically for constants related to the individual swerve modules and not to the drive subsystem itself.
   public static final class ModuleConstants {
-    // Inverts the turning encoder.
-    public static final boolean kTurningEncoderInverted = false;
 
     // Calculations required for driving motor conversion factors and feed forward
     public static final double kDrivingMotorFreeSpeedRps = NeoMotorConstants.kFreeSpeedRpm / 60;
@@ -113,6 +110,10 @@ public final class Constants {
     // Unless oriented differently, all of your turning motors should spin in the same direction.
     public static final boolean kTurningMotorsInverted = true;
 
+    // Inversion of turning ENCODERS (not motors).
+    // Unless oriented differently, all of your turning encoders should spin in the same direction.
+    public static final boolean kTurningEncoderInverted = false;
+
     public static final IdleMode kDrivingMotorIdleMode = IdleMode.kBrake;
     public static final IdleMode kTurningMotorIdleMode = IdleMode.kBrake;
 
@@ -122,23 +123,22 @@ public final class Constants {
   }
 
   public static final class HeadingConstants {
+    // The gyro should be CCW positive
     public static final boolean kGyroReversed = true;
 
     // This is used for making the robot face a certain direction
     public static final double kHeadingP = 0.05;
     public static final double kHeadingI = 0;
     public static final double kHeadingD = 0.001;
-    public static final double kHeadingMinOutput = -0.5;
-    public static final double kHeadingMaxOutput = 0.5;
-    public static final double kHeadingTolerance = 1;
+    public static final double kHeadingMaxOutput = 0.5; // Percent
+    public static final double kHeadingTolerance = 1; // Degrees
 
     // TODO: remove the old auton constants and put these in there
     public static final double kTranslationP = 5;
     public static final double kTranslationI = 0;
     public static final double kTranslationD = 0;
-    public static final double kTranslationMinOutput = -0.5;
-    public static final double kTranslationMaxOutput = 0.5;
-    public static final double kTranslationTolerance = Units.inchesToMeters(3);
+    public static final double kTranslationMaxOutput = 0.5; // Percent
+    public static final double kTranslationTolerance = Units.inchesToMeters(3); // Meters
   }
 
   public static final class OIConstants {
@@ -153,11 +153,12 @@ public final class Constants {
     /** Y axis: short side */
     public static final double KFieldHeightMeters = 8.2;
     
-    public static final double kSpeakerX = 20; // Change
-    public static final double kSpeakerY = 20; // Change
+    public static final double kSpeakerX = 0; // Change
+    public static final double kSpeakerY = 0; // Change
   }
 
   public static final class AutoConstants {
+    // TODO: these are old example constants. Figure out which to keep and which to get rid of.
     public static final double kMaxSpeedMetersPerSecond = 3;
     public static final double kMaxAccelerationMetersPerSecondSquared = 3;
     public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI;
@@ -177,7 +178,6 @@ public final class Constants {
   }
 
   public static final class VisionConstants {
-
     //How many degrees is your limelight rotated from perfectly vertical
     public static final double kLimelightMountAngle = 0; 
 
@@ -261,7 +261,6 @@ public final class Constants {
     
     public static final IdleMode kDrivingMotorIdleMode = IdleMode.kBrake;
     public static final IdleMode kTurningMotorIdleMode = IdleMode.kBrake;
-   //TODO: probably not super important, but we should look into how to properly calculate current limits.
     public static final int kDrivingMotorCurrentLimit = 35; // amps
     public static final int kTurningMotorCurrentLimit = 20; // amps
   }
