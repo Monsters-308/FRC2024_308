@@ -234,9 +234,14 @@ public final class Constants {
     // Positive intakes the piece, negative retracts the piece
     public static final boolean kIntakeMotorInverted = false; // Change
     public static final int kIntakeMotorCurrentLimit = 35; // Change
+  }
 
-    public static final int kDigitalSensorPin = 5; // Change
-    public static final boolean kSensorInverted = true; // Change
+  public static final class IndexConstants {
+    public static final int kIndexMotorCanID = 4; // Change
+
+    // Positive should bring the game piece to the shooter
+    public static final boolean kIndexMotorInverted = false; // Change
+    public static final int kIndexMotorCurrentLimit = 35; // Change
   }
 
   public static final class ShooterConstants {
@@ -244,7 +249,9 @@ public final class Constants {
   }
 
   public static final class ShooterPivotConstants {
-    public static final int kShooterPivotMotor = 10; // Change
+    public static final int kShooterPivotMotorCanID = 10; // Change
+    public static final boolean kTurningMotorInverted = false; // Change
+    public static final boolean kTurningMotorEncoderInverted = false; // Change
     
     public static final double kTurningEncoderPositionFactor = (2 * Math.PI); // radians //TODO: this is assuming that the native unit for the encoder is revolutions. Double check
     public static final double kTurningEncoderVelocityFactor = (2 * Math.PI) / 60.0; // radians per second
@@ -259,7 +266,6 @@ public final class Constants {
     public static final double kTurningMinOutput = -1;
     public static final double kTurningMaxOutput = 1;
     
-    public static final IdleMode kDrivingMotorIdleMode = IdleMode.kBrake;
     public static final IdleMode kTurningMotorIdleMode = IdleMode.kBrake;
     public static final int kDrivingMotorCurrentLimit = 35; // amps
     public static final int kTurningMotorCurrentLimit = 20; // amps
