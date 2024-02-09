@@ -33,17 +33,7 @@ public class ShooterPivotSubsystem extends SubsystemBase {
     // Apply position and velocity conversion factors for the driving encoder. The
     // native units for position and velocity are rotations and RPM, respectively,
     // but we want meters and meters per second to use with WPILib's swerve APIs.
-    shooterPivotMotorEncoder.setPositionConversionFactor(ShooterPivotConstants.kTurningEncoderPositionFactor);
-
-    // Enable PID wrap around for the turning motor. This will allow the PID
-    // controller to go through 0 to get to the setpoint i.e. going from 350 degrees
-    // to 10 degrees will go through 0 rather than the other direction which is a
-    // longer route.
-    // no PID wrapping for a linear motion...?
-    // Linear? You're right though that in this situation it's unnecessary - Noah
-    shooterPivotMotorPIDController.setPositionPIDWrappingEnabled(false);
-    //shooterPivotMotorPIDController.setPositionPIDWrappingMinInput(ShooterPivotConstants.kTurningEncoderPositionPIDMinInput);
-    //shooterPivotMotorPIDController.setPositionPIDWrappingMaxInput(ShooterPivotConstants.kTurningEncoderPositionPIDMaxInput);
+    shooterPivotMotorEncoder.setPositionConversionFactor(ShooterPivotConstants.kShooterEncoderVelocityFactor);
 
     // Set the PID gains for the turning motor.
     shooterPivotMotorPIDController.setP(ShooterPivotConstants.kTurningP);
@@ -57,7 +47,7 @@ public class ShooterPivotSubsystem extends SubsystemBase {
     shooterPivotMotor.setSmartCurrentLimit(ShooterPivotConstants.kTurningMotorCurrentLimit);
 
     // Inverting turning motor
-    shooterPivotMotor.setInverted(true);
+    shooterPivotMotor.setInverted(ShooterPivotConstants.kMotorInverted);
 
     // Save the SPARK MAX configurations. If a SPARK MAX browns out during
     // operation, it will maintain the above configurations.
