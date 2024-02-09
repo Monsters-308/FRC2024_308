@@ -88,9 +88,9 @@ public class RobotGotoFieldPos extends Command {
         double ySpeed = pidControllerY.calculate(currentPos.getTranslation().getY());
         double angleSpeed = pidControllerAngle.calculate(m_driveSubsystem.getHeading());
 
-        xSpeed = MathUtil.clamp(xSpeed, HeadingConstants.kTranslationMinOutput, HeadingConstants.kTranslationMaxOutput);
-        ySpeed = MathUtil.clamp(ySpeed, HeadingConstants.kTranslationMinOutput, HeadingConstants.kTranslationMaxOutput);
-        angleSpeed = MathUtil.clamp(angleSpeed, HeadingConstants.kHeadingMinOutput, HeadingConstants.kHeadingMaxOutput);
+        xSpeed = MathUtil.clamp(xSpeed, -HeadingConstants.kTranslationMaxOutput, HeadingConstants.kTranslationMaxOutput);
+        ySpeed = MathUtil.clamp(ySpeed, -HeadingConstants.kTranslationMaxOutput, HeadingConstants.kTranslationMaxOutput);
+        angleSpeed = MathUtil.clamp(angleSpeed, -HeadingConstants.kHeadingMaxOutput, HeadingConstants.kHeadingMaxOutput);
 
 
         m_driveSubsystem.drive(

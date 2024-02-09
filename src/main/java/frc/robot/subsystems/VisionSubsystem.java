@@ -64,25 +64,20 @@ public class VisionSubsystem extends SubsystemBase {
     /**
      * Returns the number of valid targets detected by the limelight. Returns 0 if no targets are found.
      */
-    public int getTV(){
+    public int getTargets(){
         return (int)tv.getDouble(0);
     }
 
     /**
-     * Uses whatever april tag is in front of it to estimate the robot's position on the field. 
+     * Uses whatever april tag is in front of the limelight to estimate the robot's position on the field. 
      * Returns null if no april tag is in view.
      * @return The position of the robot, or null. 
-     * returns Pose2d object containing: x, y, z
+     * returns Pose2d object containing: x, y, rot
      */
     public Pose2d getRobotPosition(){
         
-        if(getPipeline() == VisionConstants.kAprilTagPipeline) {
-            /* Notes for Gabe: a Pose2d object contains a robot's x position, y position, 
-             * and rotation. I need your help with taking the limelight values from network tables 
-             * and converting them to a robot pose object. Once you do that I'll figure out how
-             * to use this object for correcting the odometry.
-             */
-            double [] robotPosArrary = limelightTable.getEntry("targetpose_robotspace").getDoubleArray(new double[6]);
+        if((getPipeline() == VisionConstants.kAprilTagPipeline) && (getTargets() > 0)) {
+            double[] robotPosArrary = limelightTable.getEntry("targetpose_robotspace").getDoubleArray(new double[6]);
             SmartDashboard.putNumber("robotposarr0", robotPosArrary[0]);
             return new Pose2d(robotPosArrary[0], robotPosArrary[1], new Rotation2d(robotPosArrary[2]));
         }
