@@ -58,7 +58,6 @@ public class RobotGotoAngle extends Command {
         m_complete = false;
         pidController.reset();
         pidController.setSetpoint(m_desiredAngle);
-
     }
 
     /*

@@ -6,8 +6,6 @@ import frc.robot.subsystems.DriveSubsystem;
 
 import frc.robot.subsystems.VisionSubsystem;
 import frc.utils.OdometryUtils;
-import frc.utils.SwerveUtils;
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 
