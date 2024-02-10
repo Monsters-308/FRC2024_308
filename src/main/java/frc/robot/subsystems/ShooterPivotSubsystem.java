@@ -36,7 +36,7 @@ public class ShooterPivotSubsystem extends SubsystemBase {
     // Apply position and velocity conversion factors for the driving encoder. The
     // native units for position and velocity are rotations and RPM, respectively,
     // but we want meters and meters per second to use with WPILib's swerve APIs.
-    shooterPivotMotorEncoder.setPositionConversionFactor(ShooterPivotConstants.kTurningEncoderPositionFactor);
+    shooterPivotMotorEncoder.setPositionConversionFactor(ShooterPivotConstants.kTurningEncoderVelocityFactor);
 
     // Set the PID gains for the turning motor.
     shooterPivotMotorPIDController.setP(ShooterPivotConstants.kTurningP);

@@ -245,7 +245,46 @@ public final class Constants {
   }
 
   public static final class ShooterConstants {
+
+    public static final double kShooterEncoderVelocityFactor = (2 * Math.PI); // radians //TODO: this is assuming that the native unit for the encoder is revolutions. Double check
+        
+    public static final int kTopShooterMotorCanID = 16; // Change
+    public static final int kBottomShooterMotorCanID = 17; // Change
     
+    public static final IdleMode kTopShooterMotor = IdleMode.kCoast;
+    public static final IdleMode kBottomShooterMotor = IdleMode.kCoast;
+
+    public static final int kShooterMotorCurrentLimit = 35; // amps
+
+    // Calculations required for driving motor conversion factors and feed forward
+    public static final double kDrivingMotorFreeSpeedRps = NeoMotorConstants.kFreeSpeedRpm / 60;
+    public static final double kWheelDiameterMeters = Units.inchesToMeters(4);
+    public static final double kWheelCircumferenceMeters = kWheelDiameterMeters * Math.PI;
+
+    // The L1 MK4 and MK4i modules have a gear ratio of 8.14:1 on the drive wheels.
+    public static final double kDrivingMotorReduction = 1;
+    public static final double kDriveWheelFreeSpeedRps = (kDrivingMotorFreeSpeedRps * kWheelCircumferenceMeters)
+        / kDrivingMotorReduction;
+
+    public static final double kDrivingEncoderPositionFactor = (kWheelDiameterMeters * Math.PI)
+        / kDrivingMotorReduction; // meters
+    public static final double kDrivingEncoderVelocityFactor = ((kWheelDiameterMeters * Math.PI)
+        / kDrivingMotorReduction) / 60.0; // meters per second
+
+    public static final double kShooterP = 0.04;
+    public static final double kShooterI = 0;
+    public static final double kShooterD = 0;
+    //TODO: We need to figure out how feedforwards work and how to use them.
+    public static final double kShooterFF = 1 / kDriveWheelFreeSpeedRps; 
+    public static final double kShooterMinOutput = -1;
+    public static final double kShooterMaxOutput = 1;
+
+    public static final int kDigitalSensorPin = 10;
+    
+    public static final boolean kSensorInverted = true; 
+
+    //Conveyer Belt constants 
+    public static final double belt_speed = .01; 
   }
 
   public static final class ShooterPivotConstants {
@@ -253,11 +292,11 @@ public final class Constants {
     public static final boolean kTurningMotorInverted = false; // Change
     public static final boolean kTurningMotorEncoderInverted = false; // Change
     
-    public static final double kTurningEncoderPositionFactor = (2 * Math.PI); // radians //TODO: this is assuming that the native unit for the encoder is revolutions. Double check
+    public static final double kShooterEncoderVelocityFactor = (2 * Math.PI); // radians //TODO: this is assuming that the native unit for the encoder is revolutions. Double check
     public static final double kTurningEncoderVelocityFactor = (2 * Math.PI) / 60.0; // radians per second
 
     public static final double kTurningEncoderPositionPIDMinInput = 0; // radians
-    public static final double kTurningEncoderPositionPIDMaxInput = kTurningEncoderPositionFactor; // radians
+    public static final double kTurningEncoderPositionPIDMaxInput = kShooterEncoderVelocityFactor; // radians
     
     public static final double kTurningP = 1;
     public static final double kTurningI = 0;
@@ -269,5 +308,7 @@ public final class Constants {
     public static final IdleMode kTurningMotorIdleMode = IdleMode.kBrake;
     public static final int kDrivingMotorCurrentLimit = 35; // amps
     public static final int kTurningMotorCurrentLimit = 20; // amps
+
+    public static final boolean kMotorInverted = false;
   }
 }
