@@ -321,11 +321,14 @@ public class DriveSubsystem extends SubsystemBase {
    * @apiNote This may not be the same as getHeading() and is not constrained.
    * @return The angle of the gyro adjusted for inversion.
    */
-  private double getGyroAngle() {
+  public double getGyroAngle() {
     return m_gyro.getAngle() * (HeadingConstants.kGyroReversed ? -1.0 : 1.0);
 
   } 
+  public double getGyroPitch() {
+    return m_gyro.getPitch() * (HeadingConstants.kGyroReversed ? -1.0 : 1.0);
 
+  } 
   /**
    * Returns the turn rate of the robot.
    *

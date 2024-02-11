@@ -222,6 +222,10 @@ public final class Constants {
     public static final int kLeftArmUpperLimit = 8;
     public static final int kLeftArmLowerLimit = 9;
 
+    public static final double kPitchP = 0.05;
+    public static final double kPitchI = 0;
+    public static final double kPitchD = 0.001;
+
     // Forwards should be extension, Reverse should be retraction
     public static final boolean kHangingMotorInverted = false;
     public static final int kHangingMotorCurrentLimit = 35;
