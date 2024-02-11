@@ -74,12 +74,12 @@ public class AutoAlignCircle extends Command {
        // Rotation2d distanceFromTarget = OdometryUtils.getDistacnePosToPos(pos1, pos2);
 
         if (targets > 0) {
-            if (x > VisionConstants.kRotationTolerance){
-                rotate = VisionConstants.kRotationSpeed;//.6
-            }
-            else if (x < -VisionConstants.kRotationTolerance){
-                rotate = -VisionConstants.kRotationSpeed;
-            }
+            // if (x > VisionConstants.kRotationTolerance){
+            //     rotate = VisionConstants.kRotationSpeed;//.6
+            // }
+            // else if (x < -VisionConstants.kRotationTolerance){
+            //     rotate = -VisionConstants.kRotationSpeed;
+            // }
 
             //double forwardSpeed = distanceController.calculate(distanceFromTarget);
             double forwardSpeed = 0; //needs to be implemengted
