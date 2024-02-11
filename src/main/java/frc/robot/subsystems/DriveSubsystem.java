@@ -26,7 +26,7 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.HeadingConstants;
 import frc.robot.Constants.ModuleConstants;
-import frc.utils.OdometryUtils;
+import frc.utils.FieldUtils;
 import frc.utils.SwerveUtils;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -119,7 +119,7 @@ public class DriveSubsystem extends SubsystemBase {
             new ReplanningConfig() // Default path replanning config. See the API for the options here
         ),
         // Parameter for whether to invert the paths for red alliance (returns false if alliance is invalid)
-        () -> OdometryUtils.getAlliance() == Alliance.Red, 
+        () -> FieldUtils.getAlliance() == Alliance.Red, 
         this // Reference to this subsystem to set requirements
     );
 
@@ -139,21 +139,21 @@ public class DriveSubsystem extends SubsystemBase {
         });
     
     // Update field widget
-    if (OdometryUtils.getAlliance() == Alliance.Red) {
-      m_field.setRobotPose(OdometryUtils.redWidgetFlip(getPose()));
+    if (FieldUtils.getAlliance() == Alliance.Red) {
+      m_field.setRobotPose(FieldUtils.redWidgetFlip(getPose()));
     }
     else {
       m_field.setRobotPose(getPose());
     }
 
     // Widget that shows color of alliance
-    if (OdometryUtils.getAlliance(true) == null) {
+    if (FieldUtils.getAlliance(true) == null) {
       AllianceWidget.withProperties(Map.of(
           "Color when true", "Gray"
         ));
     }
     else {
-      switch (OdometryUtils.getAlliance(false)) {
+      switch (FieldUtils.getAlliance(false)) {
         case Blue:
           AllianceWidget.withProperties(Map.of(
             "Color when true", "Blue"
