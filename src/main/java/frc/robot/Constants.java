@@ -149,7 +149,7 @@ public final class Constants {
 
   public static final class FieldConstants{
     /** X axis: long side */
-    public static final double kFieldWidthMeters = 16.52;
+    public static final double kFieldWidthMeters = 16.54175;
     /** Y axis: short side */
     public static final double KFieldHeightMeters = 8.2;
     
@@ -296,8 +296,8 @@ public final class Constants {
     public static final boolean kTurningMotorInverted = false; // Change
     public static final boolean kTurningMotorEncoderInverted = false; // Change
     
-    public static final double kShooterEncoderVelocityFactor = (2 * Math.PI); // radians //TODO: this is assuming that the native unit for the encoder is revolutions. Double check
-    public static final double kTurningEncoderVelocityFactor = (2 * Math.PI) / 60.0; // radians per second
+    public static final double kShooterEncoderPositionFactor = (2 * Math.PI); // radians //TODO: this is assuming that the native unit for the encoder is revolutions. Double check
+    public static final double kShooterEncoderVelocityFactor = (2 * Math.PI) / 60.0; // radians per second
 
     public static final double kTurningEncoderPositionPIDMinInput = 0; // radians
     public static final double kTurningEncoderPositionPIDMaxInput = kShooterEncoderVelocityFactor; // radians
@@ -310,7 +310,6 @@ public final class Constants {
     public static final double kTurningMaxOutput = 1;
     
     public static final IdleMode kTurningMotorIdleMode = IdleMode.kBrake;
-    public static final int kDrivingMotorCurrentLimit = 35; // amps
     public static final int kTurningMotorCurrentLimit = 20; // amps
 
     public static final boolean kMotorInverted = false;

@@ -25,7 +25,8 @@ public class LowerBothArms extends Command {
     m_hangingSubsystem = hangingSubsystem;
     m_driveSubsystem = driveSubsystem;
     
-    addRequirements(hangingSubsystem, driveSubsystem);
+    // NOTE: don't add driveSubsystem because we're just using it to get data
+    addRequirements(m_hangingSubsystem);
   }
 
   // Called when the command is initially scheduled.
@@ -38,24 +39,27 @@ public class LowerBothArms extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double robotTilt = m_driveSubsystem.getGyroPitch();
+    double robotTilt = m_driveSubsystem.getRobotRoll();
     robotTilt = ((Math.abs(robotTilt)) / 180); //convert to percent
 
     pitchController.setSetpoint(0);
 
     speedOfArm = pitchController.calculate(robotTilt); //speed needed to set pitch of robot with hangers
-    if (m_driveSubsystem.getGyroPitch()>1){
+    if (m_driveSubsystem.getRobotRoll()>1){
       m_hangingSubsystem.setLeftSpeed(-.4*speedOfArm+1);
       m_hangingSubsystem.setRightSpeed(-.4*speedOfArm);
     }
-    else if (m_driveSubsystem.getGyroPitch()<-1){
+    else if (m_driveSubsystem.getRobotRoll()<-1){
         m_hangingSubsystem.setLeftSpeed(-.4*speedOfArm);
         m_hangingSubsystem.setRightSpeed(-.4*speedOfArm+1);
       }
     else{
-      m_hangingSubsystem.setBothSpeed(-.6);
+      m_hangingSubsystem.setBothSpeed(-.4);
     }
 
+    if(m_hangingSubsystem.leftFullyRetracted() || m_hangingSubsystem.rightFullyRetracted()){
+      m_complete = true;
+    }
   }
   
 
