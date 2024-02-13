@@ -28,15 +28,15 @@ public class ShooterPivotSubsystem extends SubsystemBase {
     // them. This is useful in case a SPARK MAX is swapped out.
     shooterPivotMotor.restoreFactoryDefaults();
 
-    // Setup encoders and PID controllers for the driving and turning SPARKS MAX.
+    // Setup encoders and PID controllers for the SPARKS MAX.
     shooterPivotMotorEncoder = shooterPivotMotor.getAbsoluteEncoder(Type.kDutyCycle);
     shooterPivotMotorPIDController = shooterPivotMotor.getPIDController();
     shooterPivotMotorPIDController.setFeedbackDevice(shooterPivotMotorEncoder);
 
-    // Apply position and velocity conversion factors for the driving encoder. The
-    // native units for position and velocity are rotations and RPM, respectively,
-    // but we want meters and meters per second to use with WPILib's swerve APIs.
-    shooterPivotMotorEncoder.setPositionConversionFactor(ShooterPivotConstants.kTurningEncoderVelocityFactor);
+    // Apply position conversion factor for the encoder. The
+    // native units for position and velocity are rotations and RPM, respectively.
+    // TODO: SwerveModule.java sets both position factor and velocity, but I don't know why both would be required if you're only doing position control
+    shooterPivotMotorEncoder.setPositionConversionFactor(ShooterPivotConstants.kShooterEncoderPositionFactor);
 
     // Set the PID gains for the turning motor.
     shooterPivotMotorPIDController.setP(ShooterPivotConstants.kTurningP);

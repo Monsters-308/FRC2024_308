@@ -34,8 +34,8 @@ public final class Constants {
     public static final double kRotationalSlewRate = 2.0 * kMaxAngularSpeed;        // radians per second^2
 
     // Chassis configuration
-    public static final double kTrackWidth = Units.inchesToMeters(21); // Distance between centers of right and left wheels on robot
-    public static final double kWheelBase = Units.inchesToMeters(21); // Distance between front and back wheels on robot
+    public static final double kTrackWidth = Units.inchesToMeters(22.75); // Distance between centers of right and left wheels on robot
+    public static final double kWheelBase = Units.inchesToMeters(22.75); // Distance between front and back wheels on robot
     public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKinematics(
         new Translation2d(kWheelBase / 2, kTrackWidth / 2),
         new Translation2d(kWheelBase / 2, -kTrackWidth / 2),
@@ -149,7 +149,7 @@ public final class Constants {
 
   public static final class FieldConstants{
     /** X axis: long side */
-    public static final double kFieldWidthMeters = 16.52;
+    public static final double kFieldWidthMeters = 16.54175;
     /** Y axis: short side */
     public static final double KFieldHeightMeters = 8.2;
     
@@ -178,29 +178,29 @@ public final class Constants {
   }
 
   public static final class VisionConstants {
-    //How many degrees is your limelight rotated from perfectly vertical
-    public static final double kLimelightMountAngle = 0; 
+    // How many degrees is your limelight rotated from perfectly vertical
+    public static final double kLimelightMountAngle = 0; // Change
 
-    //Limelight lens height from floor in inches
-    public static final double kLimelightLensHeight = 20;
+    // Limelight lens height from floor in inches
+    public static final double kLimelightLensHeight = 20; // Change
 
-    //Height of reflective tape poles in inches
-    public static final double kSpeakerHeightFromLimelightHeightInches = 71.25;
-    public static final double kBottomReflectiveTapeHeight = 24;
-    public static final double kLimelightDistanceFromCenterInches = 4.5;
-    
+    // Distance between your limelight lense and the center of the robot in inches
+    public static final double kLimelightDistanceFromCenter = 4.5; // Change
 
-    public static final double kTopPoleDesiredDistance = 24;
-    public static final double kDistanceTolerance = 2;
-    public static final double kMaxForwardSpeed = 0.7;
-    public static final double kForwardSpeedPConstant = 0.1;
+    // public static final double kSpeakerHeightFromLimelightHeightInches = 71.25;
+    // public static final double kBottomReflectiveTapeHeight = 24;
 
-    public static final double kRotationSpeed = 0.2;
-    public static final double kRotationTolerance = 2;
+    // public static final double kTopPoleDesiredDistance = 24;
+    // public static final double kDistanceTolerance = 2;
+    // public static final double kMaxForwardSpeed = 0.7;
+    // public static final double kForwardSpeedPConstant = 0.1;
 
-    //Pipeline constants
+    // public static final double kRotationSpeed = 0.2;
+    // public static final double kRotationTolerance = 2;
+
+    // Pipeline constants
     public static final int kAprilTagPipeline = 0;
-    public static final int kReflectiveTapePipeline = 3;
+    // public static final int kReflectiveTapePipeline = 3;
     public static final int kGamePiecePipeline = 2;
 
     /* NOTE: the limelight starts with pipeline 0 by default, so we need to make sure we make that pipeline something 
@@ -209,21 +209,26 @@ public final class Constants {
     public static final int kDefaultPipeline = kAprilTagPipeline;
   }
 
-  public static final class ArmConstants {
-
+  public static final class IntakePivotConstants {
+    public static final int kLeftMotorCanID = 69; // Change
+    public static final int kRightMotorCanID = 420; // Change
   }
 
   public static final class HangingConstants {
-    public static final int kRightArmCanID = 17;
-    public static final int kRightArmUpperLimit = 8;
-    public static final int kRightArmLowerLimit = 9;
+    public static final int kRightArmCanID = 17; // Change
+    public static final int kRightArmUpperLimit = 8; // Change
+    public static final int kRightArmLowerLimit = 9; // Change
 
-    public static final int kLeftArmCanID = 18;
-    public static final int kLeftArmUpperLimit = 8;
-    public static final int kLeftArmLowerLimit = 9;
+    public static final int kLeftArmCanID = 18; // Change
+    public static final int kLeftArmUpperLimit = 8; // Change
+    public static final int kLeftArmLowerLimit = 9; // Change
+
+    public static final double kPitchP = 0.05;
+    public static final double kPitchI = 0;
+    public static final double kPitchD = 0.001;
 
     // Forwards should be extension, Reverse should be retraction
-    public static final boolean kHangingMotorInverted = false;
+    public static final boolean kHangingMotorInverted = false; // Change
     public static final int kHangingMotorCurrentLimit = 35;
 
   }
@@ -274,7 +279,6 @@ public final class Constants {
     public static final double kShooterP = 0.04;
     public static final double kShooterI = 0;
     public static final double kShooterD = 0;
-    //TODO: We need to figure out how feedforwards work and how to use them.
     public static final double kShooterFF = 1 / kDriveWheelFreeSpeedRps; 
     public static final double kShooterMinOutput = -1;
     public static final double kShooterMaxOutput = 1;
@@ -292,8 +296,8 @@ public final class Constants {
     public static final boolean kTurningMotorInverted = false; // Change
     public static final boolean kTurningMotorEncoderInverted = false; // Change
     
-    public static final double kShooterEncoderVelocityFactor = (2 * Math.PI); // radians //TODO: this is assuming that the native unit for the encoder is revolutions. Double check
-    public static final double kTurningEncoderVelocityFactor = (2 * Math.PI) / 60.0; // radians per second
+    public static final double kShooterEncoderPositionFactor = (2 * Math.PI); // radians //TODO: this is assuming that the native unit for the encoder is revolutions. Double check
+    public static final double kShooterEncoderVelocityFactor = (2 * Math.PI) / 60.0; // radians per second
 
     public static final double kTurningEncoderPositionPIDMinInput = 0; // radians
     public static final double kTurningEncoderPositionPIDMaxInput = kShooterEncoderVelocityFactor; // radians
@@ -306,7 +310,6 @@ public final class Constants {
     public static final double kTurningMaxOutput = 1;
     
     public static final IdleMode kTurningMotorIdleMode = IdleMode.kBrake;
-    public static final int kDrivingMotorCurrentLimit = 35; // amps
     public static final int kTurningMotorCurrentLimit = 20; // amps
 
     public static final boolean kMotorInverted = false;

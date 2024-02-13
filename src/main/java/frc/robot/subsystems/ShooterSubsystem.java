@@ -2,9 +2,7 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
-import com.revrobotics.SparkAbsoluteEncoder.Type;
 import com.revrobotics.SparkPIDController;
-import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkBase;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
@@ -17,10 +15,10 @@ import frc.robot.Constants.ShooterConstants;
 
 public class ShooterSubsystem extends SubsystemBase {
 
-  private final CANSparkMax m_topShooterMotor = new CANSparkMax(ShooterConstants.kTopShooterMotorCanID, MotorType.kBrushed);
-  private final CANSparkMax m_bottomShooterMotor = new CANSparkMax(ShooterConstants.kBottomShooterMotorCanID, MotorType.kBrushed);
+  private final CANSparkMax m_topShooterMotor = new CANSparkMax(ShooterConstants.kTopShooterMotorCanID, MotorType.kBrushless);
+  private final CANSparkMax m_bottomShooterMotor = new CANSparkMax(ShooterConstants.kBottomShooterMotorCanID, MotorType.kBrushless);
 
-   private final DigitalInput m_noteSensor = new DigitalInput(ShooterConstants.kDigitalSensorPin);
+  private final DigitalInput m_noteSensor = new DigitalInput(ShooterConstants.kDigitalSensorPin);
 
   private final ShuffleboardTab shooterTab = Shuffleboard.getTab("Shooter");
   private final RelativeEncoder shooterMotorEncoderTop;
@@ -31,7 +29,6 @@ public class ShooterSubsystem extends SubsystemBase {
   /** Creates a new ShooterSubsystem. */
   public ShooterSubsystem() {
 
-    
     m_topShooterMotor.restoreFactoryDefaults(); 
     m_bottomShooterMotor.restoreFactoryDefaults(); 
 
