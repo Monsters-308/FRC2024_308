@@ -11,9 +11,12 @@ import edu.wpi.first.math.geometry.Translation2d;
 
 import java.util.function.DoubleSupplier;
 
+import javax.swing.text.StyleContext.SmallAttributeSet;
+
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.HeadingConstants;
 import frc.robot.Constants.OIConstants;
@@ -71,8 +74,13 @@ public class AutoAim extends Command {
         Translation2d pos2 = new Translation2d(FieldConstants.kSpeakerX, FieldConstants.kSpeakerY); //speaker position 
         Rotation2d angleToTarget = OdometryUtils.anglePoseToPose(pos1, pos2); // Angle to make robot face speacker
         double distanceToTarget = OdometryUtils.getDistacnePosToPos(pos1, pos2); //distance in inches from limelight to speaker
-        Shuffleboard.getTab("Vision").add("Angle to Goal", angleToTarget.getDegrees());
-        Shuffleboard.getTab("Vision").add("Distance to Goal", distanceToTarget);
+       // Shuffleboard.getTab("Vision").add("Angle to Goal", angleToTarget.getDegrees());
+       // Shuffleboard.getTab("Vision").add("Distance to Goal", distanceToTarget);
+
+        SmartDashboard.putNumber("Distance to goal", distanceToTarget);
+        SmartDashboard.putNumber("Angle to goal", angleToTarget.getDegrees());
+        SmartDashboard.putNumber("limelightX", m_visionSubsystem.getX());
+
 
 
         angleController.setSetpoint(angleToTarget.getDegrees());

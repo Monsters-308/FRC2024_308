@@ -101,14 +101,14 @@ public final class Constants {
 
     // Inversion of drive motors
     // This will vary depending on how your wheels are oriented when you zero them.
-    public static final boolean kLeftFrontInverted = true;
-    public static final boolean kLeftRearInverted = true;
+    public static final boolean kLeftFrontInverted = false;
+    public static final boolean kLeftRearInverted = false;
     public static final boolean kRightFrontInverted = true;
     public static final boolean kRightRearInverted = false;
 
     // Inversion of turning motors
     // Unless oriented differently, all of your turning motors should spin in the same direction.
-    public static final boolean kTurningMotorsInverted = true;
+    public static final boolean kTurningMotorsInverted = false;
 
     // Inversion of turning ENCODERS (not motors).
     // Unless oriented differently, all of your turning encoders should spin in the same direction.
