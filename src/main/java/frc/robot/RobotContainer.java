@@ -21,7 +21,8 @@ import frc.robot.commands.drive.RobotGotoAngle;
 import frc.robot.commands.vision.AutoAim;
 import frc.robot.commands.vision.DefaultLimelightPipeline;
 import frc.robot.commands.vision.UpdateOdometry;
-import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.DriveSubsystem; 
+import frc.robot.subsystems.ShooterSubsystem; 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -39,7 +40,8 @@ import java.util.Map;
 public class RobotContainer {
   // The robot's subsystems
   private final DriveSubsystem m_robotDrive = new DriveSubsystem();
-  private final VisionSubsystem m_visionSubsystem = new VisionSubsystem();
+  private final VisionSubsystem m_visionSubsystem = new VisionSubsystem(); 
+  private final ShooterSubsystem m_shooterSubsystem = new ShooterSubsystem();
 
   // The driver's controller
   // final Joystick m_driverController = new Joystick(OIConstants.kDriverControllerPort);
@@ -162,6 +164,12 @@ public class RobotContainer {
         .onTrue(new InstantCommand(
             () -> m_robotDrive.setHeading(90),
             m_robotDrive));
+  } 
+
+  new JoystickButton(m_codriverController, Button.kRightTrigger.value)
+        .onTrue(new shoot(
+            () -> m_shooterSubsystem, .5,
+            .5));
   }
 
   public void resetPose(){
