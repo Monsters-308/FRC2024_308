@@ -83,9 +83,11 @@ public class ShooterSubsystem extends SubsystemBase {
 
   }
 
-  public void setShooterSpeed(double speed){
-    shooterMotorBottomPIDController.setReference(speed, CANSparkBase.ControlType.kVelocity);
+  public void setTopShooterSpeed(double speed){
     shooterMotorTopPIDController.setReference(speed, CANSparkBase.ControlType.kVelocity);
+  } 
+  public void setBottomShooterSpeed(double speed){
+    shooterMotorBottomPIDController.setReference(speed, CANSparkBase.ControlType.kVelocity);
   }
 
   public double getTopSpeed(){

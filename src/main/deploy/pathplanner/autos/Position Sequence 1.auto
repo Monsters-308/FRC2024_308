@@ -1,0 +1,37 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 1.2876934525798875,
+      "y": 7.0
+    },
+    "rotation": 180.0
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Leave Zone (LZ) 1"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Return To Zone(RTZ) 1"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Fetch RIng(FR) 1-1"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": false
+}
