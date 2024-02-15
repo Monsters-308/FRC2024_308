@@ -11,7 +11,7 @@ import edu.wpi.first.math.controller.PIDController;
 public class LowerBothArms extends Command {
   private final HangingSubsystem m_hangingSubsystem;
   final DriveSubsystem m_driveSubsystem;
-  private double speedOfArm;
+  private double hangingSpeed = .4;
   private boolean m_complete = false;
   private final PIDController pitchController = new PIDController(HangingConstants.kPitchP,
                                                               HangingConstants.kPitchI, 
@@ -38,23 +38,15 @@ public class LowerBothArms extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    
     double robotTilt = m_driveSubsystem.getGyroPitch();
-    robotTilt = ((Math.abs(robotTilt)) / 180); //convert to percent
 
     pitchController.setSetpoint(0);
 
-    speedOfArm = pitchController.calculate(robotTilt); //speed needed to set pitch of robot with hangers
-    if (m_driveSubsystem.getGyroPitch()>1){
-      m_hangingSubsystem.setLeftSpeed(-.4*speedOfArm+1);
-      m_hangingSubsystem.setRightSpeed(-.4*speedOfArm);
-    }
-    else if (m_driveSubsystem.getGyroPitch()<-1){
-        m_hangingSubsystem.setLeftSpeed(-.4*speedOfArm);
-        m_hangingSubsystem.setRightSpeed(-.4*speedOfArm+1);
-      }
-    else{
-      m_hangingSubsystem.setBothSpeed(-.6);
-    }
+    double speedDifference = pitchController.calculate(robotTilt); //speed needed to set pitch of robot with hangers
+
+    m_hangingSubsystem.setLeftSpeed(hangingSpeed+speedDifference);
+    m_hangingSubsystem.setRightSpeed(hangingSpeed-speedDifference);
 
   }
   
