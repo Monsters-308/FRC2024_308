@@ -5,28 +5,28 @@ import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.IntakeConstants;
+import frc.robot.Constants.IndexConstants;
 
-public class IntakeSubsystem extends SubsystemBase {
+public class IndexSubsystem extends SubsystemBase {
 
-  private final CANSparkMax m_intakeMotor = new CANSparkMax(IntakeConstants.kIntakeMotorCanID, MotorType.kBrushed);
+  private final CANSparkMax m_indexMotor = new CANSparkMax(IndexConstants.kIndexMotorCanID, MotorType.kBrushless);
     
-  /** Creates a new IntakeSubsystem. */
-  public IntakeSubsystem() {
+  /** Creates a new IndexSubsystem. */
+  public IndexSubsystem() {
     // Restore the motor controller to a known state (in case it's swapped out)
-    m_intakeMotor.restoreFactoryDefaults();
+    m_indexMotor.restoreFactoryDefaults();
 
     // Limit the current so the motor doesn't oof itself
-    m_intakeMotor.setSmartCurrentLimit(IntakeConstants.kIntakeMotorCurrentLimit);
+    m_indexMotor.setSmartCurrentLimit(IndexConstants.kIndexMotorCurrentLimit);
 
     // Set to coast mode
-    m_intakeMotor.setIdleMode(IdleMode.kCoast);
+    m_indexMotor.setIdleMode(IdleMode.kCoast);
 
     // Set inverted
-    m_intakeMotor.setInverted(IntakeConstants.kIntakeMotorInverted);
+    m_indexMotor.setInverted(IndexConstants.kIndexMotorInverted);
 
     // Save the motor controller's configuration
-    m_intakeMotor.burnFlash();
+    m_indexMotor.burnFlash();
   }
 
   /**
@@ -34,7 +34,7 @@ public class IntakeSubsystem extends SubsystemBase {
    * @param speed A speed from -1 to 1.
    */
   public void setSpeed(double speed){
-    m_intakeMotor.set(speed);
+    m_indexMotor.set(speed);
   }
 
   @Override

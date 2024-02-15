@@ -66,7 +66,7 @@ public class AutoAlignCircle extends Command {
     public void execute() {
         double x = m_visionSubsystem.getX();
         double y = m_visionSubsystem.getY();
-        double targets = m_visionSubsystem.getTV();
+        double targets = m_visionSubsystem.getTargets();
         double rotate = 0;
         double orbitSpeed = 0.2; // Adjust this value to control the orbit speed
         Translation2d pos1 = m_driveSubsystem.getPose().getTranslation();
@@ -74,12 +74,12 @@ public class AutoAlignCircle extends Command {
        // Rotation2d distanceFromTarget = OdometryUtils.getDistacnePosToPos(pos1, pos2);
 
         if (targets > 0) {
-            if (x > VisionConstants.kRotationTolerance){
-                rotate = VisionConstants.kRotationSpeed;//.6
-            }
-            else if (x < -VisionConstants.kRotationTolerance){
-                rotate = -VisionConstants.kRotationSpeed;
-            }
+            // if (x > VisionConstants.kRotationTolerance){
+            //     rotate = VisionConstants.kRotationSpeed;//.6
+            // }
+            // else if (x < -VisionConstants.kRotationTolerance){
+            //     rotate = -VisionConstants.kRotationSpeed;
+            // }
 
             //double forwardSpeed = distanceController.calculate(distanceFromTarget);
             double forwardSpeed = 0; //needs to be implemengted

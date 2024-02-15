@@ -6,8 +6,6 @@ import frc.robot.subsystems.DriveSubsystem;
 
 import frc.robot.subsystems.VisionSubsystem;
 import frc.utils.OdometryUtils;
-import frc.utils.SwerveUtils;
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 
@@ -16,6 +14,7 @@ import java.util.function.DoubleSupplier;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.HeadingConstants;
 import frc.robot.Constants.OIConstants;
@@ -32,10 +31,7 @@ public class AutoAim extends Command {
     private final PIDController angleController = new PIDController(HeadingConstants.kHeadingP, 
                                                                   HeadingConstants.kHeadingI, 
                                                                   HeadingConstants.kHeadingD);
-    private final PIDController pivotController = new PIDController(HeadingConstants.kHeadingP, 
-                                                                  HeadingConstants.kHeadingI, 
-                                                                  HeadingConstants.kHeadingD);
-
+    
     //If you want to contoll whether or not the command has ended, you should store it in some sort of variable:
     private boolean m_complete = false;
     private final DoubleSupplier m_xSpeed;
@@ -53,11 +49,6 @@ public class AutoAim extends Command {
         addRequirements(m_visionSubsystem, m_driveSubsystem);
     }
 
-
-
-    /*Like Robot.java, there are a series of functions that you can override to give the command functionality. */
-    
-
     /*This function is called once when the command is schedueled.
      * If you are overriding "isFinished()", you should probably use this to set m_complete to false in case a command object is 
      * called a second time.
@@ -67,14 +58,13 @@ public class AutoAim extends Command {
     public void initialize(){
         m_visionSubsystem.setPipeline(VisionConstants.kAprilTagPipeline);
         angleController.reset();
-        pivotController.reset();
         m_complete = false;
     }
 
     /*This function is called repeatedly when the schedueler's "run()" function is called.
      * Once you want the function to end, you should set m_complete to true.
      */
-   @Override
+    @Override
     public void execute(){
         double angle = m_driveSubsystem.getHeading(); //navx
         
@@ -82,8 +72,15 @@ public class AutoAim extends Command {
         Translation2d pos2 = new Translation2d(FieldConstants.kSpeakerX, FieldConstants.kSpeakerY); //speaker position 
         Rotation2d angleToTarget = OdometryUtils.anglePoseToPose(pos1, pos2); // Angle to make robot face speacker
         double distanceToTarget = OdometryUtils.getDistacnePosToPos(pos1, pos2); //distance in inches from limelight to speaker
-        Shuffleboard.getTab("Vision").add("Angle to Goal", angleToTarget.getDegrees());
-        Shuffleboard.getTab("Vision").add("Distance to Goal", distanceToTarget);
+
+       // Shuffleboard.getTab("Vision").add("Angle to Goal", angleToTarget.getDegrees());
+       // Shuffleboard.getTab("Vision").add("Distance to Goal", distanceToTarget);
+
+        SmartDashboard.putNumber("Distance to goal", distanceToTarget);
+        SmartDashboard.putNumber("Angle to goal", angleToTarget.getDegrees());
+        SmartDashboard.putNumber("limelightX", m_visionSubsystem.getX());
+
+
 
 
         angleController.setSetpoint(angleToTarget.getDegrees());
@@ -93,7 +90,7 @@ public class AutoAim extends Command {
             1. Get absolute encoder value from the shooter 
             2. Move the shooter to meet that pot value, do this by using PID to go to the angleToTarget
             3. Shoot the note at the fastest possible speed, lets see how it works
-            */
+        */
         double encoderValue = 0;
         double offset = 1; 
         double speedAngleChange = 0;
@@ -101,7 +98,7 @@ public class AutoAim extends Command {
 
         double rotation = angleController.calculate(angle); //speed needed to rotate robot to set point
 
-        rotation = MathUtil.clamp(rotation, HeadingConstants.kHeadingMinOutput, HeadingConstants.kHeadingMaxOutput); // clamp value (speed limiter)
+        rotation = MathUtil.clamp(rotation, -HeadingConstants.kHeadingMaxOutput, HeadingConstants.kHeadingMaxOutput); // clamp value (speed limiter)
 
         
         m_driveSubsystem.drive(
@@ -127,10 +124,9 @@ public class AutoAim extends Command {
 
 
         //pivotController.setSetpoint(0);
-        //double rotation = angleController.calculate(yCrosshairDistance);
-
-        
+        //double rotation = angleController.calculate(yCrosshairDistance);        
     }
+
     /*This function is called once when the command ends.
      * A command ends either when you tell it to end with the "isFinished()" function below, or when it is interupted.
      * Whether a command is interrupted or not is determined by "boolean interrupted."

@@ -26,7 +26,7 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.HeadingConstants;
 import frc.robot.Constants.ModuleConstants;
-import frc.utils.OdometryUtils;
+import frc.utils.FieldUtils;
 import frc.utils.SwerveUtils;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -103,6 +103,10 @@ public class DriveSubsystem extends SubsystemBase {
     
     swerveTab.addDouble("robot X", () -> getPose().getX());
     swerveTab.addDouble("robot Y", () -> getPose().getY());
+
+    // Gyro values for testing
+    swerveTab.addDouble("gyro pitch", () -> m_gyro.getPitch());
+    swerveTab.addDouble("gyro roll", () -> m_gyro.getRoll());
     
     // Configure the AutoBuilder
     AutoBuilder.configureHolonomic(
@@ -119,10 +123,11 @@ public class DriveSubsystem extends SubsystemBase {
             new ReplanningConfig() // Default path replanning config. See the API for the options here
         ),
         // Parameter for whether to invert the paths for red alliance (returns false if alliance is invalid)
-        () -> OdometryUtils.getAlliance() == Alliance.Red, 
+        () -> FieldUtils.getAlliance() == Alliance.Red, 
         this // Reference to this subsystem to set requirements
     );
 
+    // Add alliance widget (it's just a boolean widget but I manually change the color)
     AllianceWidget = swerveTab.add("Alliance", true);
   }
 
@@ -139,21 +144,21 @@ public class DriveSubsystem extends SubsystemBase {
         });
     
     // Update field widget
-    if (OdometryUtils.getAlliance() == Alliance.Red) {
-      m_field.setRobotPose(OdometryUtils.redWidgetFlip(getPose()));
+    if (FieldUtils.getAlliance() == Alliance.Red) {
+      m_field.setRobotPose(FieldUtils.redWidgetFlip(getPose()));
     }
     else {
       m_field.setRobotPose(getPose());
     }
 
     // Widget that shows color of alliance
-    if (OdometryUtils.getAlliance(true) == null) {
+    if (FieldUtils.getAlliance(true) == null) {
       AllianceWidget.withProperties(Map.of(
           "Color when true", "Gray"
         ));
     }
     else {
-      switch (OdometryUtils.getAlliance(false)) {
+      switch (FieldUtils.getAlliance(false)) {
         case Blue:
           AllianceWidget.withProperties(Map.of(
             "Color when true", "Blue"
@@ -215,7 +220,7 @@ public class DriveSubsystem extends SubsystemBase {
 
     // Get the target chassis speeds relative to the robot
     final ChassisSpeeds targetVel = (fieldRelative ?
-      ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, Rotation2d.fromDegrees(getGyroAngle()))
+      ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, Rotation2d.fromDegrees(getHeading()))
         : new ChassisSpeeds(xSpeed, ySpeed, rot)
     );
 
@@ -284,7 +289,7 @@ public class DriveSubsystem extends SubsystemBase {
 
   /** Zeroes the heading of the robot. */
   public void zeroHeading() {
-    m_gyro.reset();
+    setHeading(0);
   }
 
   /**
@@ -294,14 +299,17 @@ public class DriveSubsystem extends SubsystemBase {
    */
   public void setHeading(double angle) {
     m_odometry.resetPosition(
-      new Rotation2d(Math.toRadians(angle)), 
+      Rotation2d.fromDegrees(getGyroAngle()), 
       new SwerveModulePosition[] {
         m_frontLeft.getPosition(),
         m_frontRight.getPosition(),
         m_rearLeft.getPosition(),
         m_rearRight.getPosition()
       }, 
-      getPose()
+      new Pose2d(
+        getPose().getTranslation(),
+        Rotation2d.fromDegrees(angle)
+      )
     );
   }
 
@@ -318,13 +326,28 @@ public class DriveSubsystem extends SubsystemBase {
 
   /**
    * Returns the gyro's angle adjusted for inversion.
-   * @apiNote This may not be the same as getHeading() and is not constrained.
+   * @apiNote This may not be the same as getHeading() and is not constrained from -180 to 180.
    * @return The angle of the gyro adjusted for inversion.
    */
   private double getGyroAngle() {
     return m_gyro.getAngle() * (HeadingConstants.kGyroReversed ? -1.0 : 1.0);
-
   } 
+
+  /**
+   * Returns the pitch of the ROBOT (not necessarily the gyro).
+   * @return The pitch of the robot in degrees from -180 to 180.
+   */
+  public double getRobotPitch() {
+    return m_gyro.getRoll();
+  }
+
+  /**
+   * Returns the roll of the ROBOT (not necessarily the gyro).
+   * @return The roll of the robot in degrees from -180 to 180.
+   */
+  public double getRobotRoll() {
+    return m_gyro.getPitch();
+  }
 
   /**
    * Returns the turn rate of the robot.
