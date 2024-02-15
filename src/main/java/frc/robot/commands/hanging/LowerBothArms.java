@@ -14,8 +14,9 @@ public class LowerBothArms extends Command {
   private double hangingSpeed = .4;
   private boolean m_complete = false;
   private final PIDController pitchController = new PIDController(HangingConstants.kPitchP,
-                                                              HangingConstants.kPitchI, 
-                                                              HangingConstants.kPitchD);
+      HangingConstants.kPitchI,
+      HangingConstants.kPitchD);
+
   /**
    * Creates a new ExampleCommand.
    *
@@ -24,8 +25,9 @@ public class LowerBothArms extends Command {
   public LowerBothArms(HangingSubsystem hangingSubsystem, DriveSubsystem driveSubsystem) {
     m_hangingSubsystem = hangingSubsystem;
     m_driveSubsystem = driveSubsystem;
-    
-    addRequirements(hangingSubsystem, driveSubsystem);
+
+    // NOTE: don't add driveSubsystem because we're just using it to get data
+    addRequirements(m_hangingSubsystem);
   }
 
   // Called when the command is initially scheduled.
@@ -38,18 +40,20 @@ public class LowerBothArms extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    
+
     double robotTilt = m_driveSubsystem.getGyroPitch();
 
     pitchController.setSetpoint(0);
 
-    double speedDifference = pitchController.calculate(robotTilt); //speed needed to set pitch of robot with hangers
+    double speedDifference = pitchController.calculate(robotTilt); // speed needed to set pitch of robot with hangers
 
-    m_hangingSubsystem.setLeftSpeed(hangingSpeed+speedDifference);
-    m_hangingSubsystem.setRightSpeed(hangingSpeed-speedDifference);
+    m_hangingSubsystem.setLeftSpeed(hangingSpeed + speedDifference);
+    m_hangingSubsystem.setRightSpeed(hangingSpeed - speedDifference);
 
+    if (m_hangingSubsystem.leftFullyRetracted() || m_hangingSubsystem.rightFullyRetracted()) {
+      m_complete = true;
+    }
   }
-  
 
   // Called once the command ends or is interrupted.
   @Override

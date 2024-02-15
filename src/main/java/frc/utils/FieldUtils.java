@@ -33,6 +33,14 @@ public class FieldUtils {
     }
 
     /**
+     * Returns whether or not the robot is on the red alliance.
+     * @return true if on red alliance, false if on blue alliance or invalid.
+     */
+    public static boolean isRedAlliance(){
+        return getAlliance() == Alliance.Red;
+    }
+
+    /**
      * Takes a pose object and returns it flipped on both the Y axis and X axis.
      * This is used for the Field widget.
      * @param pose The pose object relative to the blue side (in meters).
@@ -56,5 +64,34 @@ public class FieldUtils {
             position.getX(),
             FieldConstants.KFieldHeightMeters-position.getY()
         );
+    }
+
+    /**
+     * Flips a y coordinate so that it'll line up on the red side.
+     * @param yPosition A number used to represent the y coordinate of a position.
+     * @return The y value flipped.
+     */
+    public static double flipRedY(double yPosition){
+        return FieldConstants.KFieldHeightMeters-yPosition;
+    }
+
+    /**
+     * Mirrors a Rotation2d object so that left becomes right.
+     * This is equivalent to multiplying the angle by -1.
+     * @param angle A rotation2d object. 
+     * @return The same object but flipped.
+     */
+    public static Rotation2d flipRedAngle(Rotation2d angle){
+        return angle.times(-1);
+    }
+
+    /**
+     * Mirrors an angle so that left becomes right.
+     * This is equivalent to multiplying the angle by -1.
+     * @param angleDegrees An angle in degrees.
+     * @return The flipped angle.
+     */
+    public static double flipRedAngle(double angleDegrees){
+        return -angleDegrees;
     }
 }

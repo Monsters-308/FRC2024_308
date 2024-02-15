@@ -101,14 +101,14 @@ public final class Constants {
 
     // Inversion of drive motors
     // This will vary depending on how your wheels are oriented when you zero them.
-    public static final boolean kLeftFrontInverted = true;
-    public static final boolean kLeftRearInverted = true;
+    public static final boolean kLeftFrontInverted = false;
+    public static final boolean kLeftRearInverted = false;
     public static final boolean kRightFrontInverted = true;
     public static final boolean kRightRearInverted = false;
 
     // Inversion of turning motors
     // Unless oriented differently, all of your turning motors should spin in the same direction.
-    public static final boolean kTurningMotorsInverted = true;
+    public static final boolean kTurningMotorsInverted = false;
 
     // Inversion of turning ENCODERS (not motors).
     // Unless oriented differently, all of your turning encoders should spin in the same direction.
@@ -149,7 +149,7 @@ public final class Constants {
 
   public static final class FieldConstants{
     /** X axis: long side */
-    public static final double kFieldWidthMeters = 16.52;
+    public static final double kFieldWidthMeters = 16.54175;
     /** Y axis: short side */
     public static final double KFieldHeightMeters = 8.2;
     
@@ -210,8 +210,15 @@ public final class Constants {
   }
 
   public static final class IntakePivotConstants {
-    public static final int kLeftMotorCanID = 69; // Change
-    public static final int kRightMotorCanID = 420; // Change
+    public static final int kMotorCanID = 69;
+
+    public static final int kMotorSmartCurrentLimit = 30;
+
+    public static final boolean kInvertMotor = false;
+
+
+    public static final int kUpperLimitPort = 0;
+    public static final int kLowerLimitPort = 0;
   }
 
   public static final class HangingConstants {
@@ -293,15 +300,22 @@ public final class Constants {
 
   public static final class ShooterPivotConstants {
     public static final int kShooterPivotMotorCanID = 10; // Change
+
+    // Positive will be tilting the pivot upwards
     public static final boolean kTurningMotorInverted = false; // Change
     public static final boolean kTurningMotorEncoderInverted = false; // Change
     
-    public static final double kShooterEncoderVelocityFactor = (2 * Math.PI); // radians //TODO: this is assuming that the native unit for the encoder is revolutions. Double check
-    public static final double kTurningEncoderVelocityFactor = (2 * Math.PI) / 60.0; // radians per second
+    public static final double kShooterEncoderPositionFactor = (2 * Math.PI); // radians //TODO: this is assuming that the native unit for the encoder is revolutions. Double check
+    public static final double kShooterEncoderVelocityFactor = (2 * Math.PI) / 60.0; // radians per second
 
     public static final double kTurningEncoderPositionPIDMinInput = 0; // radians
     public static final double kTurningEncoderPositionPIDMaxInput = kShooterEncoderVelocityFactor; // radians
+
+    // Safety: let's set max and min angles for the shooter pivot so we don't accidentally rotate too far in one direction
+    public static final double kPivotMinAngle = 0; // radians
+    public static final double kPivotMaxAngle = Math.PI/2; // radians
     
+    // PID constants
     public static final double kTurningP = 1;
     public static final double kTurningI = 0;
     public static final double kTurningD = 0;
@@ -310,9 +324,6 @@ public final class Constants {
     public static final double kTurningMaxOutput = 1;
     
     public static final IdleMode kTurningMotorIdleMode = IdleMode.kBrake;
-    public static final int kDrivingMotorCurrentLimit = 35; // amps
     public static final int kTurningMotorCurrentLimit = 20; // amps
-
-    public static final boolean kMotorInverted = false;
   }
 }

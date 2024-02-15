@@ -9,7 +9,7 @@ import frc.robot.Constants.IndexConstants;
 
 public class IndexSubsystem extends SubsystemBase {
 
-  private final CANSparkMax m_indexMotor = new CANSparkMax(IndexConstants.kIndexMotorCanID, MotorType.kBrushed);
+  private final CANSparkMax m_indexMotor = new CANSparkMax(IndexConstants.kIndexMotorCanID, MotorType.kBrushless);
     
   /** Creates a new IndexSubsystem. */
   public IndexSubsystem() {

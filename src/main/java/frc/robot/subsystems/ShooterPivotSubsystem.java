@@ -6,6 +6,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkAbsoluteEncoder.Type;
 import com.revrobotics.SparkPIDController;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -28,15 +29,16 @@ public class ShooterPivotSubsystem extends SubsystemBase {
     // them. This is useful in case a SPARK MAX is swapped out.
     shooterPivotMotor.restoreFactoryDefaults();
 
-    // Setup encoders and PID controllers for the driving and turning SPARKS MAX.
+    // Setup encoders and PID controllers for the SPARKS MAX.
     shooterPivotMotorEncoder = shooterPivotMotor.getAbsoluteEncoder(Type.kDutyCycle);
     shooterPivotMotorPIDController = shooterPivotMotor.getPIDController();
     shooterPivotMotorPIDController.setFeedbackDevice(shooterPivotMotorEncoder);
 
-    // Apply position and velocity conversion factors for the driving encoder. The
-    // native units for position and velocity are rotations and RPM, respectively,
-    // but we want meters and meters per second to use with WPILib's swerve APIs.
-    shooterPivotMotorEncoder.setPositionConversionFactor(ShooterPivotConstants.kTurningEncoderVelocityFactor);
+    // Apply position conversion factor for the encoder. The
+    // native units for position and velocity are rotations and RPM, respectively.
+    // TODO: SwerveModule.java sets both position factor and velocity, but I don't know why both would be required if we're only doing position control
+    shooterPivotMotorEncoder.setPositionConversionFactor(ShooterPivotConstants.kShooterEncoderPositionFactor);
+    shooterPivotMotorEncoder.setVelocityConversionFactor(ShooterPivotConstants.kShooterEncoderVelocityFactor);
 
     // Set the PID gains for the turning motor.
     shooterPivotMotorPIDController.setP(ShooterPivotConstants.kTurningP);
@@ -63,7 +65,8 @@ public class ShooterPivotSubsystem extends SubsystemBase {
   }
 
   /**
-   * Returns the current position of the module.
+   * Returns the angle the shooter is at.
+   * The angle is 0 when the shooter is parallel to the ground.
    *
    * @return The current position of the module (in radians).
    */
@@ -78,8 +81,10 @@ public class ShooterPivotSubsystem extends SubsystemBase {
    * @param angle The angle to set the shooter to (in radians)
    */
   public void setPosition(double angle) {
-    // Apply chassis angular offset to the encoder position to get the position
-    // relative to the chassis.
+
+    // restrict angle from breaking robot
+    angle = MathUtil.clamp(angle, ShooterPivotConstants.kPivotMinAngle, ShooterPivotConstants.kPivotMaxAngle);
+
     shooterPivotMotorPIDController.setReference(angle, CANSparkBase.ControlType.kPosition);
   }
 

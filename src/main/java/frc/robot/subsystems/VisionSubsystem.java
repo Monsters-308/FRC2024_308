@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.VisionConstants;
+import frc.utils.FieldUtils;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.networktables.NetworkTable;
@@ -10,7 +11,6 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class VisionSubsystem extends SubsystemBase {
     final private NetworkTableEntry ty;
@@ -71,21 +71,28 @@ public class VisionSubsystem extends SubsystemBase {
     /**
      * Uses whatever april tag is in front of the limelight to estimate the robot's position on the field. 
      * Returns null if no april tag is in view.
-     * @return The position of the robot, or null. 
-     * returns Pose2d object containing: x, y, rot
+     * @return The position of the robot according to apriltags as a Pose2d object, or null. 
      */
     public Pose2d getRobotPosition(){
-        
+        // Check if the limelight is actually viewing an apriltag
         if((getPipeline() == VisionConstants.kAprilTagPipeline) && (getTargets() > 0)) {
-            double[] robotPosArrary = limelightTable.getEntry("targetpose_robotspace").getDoubleArray(new double[6]);
-            SmartDashboard.putNumber("robotposarr0", robotPosArrary[0]);
-            return new Pose2d(robotPosArrary[0], robotPosArrary[1], new Rotation2d(robotPosArrary[2]));
+
+            // Get pose data from networktables
+            double[] robotPosArrary = limelightTable.getEntry(
+                FieldUtils.isRedAlliance() ?
+                    "botpose_wpired" :
+                    "botpose_wpiblue"
+            ).getDoubleArray(new double[6]);
+
+            // Turn pose data into pose2d object
+            return new Pose2d(robotPosArrary[0], robotPosArrary[1], Rotation2d.fromDegrees(robotPosArrary[5]));
         }
         return null;
     }
 
     @Override
     public void periodic(){
+        // Display april tag data on a field widget for testing
         Pose2d limelightPose = getRobotPosition();
         if(limelightPose != null){
             m_field.setRobotPose(limelightPose);
