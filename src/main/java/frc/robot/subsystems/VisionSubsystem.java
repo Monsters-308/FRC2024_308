@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.VisionConstants;
+import frc.utils.FieldUtils;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.networktables.NetworkTable;
@@ -10,7 +11,6 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class VisionSubsystem extends SubsystemBase {
     final private NetworkTableEntry ty;
@@ -78,7 +78,11 @@ public class VisionSubsystem extends SubsystemBase {
         if((getPipeline() == VisionConstants.kAprilTagPipeline) && (getTargets() > 0)) {
 
             // Get pose data from networktables
-            double[] robotPosArrary = limelightTable.getEntry("botpose_wpiblue").getDoubleArray(new double[6]);
+            double[] robotPosArrary = limelightTable.getEntry(
+                FieldUtils.isRedAlliance() ?
+                    "botpose_wpired" :
+                    "botpose_wpiblue"
+            ).getDoubleArray(new double[6]);
 
             // Turn pose data into pose2d object
             return new Pose2d(robotPosArrary[0], robotPosArrary[1], Rotation2d.fromDegrees(robotPosArrary[5]));

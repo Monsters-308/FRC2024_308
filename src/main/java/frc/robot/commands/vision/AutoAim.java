@@ -11,8 +11,6 @@ import edu.wpi.first.math.geometry.Translation2d;
 
 import java.util.function.DoubleSupplier;
 
-import javax.swing.text.StyleContext.SmallAttributeSet;
-
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
