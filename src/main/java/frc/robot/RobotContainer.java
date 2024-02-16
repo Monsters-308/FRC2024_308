@@ -23,6 +23,7 @@ import frc.robot.commands.vision.DefaultLimelightPipeline;
 import frc.robot.commands.vision.UpdateOdometry;
 import frc.robot.subsystems.DriveSubsystem; 
 import frc.robot.subsystems.ShooterSubsystem; 
+import frc.robot.subsystems.ShooterPivotSubsystem; 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -41,7 +42,9 @@ public class RobotContainer {
   // The robot's subsystems
   private final DriveSubsystem m_robotDrive = new DriveSubsystem();
   private final VisionSubsystem m_visionSubsystem = new VisionSubsystem(); 
-  private final ShooterSubsystem m_shooterSubsystem = new ShooterSubsystem();
+  private final ShooterSubsystem m_shooterSubsystem = new ShooterSubsystem(); 
+  private final ShooterPivotSubsystem m_shooterPivotSubsystem = new ShooterPivotSubsystem();
+
 
   // The driver's controller
   // final Joystick m_driverController = new Joystick(OIConstants.kDriverControllerPort);
@@ -168,7 +171,7 @@ public class RobotContainer {
 
   new JoystickButton(m_codriverController, Button.kRightTrigger.value)
         .onTrue(new shoot(
-            () -> m_shooterSubsystem, .5,
+            () -> m_shooterSubsystem, m_shooterPivotSubsystem, .5,
             .5));
   }
 

@@ -1,15 +1,17 @@
 package frc.robot.commands;
     
-    import frc.robot.subsystems.ShooterSubsystem;
+    import frc.robot.subsystems.IntakeSubsystem;
+    import frc.robot.subsystems.ShooterPivotSubsystem;
     import edu.wpi.first.wpilibj2.command.CommandBase; 
-    import frc.robot.Constants.ShooterConstants; 
+    import frc.robot.Constants.IntakeConstants; 
     import java.util.function.DoubleSupplier;
 
-public class shoot {
+public class intakeHumanPlayer {
     
-    public class shooter extends Command {
-      private final ShooterSubsystem m_shootersubsystem;   
-      private final ShooterPivotSubsystem m_shooterPivotSubsystem;
+    public class intakeHumanPlayer extends Command {
+      private final IntakeSubsystem m_intakeSystem;  
+      private final ShooterPivotSubsystem m_shooterPivotSubsystem; 
+      private final IndexSubsystem m_indexSubsystem;
       //variables for motor speeds/velocities 
 
       private final DoubleSupplier topSMotorV;
@@ -22,14 +24,14 @@ public class shoot {
        * @param Shootersubsystem The subsystem used by this command.
        */ 
 
-      public shoot(ShooterSubsystem subsystem, ShooterPivotSubsystem subsystem2 ,DoubleSupplier topSMotorV, DoubleSupplier bottomSMotorV) {
-        m_shootersubsystem = subsystem;  
-        m_shooterPivotSubsystem = subsystem2;
-    
+      public intakeHumanPlayer(IntakeSubsystem intakeSubsystem, ShooterPivotSubsystem shooterPivotSubsystem, IndexSubsystem indexSubsystem, DoubleSupplier topSMotorV, DoubleSupplier bottomSMotorV) {
+        m_intakeSystem = intakeSubsystem; 
+        m_shooterPivotSubsystem = shooterPivotSubsystem; 
+        m_indexSubsystem = indexSubsystem;
         
         m_topSMotorV = topSMotorV; 
         m_bottomSMotorV = bottomSMotorV;  
-        addRequirements(Shootersubsystem);
+        addRequirements(intakeSubsystem, shooterPivotSubsystem, indexSubsystem);
       }
     
       // Called when the command is initially scheduled.
@@ -41,12 +43,11 @@ public class shoot {
       // Called every time the scheduler runs while the command is scheduled.
       @Override
       public void execute() {
-        if (m_shooterSubsystem.gamePieceDetected()){
-          //m_shooterPivotSubsystem.setPosition()
-          m_shooterSubsystem.setTopShooterSpeed(m_topSMotorV); 
-          m_shooterSubsystem.setBottomShooterSpeed(m_bottomSMotorV);
-        }
+        if (m_shooterSubsystem.gamePieceDetected() == false){
+          indexSubsystem.setSpeed(IntakeConstants.kHumanPlayerIntakeSpeed);
 
+
+        }
       }
     
       // Called once the command ends or is interrupted.

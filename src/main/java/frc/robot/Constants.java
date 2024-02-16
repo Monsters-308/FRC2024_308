@@ -246,6 +246,7 @@ public final class Constants {
     // Positive intakes the piece, negative retracts the piece
     public static final boolean kIntakeMotorInverted = false; // Change
     public static final int kIntakeMotorCurrentLimit = 35; // Change
+    public static final double kHumanPlayerIntakeSpeed = .8 //oh noes speed
   }
 
   public static final class IndexConstants {
