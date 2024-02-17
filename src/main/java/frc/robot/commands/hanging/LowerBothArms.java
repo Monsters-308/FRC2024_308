@@ -1,7 +1,6 @@
 package frc.robot.commands.hanging;
 
 import frc.robot.subsystems.HangingSubsystem;
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.HangingConstants;
 import frc.robot.subsystems.DriveSubsystem;
@@ -10,9 +9,11 @@ import edu.wpi.first.math.controller.PIDController;
 //skeleton made by nico
 public class LowerBothArms extends Command {
   private final HangingSubsystem m_hangingSubsystem;
-  final DriveSubsystem m_driveSubsystem;
-  private double hangingSpeed = .4;
+  private final DriveSubsystem m_driveSubsystem;
+
+  private final double m_hangingSpeed;
   private boolean m_complete = false;
+
   private final PIDController pitchController = new PIDController(HangingConstants.kPitchP,
       HangingConstants.kPitchI,
       HangingConstants.kPitchD);
@@ -22,9 +23,11 @@ public class LowerBothArms extends Command {
    *
    * @param subsystem The subsystem used by this command.
    */
-  public LowerBothArms(HangingSubsystem hangingSubsystem, DriveSubsystem driveSubsystem) {
+  public LowerBothArms(HangingSubsystem hangingSubsystem, DriveSubsystem driveSubsystem, double hangingSpeed) {
     m_hangingSubsystem = hangingSubsystem;
     m_driveSubsystem = driveSubsystem;
+
+    m_hangingSpeed = hangingSpeed;
 
     // NOTE: don't add driveSubsystem because we're just using it to get data
     addRequirements(m_hangingSubsystem);
@@ -34,21 +37,19 @@ public class LowerBothArms extends Command {
   @Override
   public void initialize() {
     pitchController.reset();
+    pitchController.setSetpoint(0);
     m_complete = false;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    double robotTilt = m_driveSubsystem.getRobotRoll();
 
-    double robotTilt = m_driveSubsystem.getRobotPitch();
+    double speedDifference = pitchController.calculate(robotTilt); // speed needed to set roll of robot with hangers
 
-    pitchController.setSetpoint(0);
-
-    double speedDifference = pitchController.calculate(robotTilt); // speed needed to set pitch of robot with hangers
-
-    m_hangingSubsystem.setLeftSpeed(hangingSpeed + speedDifference);
-    m_hangingSubsystem.setRightSpeed(hangingSpeed - speedDifference);
+    m_hangingSubsystem.setLeftSpeed(m_hangingSpeed + speedDifference);
+    m_hangingSubsystem.setRightSpeed(m_hangingSpeed - speedDifference);
 
     if (m_hangingSubsystem.leftFullyRetracted() || m_hangingSubsystem.rightFullyRetracted()) {
       m_complete = true;
@@ -65,6 +66,5 @@ public class LowerBothArms extends Command {
   @Override
   public boolean isFinished() {
     return m_complete;
-
   }
 }

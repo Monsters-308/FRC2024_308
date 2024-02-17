@@ -69,7 +69,7 @@ public class AutoAim extends Command {
         double angle = m_driveSubsystem.getHeading(); //navx
         
         Translation2d pos1 = m_driveSubsystem.getPose().getTranslation(); // Position of robot on field
-        Translation2d pos2 = new Translation2d(FieldConstants.kSpeakerX, FieldConstants.kSpeakerY); //speaker position 
+        Translation2d pos2 = FieldConstants.kSpeakerPosition; //speaker position 
         Rotation2d angleToTarget = OdometryUtils.anglePoseToPose(pos1, pos2); // Angle to make robot face speacker
         double distanceToTarget = OdometryUtils.getDistacnePosToPos(pos1, pos2); //distance in inches from limelight to speaker
 

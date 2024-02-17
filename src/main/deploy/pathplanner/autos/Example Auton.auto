@@ -12,7 +12,13 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Leave Zone"
+                  "pathName": "RTZ 2"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "FR 2-1"
                 }
               }
             ]
