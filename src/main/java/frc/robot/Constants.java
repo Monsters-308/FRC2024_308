@@ -153,8 +153,14 @@ public final class Constants {
     /** Y axis: short side */
     public static final double KFieldHeightMeters = 8.2;
     
-    public static final double kSpeakerX = 0; // Change
-    public static final double kSpeakerY = 0; // Change
+    // Position of the speaker on the field (in meters)
+    // This will need to be flipped for red alliance
+    public static final Translation2d kSpeakerPosition = new Translation2d(
+      0, 0 // Change
+    );
+
+    // Height to the bottom lip of speaker
+    public static final double kSpeakerHeight = 0; // Change
   }
 
   public static final class AutoConstants {
@@ -246,7 +252,7 @@ public final class Constants {
     // Positive intakes the piece, negative retracts the piece
     public static final boolean kIntakeMotorInverted = false; // Change
     public static final int kIntakeMotorCurrentLimit = 35; // Change
-    public static final double kHumanPlayerIntakeSpeed = .8 //oh noes speed
+    public static final double kHumanPlayerIntakeSpeed = .8; //oh noes speed
   }
 
   public static final class IndexConstants {
@@ -295,8 +301,22 @@ public final class Constants {
     
     public static final boolean kSensorInverted = true; 
 
-    //Conveyer Belt constants 
-    public static final double belt_speed = .01; 
+    // Conveyer Belt constants 
+    public static final double belt_speed = .01;
+    
+    //                ************* Super important constants for math **************
+
+    // Offsets from pivot to end of shooter
+    public static final double kShooterVerticalOffset = 2; // Inches // Change
+    public static final double kShooterHorizontalOffset = 5; // Inches // Change
+
+    // Angle of depression
+    public static final double kAngleFromPivotToShooter = Math.atan(kShooterVerticalOffset / kShooterHorizontalOffset);
+    public static final double kDistanceFromPivotToShooter = Math.hypot(kShooterVerticalOffset, kShooterHorizontalOffset);
+
+    // How far upwards to aim up into the speaker (in inches)
+    public static final double kSpeakerAimHeight = 0; // Change
+
   }
 
   public static final class ShooterPivotConstants {
@@ -326,5 +346,12 @@ public final class Constants {
     
     public static final IdleMode kTurningMotorIdleMode = IdleMode.kBrake;
     public static final int kTurningMotorCurrentLimit = 20; // amps
+
+    //                ************* Super important constants for math **************
+
+    public static final double kPivotHeightInches = 0; // Change
+    // The horizontal distance between the center of the robot and the pivot
+    public static final double kPivotCenterOffsetInches = 0; // Change
+
   }
 }

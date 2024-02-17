@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import frc.robot.Constants.OIConstants;
+import frc.robot.commands.Shooter.shoot;
 import frc.robot.commands.auton.TemplateAuton;
 import frc.robot.commands.drive.RobotGotoAngle;
 import frc.robot.commands.vision.AutoAim;
@@ -167,12 +168,11 @@ public class RobotContainer {
         .onTrue(new InstantCommand(
             () -> m_robotDrive.setHeading(90),
             m_robotDrive));
-  } 
 
-  new JoystickButton(m_codriverController, Button.kRightTrigger.value)
-        .onTrue(new shoot(
-            () -> m_shooterSubsystem, m_shooterPivotSubsystem, .5,
-            .5));
+  // new JoystickButton(m_coDriverController, Button.kRightTrigger.value)
+  //       .onTrue(new shoot(
+  //           () -> m_shooterSubsystem, .5,
+  //           .5));
   }
 
   public void resetPose(){

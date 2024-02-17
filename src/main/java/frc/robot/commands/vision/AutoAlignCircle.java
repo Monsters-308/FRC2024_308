@@ -70,7 +70,7 @@ public class AutoAlignCircle extends Command {
         double rotate = 0;
         double orbitSpeed = 0.2; // Adjust this value to control the orbit speed
         Translation2d pos1 = m_driveSubsystem.getPose().getTranslation();
-        Translation2d pos2 = new Translation2d(FieldConstants.kSpeakerX, FieldConstants.kSpeakerY);
+        Translation2d pos2 = FieldConstants.kSpeakerPosition;
        // Rotation2d distanceFromTarget = OdometryUtils.getDistacnePosToPos(pos1, pos2);
 
         if (targets > 0) {
