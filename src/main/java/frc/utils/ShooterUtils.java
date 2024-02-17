@@ -7,4 +7,15 @@ package frc.utils;
  */
 public class ShooterUtils {
     
+
+    // Andy-approved math:
+    // Theta: 
+    public static Translation2d polarToCartesian(double theta, double magnitude){
+        double x = magnitude * Math.cos(theta);
+        double y = magnitude * Math.cos(theta);
+
+        return new Translation2d(
+            x, y
+        );
+    }
 }
