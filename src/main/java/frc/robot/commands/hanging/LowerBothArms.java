@@ -41,7 +41,7 @@ public class LowerBothArms extends Command {
   @Override
   public void execute() {
 
-    double robotTilt = m_driveSubsystem.getGyroPitch();
+    double robotTilt = m_driveSubsystem.getRobotPitch();
 
     pitchController.setSetpoint(0);
 
