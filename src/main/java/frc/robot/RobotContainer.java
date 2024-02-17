@@ -16,7 +16,7 @@ import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import frc.robot.Constants.OIConstants;
-import frc.robot.commands.Shooter.shoot;
+import frc.robot.commands.shooter.shoot;
 import frc.robot.commands.auton.TemplateAuton;
 import frc.robot.commands.drive.RobotGotoAngle;
 import frc.robot.commands.vision.AutoAim;
@@ -25,6 +25,7 @@ import frc.robot.commands.vision.UpdateOdometry;
 import frc.robot.subsystems.DriveSubsystem; 
 import frc.robot.subsystems.ShooterSubsystem; 
 import frc.robot.subsystems.ShooterPivotSubsystem; 
+import frc.robot.subsystems.ShooterIndexSubsystem; 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -43,8 +44,9 @@ public class RobotContainer {
   // The robot's subsystems
   private final DriveSubsystem m_robotDrive = new DriveSubsystem();
   private final VisionSubsystem m_visionSubsystem = new VisionSubsystem(); 
-  private final ShooterSubsystem m_shooterSubsystem = new ShooterSubsystem(); 
-  private final ShooterPivotSubsystem m_shooterPivotSubsystem = new ShooterPivotSubsystem();
+  // private final ShooterSubsystem m_shooterSubsystem = new ShooterSubsystem(); 
+  // private final ShooterPivotSubsystem m_shooterPivotSubsystem = new ShooterPivotSubsystem();
+  // private final ShooterIndexSubsystem m_shooterIndexSubsystem = new ShooterIndexSubsystem();
 
 
   // The driver's controller
@@ -85,14 +87,14 @@ public class RobotContainer {
     
     // "registerCommand" lets pathplanner identify our commands
     // Here's the autoalign as an example:
-    NamedCommands.registerCommand("Auto Align", 
-        new AutoAim(
-          m_visionSubsystem,
-          m_robotDrive,
-          () -> m_driverController.getLeftY(),
-          () -> m_driverController.getLeftX()
-            )
-    );
+    // NamedCommands.registerCommand("Auto Align", 
+    //     new AutoAim(
+    //       m_visionSubsystem,
+    //       m_robotDrive,
+    //       () -> m_driverController.getLeftY(),
+    //       () -> m_driverController.getLeftX()
+    //         )
+    // );
 
     //Adding options to the sendable chooser
     m_autonChooser.setDefaultOption("Template Auton", new TemplateAuton(m_robotDrive));
@@ -133,15 +135,15 @@ public class RobotContainer {
             m_robotDrive));
     
     //Y button: auto aim
-    new JoystickButton(m_driverController, Button.kY.value)
-        .toggleOnTrue(
-            new AutoAim(
-              m_visionSubsystem,
-               m_robotDrive,
-              () -> m_driverController.getLeftY(),
-              () -> m_driverController.getLeftX()
-            )
-        );
+    // new JoystickButton(m_driverController, Button.kY.value)
+    //     .toggleOnTrue(
+    //         new AutoAim(
+    //           m_visionSubsystem,
+    //            m_robotDrive,
+    //           () -> m_driverController.getLeftY(),
+    //           () -> m_driverController.getLeftX()
+    //         )
+    //     );
     
     //A button: makes robot face 0 degrees
     new JoystickButton(m_driverController, Button.kA.value)
@@ -169,10 +171,10 @@ public class RobotContainer {
             () -> m_robotDrive.setHeading(90),
             m_robotDrive));
 
-  // new JoystickButton(m_coDriverController, Button.kRightTrigger.value)
-  //       .onTrue(new shoot(
-  //           () -> m_shooterSubsystem, .5,
-  //           .5));
+  //   new JoystickButton(m_coDriverController, Button.kright)
+  //         .onTrue(new shoot(
+  //             () -> m_shooterSubsystem, m_shooterPivotSubsystem, m_shooterIndexSubsystem, .5,
+  //             .5));
   }
 
   public void resetPose(){

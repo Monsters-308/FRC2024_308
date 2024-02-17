@@ -112,7 +112,7 @@ public final class Constants {
 
     // Inversion of turning ENCODERS (not motors).
     // Unless oriented differently, all of your turning encoders should spin in the same direction.
-    public static final boolean kTurningEncoderInverted = false;
+    public static final boolean kTurningEncoderInverted = true;
 
     public static final IdleMode kDrivingMotorIdleMode = IdleMode.kBrake;
     public static final IdleMode kTurningMotorIdleMode = IdleMode.kBrake;
@@ -216,7 +216,8 @@ public final class Constants {
   }
 
   public static final class IntakePivotConstants {
-    public static final int kMotorCanID = 69;
+    public static final int kMotorCanID = 15; //set
+    public static final int KOtherMotorCanID = 13; 
 
     public static final int kMotorSmartCurrentLimit = 30;
 
@@ -247,20 +248,22 @@ public final class Constants {
   }
 
   public static final class IntakeConstants {
-    public static final int kIntakeMotorCanID = 4; // Change
+    public static final int kIntakeMotorCanID = 14; // set
 
     // Positive intakes the piece, negative retracts the piece
     public static final boolean kIntakeMotorInverted = false; // Change
     public static final int kIntakeMotorCurrentLimit = 35; // Change
-    public static final double kHumanPlayerIntakeSpeed = .8; //oh noes speed
+    public static final double kHumanPlayerIntakeSpeed = .8; //oh noes sp
+    public static final double kIntakeSpeed = .8; //oh noes sp
   }
 
   public static final class IndexConstants {
-    public static final int kIndexMotorCanID = 4; // Change
+    public static final int kIndexMotorCanID = 12; // set
 
     // Positive should bring the game piece to the shooter
     public static final boolean kIndexMotorInverted = false; // Change
     public static final int kIndexMotorCurrentLimit = 35; // Change
+    public static final double kIndexIntakeSpeed = .8;
   }
 
   public static final class ShooterConstants {
@@ -320,7 +323,7 @@ public final class Constants {
   }
 
   public static final class ShooterPivotConstants {
-    public static final int kShooterPivotMotorCanID = 10; // Change
+    public static final int kShooterPivotMotorCanID = 20; 
 
     // Positive will be tilting the pivot upwards
     public static final boolean kTurningMotorInverted = false; // Change
@@ -334,15 +337,9 @@ public final class Constants {
 
     // Safety: let's set max and min angles for the shooter pivot so we don't accidentally rotate too far in one direction
     public static final double kPivotMinAngle = 0; // radians
-    public static final double kPivotMaxAngle = Math.PI/2; // radians
-    
-    // PID constants
-    public static final double kTurningP = 1;
-    public static final double kTurningI = 0;
-    public static final double kTurningD = 0;
-    public static final double kTurningFF = 0;
-    public static final double kTurningMinOutput = -1;
-    public static final double kTurningMaxOutput = 1;
+    public static final double kPivotMaxAngle = Math.toRadians(80); // radians
+
+    public static final double kAngleTolerance = Math.toRadians(0.5);
     
     public static final IdleMode kTurningMotorIdleMode = IdleMode.kBrake;
     public static final int kTurningMotorCurrentLimit = 20; // amps
@@ -353,5 +350,21 @@ public final class Constants {
     // The horizontal distance between the center of the robot and the pivot
     public static final double kPivotCenterOffsetInches = 0; // Change
 
+    public static final double kshooterPivotDownPosition = 45; //in degrees
+
+    public static final Translation2d kPivotPostiton = new Translation2d(25, 25);
+  }
+
+  public static final class ShooterIndexConstants {
+    public static final int kMotorCanID = 10;
+    public static final int kMotorCurrentLimit = 30; // Change
+
+    public static final int kDigitalSensorPin = 0; // Change
+
+    // Positive is intaking
+    public static final boolean kInvertMotor = false;
+    public static final boolean kSensorInverted = true;
+    
+    public static final double kIndexIntakeSpeed = .8;
   }
 }

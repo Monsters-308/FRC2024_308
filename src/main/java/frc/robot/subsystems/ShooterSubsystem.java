@@ -7,7 +7,6 @@ import com.revrobotics.CANSparkBase;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -18,17 +17,16 @@ public class ShooterSubsystem extends SubsystemBase {
   private final CANSparkMax m_topShooterMotor = new CANSparkMax(ShooterConstants.kTopShooterMotorCanID, MotorType.kBrushless);
   private final CANSparkMax m_bottomShooterMotor = new CANSparkMax(ShooterConstants.kBottomShooterMotorCanID, MotorType.kBrushless);
 
-  private final DigitalInput m_noteSensor = new DigitalInput(ShooterConstants.kDigitalSensorPin);
-
   private final ShuffleboardTab shooterTab = Shuffleboard.getTab("Shooter");
+
   private final RelativeEncoder shooterMotorEncoderTop;
   private final RelativeEncoder shooterMotorEncoderBottom;
+
   private final SparkPIDController shooterMotorTopPIDController;
   private final SparkPIDController shooterMotorBottomPIDController;
 
   /** Creates a new ShooterSubsystem. */
   public ShooterSubsystem() {
-
     m_topShooterMotor.restoreFactoryDefaults(); 
     m_bottomShooterMotor.restoreFactoryDefaults(); 
 
@@ -77,10 +75,8 @@ public class ShooterSubsystem extends SubsystemBase {
     m_bottomShooterMotor.burnFlash();
 
     // Add Values to shuffleboard
-    shooterTab.addBoolean("Game Piece", () -> gamePieceDetected());
     shooterTab.addDouble("Top Roller Speed", () -> getTopSpeed());
     shooterTab.addDouble("Bottom Roller Speed", () -> getBottomSpeed());
-
   }
 
   public void setTopShooterSpeed(double speed){
@@ -97,19 +93,6 @@ public class ShooterSubsystem extends SubsystemBase {
   public double getBottomSpeed(){
     return shooterMotorEncoderBottom.getVelocity();
   }
-
-  /**
-   * Returns whether or not there's a game piece in the intake.
-   * pancake pancake pancake pancake pancake pancake pancake pancake
-   * @return true if the sensor detects a game piece.
-   */
-  public boolean gamePieceDetected(){
-    if (ShooterConstants.kSensorInverted){
-      return !m_noteSensor.get();
-    }
-
-    return m_noteSensor.get();
-  }  
   
   @Override
   public void periodic() {

@@ -1,33 +1,34 @@
 package frc.robot.commands.vision;
 
+import java.util.function.DoubleSupplier;
+
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+//Import this so you can make this class a command
+import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants.FieldConstants;
+import frc.robot.Constants.HeadingConstants;
+import frc.robot.Constants.OIConstants;
+import frc.robot.Constants.ShooterPivotConstants;
+import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.ShooterPivotSubsystem;
 
 //Import subsystem(s) this command interacts with below
 
 import frc.robot.subsystems.VisionSubsystem;
 import frc.utils.OdometryUtils;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
-
-import java.util.function.DoubleSupplier;
-
-import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.Constants.FieldConstants;
-import frc.robot.Constants.HeadingConstants;
-import frc.robot.Constants.OIConstants;
-import frc.robot.Constants.VisionConstants;
-
-//Import this so you can make this class a command
-import edu.wpi.first.wpilibj2.command.Command;
+import frc.utils.ShooterUtils;
 
 public class AutoAim extends Command {
 
     //Import any instance variables that are passed into the file below here, such as the subsystem(s) your command interacts with.
     final VisionSubsystem m_visionSubsystem;
     final DriveSubsystem m_driveSubsystem;
+    final ShooterPivotSubsystem m_shooterPivotSubsystem;
     private final PIDController angleController = new PIDController(HeadingConstants.kHeadingP, 
                                                                   HeadingConstants.kHeadingI, 
                                                                   HeadingConstants.kHeadingD);
@@ -38,15 +39,16 @@ public class AutoAim extends Command {
     private final DoubleSupplier m_ySpeed;
 
     //Class Constructor
-    public AutoAim(VisionSubsystem visionSubsystem, DriveSubsystem driveSubsystem, DoubleSupplier xSpeed, DoubleSupplier ySpeed){
+    public AutoAim(VisionSubsystem visionSubsystem, DriveSubsystem driveSubsystem, ShooterPivotSubsystem shooterPivotSubsystem, DoubleSupplier xSpeed, DoubleSupplier ySpeed){
         m_driveSubsystem = driveSubsystem;
         m_visionSubsystem = visionSubsystem;
+        m_shooterPivotSubsystem = shooterPivotSubsystem;
         m_xSpeed = xSpeed;
         m_ySpeed = ySpeed;
         //If your command interacts with any subsystem(s), you should pass them into "addRequirements()"
         //This function makes it so your command will only run once these subsystem(s) are free from other commands.
         //This is really important as it will stop scenarios where two commands try to controll a motor at the same time.
-        addRequirements(m_visionSubsystem, m_driveSubsystem);
+        addRequirements(m_visionSubsystem, m_shooterPivotSubsystem);
     }
 
     /*This function is called once when the command is schedueled.
@@ -96,6 +98,8 @@ public class AutoAim extends Command {
         double speedAngleChange = 0;
         double maxDistanceShot = 20;
 
+        
+
         double rotation = angleController.calculate(angle); //speed needed to rotate robot to set point
 
         rotation = MathUtil.clamp(rotation, -HeadingConstants.kHeadingMaxOutput, HeadingConstants.kHeadingMaxOutput); // clamp value (speed limiter)
@@ -127,20 +131,11 @@ public class AutoAim extends Command {
         //double rotation = angleController.calculate(yCrosshairDistance);        
     }
     public void shooterPivotToSpeakerField(){
-        double xCrosshairDistance = m_visionSubsystem.getX();
-        double yCrosshairDistance = m_visionSubsystem.getY();
-        //Translation2d pos1 = m_driveSubsystem.getPose().getTranslation(); // Position of robot on field
-        Translation2d pos1 = new Translation2d(0, 0); //assuming the limelight has crosshair offset setup
-        Translation2d pos2 = new Translation2d(xCrosshairDistance, yCrosshairDistance); //speaker position 
+        //change second parameter to shooter util robot pos
+        double anglePivot = ShooterUtils.shooterAngleToFacePoint(m_driveSubsystem.getPose().getTranslation(), FieldConstants.kSpeakerPosition, FieldConstants.kSpeakerHeight);
 
-        Rotation2d angleToTarget = OdometryUtils.anglePoseToPose(pos1, pos2); // Angle to make robot face speacker
-
-
-        //here we need to calculate the angle required to make a shot
-
-
-        //pivotController.setSetpoint(0);
-        //double rotation = angleController.calculate(yCrosshairDistance);        
+        m_shooterPivotSubsystem.setPosition(anglePivot);
+  
     }
     /*This function is called once when the command ends.
      * A command ends either when you tell it to end with the "isFinished()" function below, or when it is interupted.

@@ -10,19 +10,21 @@ import frc.robot.Constants.IndexConstants;
 import frc.robot.Constants.ShooterPivotConstants; 
 import frc.robot.Constants.ShooterIndexConstants;
     
-public class intakeHumanPlayer extends Command {
+public class Intake extends Command {
+  private final IntakeSubsystem m_intakeSubsystem;  
   private final ShooterPivotSubsystem m_shooterPivotSubsystem; 
   private final ShooterIndexSubsystem m_shooterIndexSubsystem;
   private final IndexSubsystem m_hotdogRoller;
   //variables for motor speeds/velocities
 
 
-  public intakeHumanPlayer(ShooterPivotSubsystem shooterPivotSubsystem, ShooterIndexSubsystem shooterIndexSubsystem, 
+  public Intake(IntakeSubsystem intakeSubsystem, ShooterPivotSubsystem shooterPivotSubsystem, ShooterIndexSubsystem shooterIndexSubsystem, 
                            IndexSubsystem indexSubsystem) {
+    m_intakeSubsystem = intakeSubsystem; 
     m_shooterPivotSubsystem = shooterPivotSubsystem; 
     m_hotdogRoller = indexSubsystem;
     m_shooterIndexSubsystem = shooterIndexSubsystem;
-    addRequirements(shooterPivotSubsystem, indexSubsystem, shooterIndexSubsystem);
+    addRequirements(intakeSubsystem, shooterPivotSubsystem, indexSubsystem, shooterIndexSubsystem);
   }
 
   // Called when the command is initially scheduled.
@@ -33,6 +35,8 @@ public class intakeHumanPlayer extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+  
+    m_intakeSubsystem.setSpeed(IntakeConstants.kIntakeSpeed);
   
     if (m_shooterPivotSubsystem.getPosition() == ShooterPivotConstants.kshooterPivotDownPosition){
       m_hotdogRoller.setSpeed(IndexConstants.kIndexIntakeSpeed);
@@ -50,6 +54,7 @@ public class intakeHumanPlayer extends Command {
   public void end(boolean interrupted) {
     m_hotdogRoller.setSpeed(0);
     m_shooterIndexSubsystem.setSpeed(0);
+    m_intakeSubsystem.setSpeed(0);
   }
 
   // Returns true when the command should end.

@@ -1,6 +1,8 @@
 package frc.utils;
 
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.math.util.Units;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.Constants.ShooterPivotConstants;
 
@@ -54,12 +56,35 @@ public class ShooterUtils {
         return Math.hypot(point.getY() - ShooterPivotConstants.kPivotHeightInches, point.getX());
     }
 
-    public static double shooterAngleToFacePoint(Translation2d pivotPosition, Translation2d goalPosition){
-        // TODO: implement this function
-        double pivotAngle = pivotAngleToFacePoint(goalPosition);
-        double pivotDistance = pivotDistanceToPoint(goalPosition);
+    /**
+     * Returns the angle (in radians) needed to make shooter face a certain point in space.
+     * @param robotPosition The position of the robot on the field in meters.
+     * @param goalPosition The position of the target on the field in meters.
+     * @param goalHeight The height of the target in inches.
+     * @return The angle in radians.
+     */
+    public static double shooterAngleToFacePoint(Translation2d robotPosition, Translation2d goalPosition, double goalHeight){
 
-        return 0;
+        // The horizontal distance in inches between the center of the robot and the target
+        double robotDistance = Units.metersToInches( OdometryUtils.getDistacnePosToPos(robotPosition, goalPosition)); // (Birds-eye view)
+        
+        //turns into distacne between pivot and target
+        //Y axis now represents height (horizontal view)
+        //returning the X and Y distacnes as a translation2d object
+        Translation2d goalRelativeToPivot = new Translation2d(
+            robotDistance-ShooterPivotConstants.kPivotCenterOffsetInches, goalHeight
+        );
+
+        // Calculates angle between pivot and goal (horizontal view)
+        double pivotAngle = pivotAngleToFacePoint(goalRelativeToPivot);
+
+        // Calculate hypotenuse between pivot and goal (horizontal view)
+        double pivotDistance = pivotDistanceToPoint(goalRelativeToPivot);
+
+        // Epic math to adjust angle (horizontal view)
+        double adjustmentAngle = Math.asin(pivotDistance / ShooterPivotConstants.kPivotHeightInches);
+
+        return pivotAngle + adjustmentAngle;
     }
     
 }

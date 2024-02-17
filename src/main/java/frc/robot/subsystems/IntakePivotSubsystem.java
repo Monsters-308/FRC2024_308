@@ -15,6 +15,7 @@ public class IntakePivotSubsystem extends SubsystemBase {
   private boolean m_intakeState = false;
   
   private final CANSparkMax m_motor = new CANSparkMax(IntakePivotConstants.kMotorCanID, MotorType.kBrushed);
+  private final CANSparkMax m_otherMotor = new CANSparkMax(IntakePivotConstants.kMotorCanID+1, MotorType.kBrushed);
   private final DigitalInput m_upperLimit = new DigitalInput(IntakePivotConstants.kUpperLimitPort);
   private final DigitalInput m_lowerLimit = new DigitalInput(IntakePivotConstants.kLowerLimitPort);
 
