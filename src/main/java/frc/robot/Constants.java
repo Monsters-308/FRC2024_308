@@ -276,6 +276,9 @@ public final class Constants {
     public static final IdleMode kTopShooterMotor = IdleMode.kCoast;
     public static final IdleMode kBottomShooterMotor = IdleMode.kCoast;
 
+    public static final boolean kInvertTopMotor = true;
+    public static final boolean kInvertBottomMotor = false;
+
     public static final int kShooterMotorCurrentLimit = 35; // amps
 
     // Calculations required for driving motor conversion factors and feed forward
@@ -299,13 +302,6 @@ public final class Constants {
     public static final double kShooterFF = 1 / kDriveWheelFreeSpeedRps; 
     public static final double kShooterMinOutput = -1;
     public static final double kShooterMaxOutput = 1;
-
-    public static final int kDigitalSensorPin = 10;
-    
-    public static final boolean kSensorInverted = true; 
-
-    // Conveyer Belt constants 
-    public static final double belt_speed = .01;
     
     //                ************* Super important constants for math **************
 
@@ -359,10 +355,10 @@ public final class Constants {
     public static final int kMotorCanID = 10;
     public static final int kMotorCurrentLimit = 30; // Change
 
-    public static final int kDigitalSensorPin = 0; // Change
+    public static final int kDigitalSensorPin = 9; 
 
     // Positive is intaking
-    public static final boolean kInvertMotor = false;
+    public static final boolean kInvertMotor = true;
     public static final boolean kSensorInverted = true;
     
     public static final double kIndexIntakeSpeed = .8;

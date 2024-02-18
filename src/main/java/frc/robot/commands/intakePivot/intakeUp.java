@@ -1,10 +1,7 @@
 package frc.robot.commands.intakePivot;
 
-import frc.robot.subsystems.IndexSubsystem;
 import frc.robot.subsystems.IntakePivotSubsystem;
-import frc.robot.subsystems.ShooterIndexSubsystem;
 import edu.wpi.first.wpilibj2.command.Command; 
-import frc.robot.Constants.ShooterPivotConstants; 
     
 public class intakeUp extends Command {
   private final IntakePivotSubsystem m_intakePivotSubsystem;

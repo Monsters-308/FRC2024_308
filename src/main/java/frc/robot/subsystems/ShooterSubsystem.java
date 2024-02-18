@@ -70,9 +70,14 @@ public class ShooterSubsystem extends SubsystemBase {
     m_topShooterMotor.setIdleMode(IdleMode.kCoast); 
     m_bottomShooterMotor.setIdleMode(IdleMode.kCoast);
 
+    // Invert motors
+    m_topShooterMotor.setInverted(ShooterConstants.kInvertTopMotor);
+    m_bottomShooterMotor.setInverted(ShooterConstants.kInvertBottomMotor);
+
     // Save the motor controller's configuration
     m_topShooterMotor.burnFlash(); 
     m_bottomShooterMotor.burnFlash();
+
 
     // Add Values to shuffleboard
     shooterTab.addDouble("Top Roller Speed", () -> getTopSpeed());
@@ -80,10 +85,12 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public void setTopShooterSpeed(double speed){
-    shooterMotorTopPIDController.setReference(speed, CANSparkBase.ControlType.kVelocity);
+    //shooterMotorTopPIDController.setReference(speed, CANSparkBase.ControlType.kVelocity);
+    m_topShooterMotor.set(0.7);
   } 
   public void setBottomShooterSpeed(double speed){
     shooterMotorBottomPIDController.setReference(speed, CANSparkBase.ControlType.kVelocity);
+    m_bottomShooterMotor.set(0.7);
   }
 
   public double getTopSpeed(){

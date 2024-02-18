@@ -1,7 +1,6 @@
 package frc.utils;
 
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.Constants.ShooterPivotConstants;

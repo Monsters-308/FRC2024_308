@@ -6,13 +6,17 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.subsystems.ShooterIndexSubsystem;
 
-class launchNote extends SequentialCommandGroup {
+class LaunchNote extends SequentialCommandGroup {
 
-    public launchNote(ShooterIndexSubsystem shooterIndexSubsystem){
+    public LaunchNote(ShooterIndexSubsystem shooterIndexSubsystem){
         addCommands(
-            new InstantCommand(() -> shooterIndexSubsystem.setSpeed(1), shooterIndexSubsystem),
+            // Set conveyor to max speed
+            new InstantCommand(() -> shooterIndexSubsystem.setSpeed(1), shooterIndexSubsystem), 
+            // Wait until note has left shooter. Use a timeout in case note is stuck or sensor is broken
+            new WaitUntilCommand(() -> shooterIndexSubsystem.gamePieceDetected()).withTimeout(1), 
+            // Wait a little longer just to make sure the note has fully left the shooter
             new WaitCommand(0.5),
-            new WaitUntilCommand(() -> shooterIndexSubsystem.gamePieceDetected()).withTimeout(1),
+            // Stop conveyor
             new InstantCommand(() -> shooterIndexSubsystem.setSpeed(0), shooterIndexSubsystem)
         );
     }

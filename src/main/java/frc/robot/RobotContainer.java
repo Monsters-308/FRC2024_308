@@ -16,19 +16,21 @@ import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import frc.robot.Constants.OIConstants;
-import frc.robot.commands.shooter.shoot;
 import frc.robot.commands.auton.TemplateAuton;
 import frc.robot.commands.drive.RobotGotoAngle;
+import frc.robot.commands.shooter.shoot;
 import frc.robot.commands.vision.AutoAim;
 import frc.robot.commands.vision.DefaultLimelightPipeline;
 import frc.robot.commands.vision.UpdateOdometry;
-import frc.robot.subsystems.DriveSubsystem; 
+import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem; 
 import frc.robot.subsystems.ShooterPivotSubsystem; 
 import frc.robot.subsystems.ShooterIndexSubsystem; 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.subsystems.VisionSubsystem;
 
@@ -44,9 +46,10 @@ public class RobotContainer {
   // The robot's subsystems
   private final DriveSubsystem m_robotDrive = new DriveSubsystem();
   private final VisionSubsystem m_visionSubsystem = new VisionSubsystem(); 
-  // private final ShooterSubsystem m_shooterSubsystem = new ShooterSubsystem(); 
+  private final ShooterSubsystem m_shooterSubsystem = new ShooterSubsystem(); 
   // private final ShooterPivotSubsystem m_shooterPivotSubsystem = new ShooterPivotSubsystem();
-  // private final ShooterIndexSubsystem m_shooterIndexSubsystem = new ShooterIndexSubsystem();
+  private final ShooterIndexSubsystem m_shooterIndexSubsystem = new ShooterIndexSubsystem();
+  private final IntakeSubsystem m_intakeSubsystem = new IntakeSubsystem();
 
 
   // The driver's controller
@@ -77,6 +80,7 @@ public class RobotContainer {
                 -MathUtil.applyDeadband(m_driverController.getRightX(), OIConstants.kDriveDeadband),
                 true, true),
             m_robotDrive));
+        // Joystick equivalent:
         // new RunCommand(
         //     () -> m_robotDrive.drive(
         //         -MathUtil.applyDeadband(m_driverController.getY(), OIConstants.kDriveDeadband),
@@ -134,7 +138,8 @@ public class RobotContainer {
             () -> m_robotDrive.zeroHeading(),
             m_robotDrive));
     
-    //Y button: auto aim
+    // Y button: auto aim
+    // This is commented out until the Shooter pivot subsystem works
     // new JoystickButton(m_driverController, Button.kY.value)
     //     .toggleOnTrue(
     //         new AutoAim(
@@ -155,6 +160,8 @@ public class RobotContainer {
               () -> m_driverController.getLeftX()
             )
         );
+    
+    // Joystick equivalent:
     // new JoystickButton(m_driverController, Button.kA.value)
     //     .toggleOnTrue(
     //         new RobotGotoAngle(
@@ -165,16 +172,41 @@ public class RobotContainer {
     //         )
     //     );
     
-    //B button: sets gyro to 90 degrees
+    // B button: sets gyro to 90 degrees
     new JoystickButton(m_driverController, Button.kB.value)
         .onTrue(new InstantCommand(
             () -> m_robotDrive.setHeading(90),
             m_robotDrive));
 
-  //   new JoystickButton(m_coDriverController, Button.kright)
-  //         .onTrue(new shoot(
-  //             () -> m_shooterSubsystem, m_shooterPivotSubsystem, m_shooterIndexSubsystem, .5,
-  //             .5));
+    // Button for testing shooter:
+    // new JoystickButton(m_driverController, Button.kB.value)
+    //     .onTrue(new SequentialCommandGroup(
+    //       new InstantCommand(
+    //         () -> m_shooterSubsystem.setTopShooterSpeed(2)
+    //         ),
+    //       new InstantCommand(
+    //           () -> m_shooterSubsystem.setBottomShooterSpeed(2)
+    //           )
+    //         )
+    //       );
+
+    // Button for testing shooter index:
+    // new JoystickButton(m_driverController, Button.kX.value)
+    //   .onTrue(
+    //     new InstantCommand(
+    //       () -> m_shooterIndexSubsystem.setSpeed(1)
+    //     )
+    //   )
+    //   .onFalse(
+    //     new InstantCommand(
+    //       () -> m_shooterIndexSubsystem.setSpeed(0)
+    //     )
+    //   );
+
+    // new JoystickButton(m_coDriverController, Button.kright)
+    //       .onTrue(new shoot(
+    //           () -> m_shooterSubsystem, m_shooterPivotSubsystem, m_shooterIndexSubsystem, .5,
+    //           .5));
   }
 
   public void resetPose(){
