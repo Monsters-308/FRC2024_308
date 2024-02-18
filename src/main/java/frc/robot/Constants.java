@@ -216,16 +216,19 @@ public final class Constants {
   }
 
   public static final class IntakePivotConstants {
-    public static final int kMotorCanID = 15; //set
+    public static final int kMotorCanID = 15; 
     public static final int KOtherMotorCanID = 13; 
 
-    public static final int kMotorSmartCurrentLimit = 30;
+    public static final int kMotorSmartCurrentLimit = 30; // Change
 
-    public static final boolean kInvertMotor = false;
+    // This will invert both motors at the same time
+    public static final boolean kInvertMotors = false;
 
-
-    public static final int kUpperLimitPort = 0;
-    public static final int kLowerLimitPort = 0;
+    public static final int kUpperLimitPort = 0; // Change
+    public static final int kLowerLimitPort = 0; // Change
+    
+    public static final double kIntakeDownSpeed = 0.5;
+    public static final double kIntakeUpSpeed = -0.5;
   }
 
   public static final class HangingConstants {
