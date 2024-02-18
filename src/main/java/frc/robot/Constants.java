@@ -267,11 +267,9 @@ public final class Constants {
   }
 
   public static final class ShooterConstants {
-
-    public static final double kShooterEncoderVelocityFactor = (2 * Math.PI); // radians //TODO: this is assuming that the native unit for the encoder is revolutions. Double check
         
-    public static final int kTopShooterMotorCanID = 16; // Change
-    public static final int kBottomShooterMotorCanID = 17; // Change
+    public static final int kTopShooterMotorCanID = 16;
+    public static final int kBottomShooterMotorCanID = 17;
     
     public static final IdleMode kTopShooterMotor = IdleMode.kCoast;
     public static final IdleMode kBottomShooterMotor = IdleMode.kCoast;
@@ -286,7 +284,7 @@ public final class Constants {
     public static final double kWheelDiameterMeters = Units.inchesToMeters(4);
     public static final double kWheelCircumferenceMeters = kWheelDiameterMeters * Math.PI;
 
-    // The L1 MK4 and MK4i modules have a gear ratio of 8.14:1 on the drive wheels.
+    // Gear ratio of shooting motors
     public static final double kDrivingMotorReduction = 1;
     public static final double kDriveWheelFreeSpeedRps = (kDrivingMotorFreeSpeedRps * kWheelCircumferenceMeters)
         / kDrivingMotorReduction;
