@@ -3,12 +3,12 @@ package frc.robot.commands.intakePivot;
 import frc.robot.subsystems.IntakePivotSubsystem;
 import edu.wpi.first.wpilibj2.command.Command; 
     
-public class intakeUp extends Command {
+public class IntakeUp extends Command {
   private final IntakePivotSubsystem m_intakePivotSubsystem;
   //variables for motor speeds/velocities
 
 
-  public intakeUp(IntakePivotSubsystem intakePivotSubsystem) {
+  public IntakeUp(IntakePivotSubsystem intakePivotSubsystem) {
     m_intakePivotSubsystem = intakePivotSubsystem;
     addRequirements(intakePivotSubsystem);
   }

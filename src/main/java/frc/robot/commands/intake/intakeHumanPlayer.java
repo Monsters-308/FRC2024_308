@@ -8,14 +8,14 @@ import frc.robot.Constants.IndexConstants;
 import frc.robot.Constants.ShooterPivotConstants; 
 import frc.robot.Constants.ShooterIndexConstants;
     
-public class intakeHumanPlayer extends Command {
+public class IntakeHumanPlayer extends Command {
   private final ShooterPivotSubsystem m_shooterPivotSubsystem; 
   private final ShooterIndexSubsystem m_shooterIndexSubsystem;
   private final IndexSubsystem m_hotdogRoller;
   //variables for motor speeds/velocities
 
 
-  public intakeHumanPlayer(ShooterPivotSubsystem shooterPivotSubsystem, ShooterIndexSubsystem shooterIndexSubsystem, 
+  public IntakeHumanPlayer(ShooterPivotSubsystem shooterPivotSubsystem, ShooterIndexSubsystem shooterIndexSubsystem, 
                            IndexSubsystem indexSubsystem) {
     m_shooterPivotSubsystem = shooterPivotSubsystem; 
     m_hotdogRoller = indexSubsystem;

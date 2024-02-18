@@ -44,7 +44,7 @@ import java.util.Map;
  */
 public class RobotContainer {
   // The robot's subsystems
-  private final DriveSubsystem m_robotDrive = new DriveSubsystem();
+  private final DriveSubsystem m_driveSubsystem = new DriveSubsystem();
   private final VisionSubsystem m_visionSubsystem = new VisionSubsystem(); 
   private final ShooterSubsystem m_shooterSubsystem = new ShooterSubsystem(); 
   // private final ShooterPivotSubsystem m_shooterPivotSubsystem = new ShooterPivotSubsystem();
@@ -70,16 +70,16 @@ public class RobotContainer {
     m_visionSubsystem.setDefaultCommand(new DefaultLimelightPipeline(m_visionSubsystem));
 
     // Configure default commands
-    m_robotDrive.setDefaultCommand(
+    m_driveSubsystem.setDefaultCommand(
         // The left stick controls translation of the robot.
         // Turning is controlled by the X axis of the right stick.
         new RunCommand(
-            () -> m_robotDrive.drive(
+            () -> m_driveSubsystem.drive(
                 -MathUtil.applyDeadband(m_driverController.getLeftY(), OIConstants.kDriveDeadband),
                 -MathUtil.applyDeadband(m_driverController.getLeftX(), OIConstants.kDriveDeadband),
                 -MathUtil.applyDeadband(m_driverController.getRightX(), OIConstants.kDriveDeadband),
                 true, true),
-            m_robotDrive));
+            m_driveSubsystem));
         // Joystick equivalent:
         // new RunCommand(
         //     () -> m_robotDrive.drive(
@@ -101,7 +101,7 @@ public class RobotContainer {
     // );
 
     //Adding options to the sendable chooser
-    m_autonChooser.setDefaultOption("Template Auton", new TemplateAuton(m_robotDrive));
+    m_autonChooser.setDefaultOption("Template Auton", new TemplateAuton(m_driveSubsystem));
     m_autonChooser.addOption("Path Planner", new PathPlannerAuto("Move One Meter"));
     m_autonChooser.addOption("Path Planner", new PathPlannerAuto("Two Meter Spin"));
 
@@ -112,7 +112,7 @@ public class RobotContainer {
     // DEBUG: shuffleboard widget for resetting pose. For now I'm using a default pose of 0, 0 and a rotation of 0
     Shuffleboard.getTab("Swerve").add("reset pose", new InstantCommand(this::resetPose)).withSize(2, 1);
 
-    Shuffleboard.getTab("Vision").add("update odometry", new UpdateOdometry(m_robotDrive, m_visionSubsystem));
+    Shuffleboard.getTab("Vision").add("update odometry", new UpdateOdometry(m_driveSubsystem, m_visionSubsystem));
   }
 
   /**
@@ -129,14 +129,14 @@ public class RobotContainer {
     //Right bumper: puts drive into x mode
     new JoystickButton(m_driverController, Button.kRightBumper.value)
         .whileTrue(new RunCommand(
-            () -> m_robotDrive.setX(),
-            m_robotDrive));
+            () -> m_driveSubsystem.setX(),
+            m_driveSubsystem));
     
     //Left bumper: sets gyro to 0 degrees
     new JoystickButton(m_driverController, Button.kLeftBumper.value)
         .onTrue(new InstantCommand(
-            () -> m_robotDrive.zeroHeading(),
-            m_robotDrive));
+            () -> m_driveSubsystem.zeroHeading(),
+            m_driveSubsystem));
     
     // Y button: auto aim
     // This is commented out until the Shooter pivot subsystem works
@@ -154,7 +154,7 @@ public class RobotContainer {
     new JoystickButton(m_driverController, Button.kA.value)
         .toggleOnTrue(
             new RobotGotoAngle(
-              m_robotDrive,
+              m_driveSubsystem,
               0,
               () -> m_driverController.getLeftY(),
               () -> m_driverController.getLeftX()
@@ -175,8 +175,8 @@ public class RobotContainer {
     // B button: sets gyro to 90 degrees
     new JoystickButton(m_driverController, Button.kB.value)
         .onTrue(new InstantCommand(
-            () -> m_robotDrive.setHeading(90),
-            m_robotDrive));
+            () -> m_driveSubsystem.setHeading(90),
+            m_driveSubsystem));
 
     // Button for testing shooter:
     // new JoystickButton(m_driverController, Button.kB.value)
@@ -210,7 +210,7 @@ public class RobotContainer {
   }
 
   public void resetPose(){
-    m_robotDrive.resetOdometry(
+    m_driveSubsystem.resetOdometry(
         new Pose2d(0, 0, new Rotation2d(0))
     );
   }
