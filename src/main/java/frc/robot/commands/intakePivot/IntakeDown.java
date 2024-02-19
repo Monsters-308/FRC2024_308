@@ -5,13 +5,13 @@ import frc.robot.subsystems.ShooterPivotSubsystem;
 import edu.wpi.first.wpilibj2.command.Command; 
 import frc.robot.Constants.ShooterPivotConstants; 
     
-public class intakeDown extends Command {
+public class IntakeDown extends Command {
   private final ShooterPivotSubsystem m_shooterPivotSubsystem; 
   private final IntakePivotSubsystem m_intakePivotSubsystem;
   //variables for motor speeds/velocities
 
 
-  public intakeDown(ShooterPivotSubsystem shooterPivotSubsystem, IntakePivotSubsystem intakePivotSubsystem) {
+  public IntakeDown(ShooterPivotSubsystem shooterPivotSubsystem, IntakePivotSubsystem intakePivotSubsystem) {
     m_shooterPivotSubsystem = shooterPivotSubsystem; 
     m_intakePivotSubsystem = intakePivotSubsystem;
     addRequirements(shooterPivotSubsystem, intakePivotSubsystem);

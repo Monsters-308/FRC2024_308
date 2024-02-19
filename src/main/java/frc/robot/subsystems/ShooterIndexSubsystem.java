@@ -4,6 +4,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkBase.IdleMode;
 
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ShooterIndexConstants;
 
@@ -27,6 +28,8 @@ public class ShooterIndexSubsystem extends SubsystemBase {
         m_conveyorMotor.setIdleMode(IdleMode.kBrake);
 
         m_conveyorMotor.burnFlash();
+
+        Shuffleboard.getTab("Shooter").addBoolean("Game Piece", () -> gamePieceDetected());
     }
 
     /**

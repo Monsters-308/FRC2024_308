@@ -40,12 +40,10 @@ public class ShooterSubsystem extends SubsystemBase {
     shooterMotorTopPIDController.setFeedbackDevice(shooterMotorEncoderTop);
     shooterMotorBottomPIDController.setFeedbackDevice(shooterMotorEncoderBottom);
 
-    // Apply position and velocity conversion factors for the driving encoder. The
-    // native units for position and velocity are rotations and RPM, respectively,
-    // but we want meters and meters per second to use with WPILib's swerve APIs.
-    //get the actual rpm of the spin motors, or get the estimated linear speed of the rollers like in the drive subystem
-    shooterMotorEncoderTop.setVelocityConversionFactor(ShooterConstants.kShooterEncoderVelocityFactor);
-    shooterMotorEncoderBottom.setVelocityConversionFactor(ShooterConstants.kShooterEncoderVelocityFactor);
+    // Converts the default unit of RPM to meters per second. 
+    // Making this a linear velocity allows us to estimate the velocity of the note as it exits the shooter (as opposed to making this a rotational velocity)
+    shooterMotorEncoderTop.setVelocityConversionFactor(ShooterConstants.kDrivingEncoderVelocityFactor);
+    shooterMotorEncoderBottom.setVelocityConversionFactor(ShooterConstants.kDrivingEncoderVelocityFactor);
 
     // Set the PID gains for the turning motor.
     shooterMotorTopPIDController.setP(ShooterConstants.kShooterP);
@@ -70,20 +68,38 @@ public class ShooterSubsystem extends SubsystemBase {
     m_topShooterMotor.setIdleMode(IdleMode.kCoast); 
     m_bottomShooterMotor.setIdleMode(IdleMode.kCoast);
 
+    // Invert motors
+    m_topShooterMotor.setInverted(ShooterConstants.kInvertTopMotor);
+    m_bottomShooterMotor.setInverted(ShooterConstants.kInvertBottomMotor);
+
     // Save the motor controller's configuration
     m_topShooterMotor.burnFlash(); 
     m_bottomShooterMotor.burnFlash();
+
 
     // Add Values to shuffleboard
     shooterTab.addDouble("Top Roller Speed", () -> getTopSpeed());
     shooterTab.addDouble("Bottom Roller Speed", () -> getBottomSpeed());
   }
 
+  
   public void setTopShooterSpeed(double speed){
     shooterMotorTopPIDController.setReference(speed, CANSparkBase.ControlType.kVelocity);
   } 
+
   public void setBottomShooterSpeed(double speed){
     shooterMotorBottomPIDController.setReference(speed, CANSparkBase.ControlType.kVelocity);
+  }
+
+  public void setBothSpeeds(double speed){
+    shooterMotorTopPIDController.setReference(speed, CANSparkBase.ControlType.kVelocity);
+    shooterMotorBottomPIDController.setReference(speed, CANSparkBase.ControlType.kVelocity);
+  }
+
+  //NOTE: this function is for testing purposes
+  public void setPercent(double speed){
+    m_topShooterMotor.set(speed);
+    m_bottomShooterMotor.set(speed);
   }
 
   public double getTopSpeed(){

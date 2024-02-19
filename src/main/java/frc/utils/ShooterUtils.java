@@ -1,7 +1,6 @@
 package frc.utils;
 
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.Constants.ShooterPivotConstants;
@@ -66,7 +65,7 @@ public class ShooterUtils {
     public static double shooterAngleToFacePoint(Translation2d robotPosition, Translation2d goalPosition, double goalHeight){
 
         // The horizontal distance in inches between the center of the robot and the target
-        double robotDistance = Units.metersToInches( OdometryUtils.getDistacnePosToPos(robotPosition, goalPosition)); // (Birds-eye view)
+        double robotDistance = Units.metersToInches(OdometryUtils.getDistacnePosToPos(robotPosition, goalPosition)); // (Birds-eye view)
         
         //turns into distacne between pivot and target
         //Y axis now represents height (horizontal view)
