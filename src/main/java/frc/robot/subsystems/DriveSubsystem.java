@@ -80,7 +80,8 @@ public class DriveSubsystem extends SubsystemBase {
   // Shuffleboard objects
   private final ShuffleboardTab swerveTab = Shuffleboard.getTab("Swerve");
   private final SimpleWidget AllianceWidget;
-  private final VisionSubsystem visionSubsystem = new VisionSubsystem();
+
+  private final VisionSubsystem visionSubsystem = new VisionSubsystem(); 
 
   // Odometry class for tracking robot pose
   private final SwerveDriveOdometry m_odometry = new SwerveDriveOdometry(
@@ -189,12 +190,8 @@ public class DriveSubsystem extends SubsystemBase {
 
     
     // Update field widget
-    if (FieldUtils.getAlliance() == Alliance.Red) {
-      m_field.setRobotPose(FieldUtils.redWidgetFlip(getPose()));
-    }
-    else {
-      m_field.setRobotPose(getPose());
-    }
+    m_field.setRobotPose(FieldUtils.redWidgetFlip(getPose()));
+  
 
     // Widget that shows color of alliance
     if (FieldUtils.getAlliance(true) == null) {
@@ -228,6 +225,7 @@ public class DriveSubsystem extends SubsystemBase {
   public Pose2d getPose() {
     return m_odometry.getPoseMeters();
   }
+
   public Pose2d getCurrentPose() {
     return m_poseEstimator.getEstimatedPosition();
   }
