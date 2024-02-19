@@ -130,6 +130,10 @@ public class AutoAim extends Command {
         //pivotController.setSetpoint(0);
         //double rotation = angleController.calculate(yCrosshairDistance);        
     }
+    /**
+     * Gets the proper pivot to angle the shooter at the speaker according the the m_driveSubsystem.getPose() and FieldConstants.kSpeakerPosition, FieldConstants.kSpeakerHeight
+     * @return The angle to pivot towards the speaker as a double
+     */
     public void shooterPivotToSpeakerField(){
         //change second parameter to shooter util robot pos
         double anglePivot = ShooterUtils.shooterAngleToFacePoint(m_driveSubsystem.getPose().getTranslation(), FieldConstants.kSpeakerPosition, FieldConstants.kSpeakerHeight);
