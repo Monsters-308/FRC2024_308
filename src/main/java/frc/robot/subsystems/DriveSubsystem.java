@@ -4,8 +4,14 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.estimator.DifferentialDrivePoseEstimator;
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
@@ -74,6 +80,7 @@ public class DriveSubsystem extends SubsystemBase {
   // Shuffleboard objects
   private final ShuffleboardTab swerveTab = Shuffleboard.getTab("Swerve");
   private final SimpleWidget AllianceWidget;
+  private final VisionSubsystem visionSubsystem = new VisionSubsystem();
 
   // Odometry class for tracking robot pose
   private final SwerveDriveOdometry m_odometry = new SwerveDriveOdometry(
@@ -86,6 +93,28 @@ public class DriveSubsystem extends SubsystemBase {
           m_rearRight.getPosition()
       }
   );
+
+  private final SwerveDrivePoseEstimator m_poseEstimator =
+  new SwerveDrivePoseEstimator(
+      DriveConstants.kDriveKinematics,
+      Rotation2d.fromDegrees(getGyroAngle()),
+      new SwerveModulePosition[] {
+          m_frontLeft.getPosition(),
+          m_frontRight.getPosition(),
+          m_rearLeft.getPosition(),
+          m_rearRight.getPosition()
+      },
+      new Pose2d(),
+      /**
+       * VecBuilder -> Standard deviations of model states. Increase these numbers to trust your model's state estimates less. This
+       * matrix is in the form [x, y, theta]ᵀ, with units in meters and radians, then meters.
+      */
+      VecBuilder.fill(0.1, 0.1, .1),
+      /**
+       * Standard deviations of the vision measurements. Increase these numbers to trust global measurements from vision
+       * less. This matrix is in the form [x, y, theta]ᵀ, with units in meters and radians.
+      */
+      VecBuilder.fill(1.5, 1.5, 1.5));
 
   /** Creates a new DriveSubsystem. */
   public DriveSubsystem() {
@@ -142,6 +171,22 @@ public class DriveSubsystem extends SubsystemBase {
             m_rearLeft.getPosition(),
             m_rearRight.getPosition()
         });
+
+    m_poseEstimator.update(
+      Rotation2d.fromDegrees(getGyroAngle()),
+       new SwerveModulePosition[] {
+          m_frontLeft.getPosition(),
+          m_frontRight.getPosition(),
+          m_rearLeft.getPosition(),
+          m_rearRight.getPosition()
+      });
+      
+    var timestamp = visionSubsystem.getLastTimeStamp() / 1e6 - visionSubsystem.getTimeStamp() / 1e3;
+
+    var pose = visionSubsystem.getRobotPosition();
+
+    m_poseEstimator.addVisionMeasurement(pose, timestamp);
+
     
     // Update field widget
     if (FieldUtils.getAlliance() == Alliance.Red) {
@@ -183,7 +228,11 @@ public class DriveSubsystem extends SubsystemBase {
   public Pose2d getPose() {
     return m_odometry.getPoseMeters();
   }
+  public Pose2d getCurrentPose() {
+    return m_poseEstimator.getEstimatedPosition();
+  }
 
+  
   /**
    * Resets the odometry to the specified pose. Note: this also resets the angle of the robot.
    *

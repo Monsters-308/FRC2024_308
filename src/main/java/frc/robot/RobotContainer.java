@@ -96,6 +96,7 @@ public class RobotContainer {
     //         )
     // );
 
+
     //Adding options to the sendable chooser
     m_autonChooser.setDefaultOption("Template Auton", new TemplateAuton(m_robotDrive));
     m_autonChooser.addOption("Path Planner", new PathPlannerAuto("Move One Meter"));
