@@ -19,6 +19,7 @@ import frc.robot.Constants.OIConstants;
 import frc.robot.commands.auton.TemplateAuton;
 import frc.robot.commands.drive.AutoAim;
 import frc.robot.commands.drive.RobotGotoAngle;
+import frc.robot.commands.drive.TurningMotorsTest;
 import frc.robot.commands.shooter.shoot;
 import frc.robot.commands.vision.DefaultLimelightPipeline;
 import frc.robot.commands.vision.UpdateOdometry;
@@ -26,9 +27,9 @@ import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.IntakePivotSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.LEDSubsystem;
-import frc.robot.subsystems.ShooterSubsystem; 
-import frc.robot.subsystems.ShooterPivotSubsystem; 
-import frc.robot.subsystems.ShooterIndexSubsystem; 
+import frc.robot.subsystems.ShooterSubsystem;
+import frc.robot.subsystems.ShooterPivotSubsystem;
+import frc.robot.subsystems.ShooterIndexSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -47,18 +48,19 @@ import java.util.Map;
  */
 public class RobotContainer {
   // The robot's subsystems
-  private final VisionSubsystem m_visionSubsystem = new VisionSubsystem(); 
-  private final DriveSubsystem m_driveSubsystem = new DriveSubsystem(() -> m_visionSubsystem.getRobotPosition(), () -> m_visionSubsystem.getTimeStampEstimator());
+  private final VisionSubsystem m_visionSubsystem = new VisionSubsystem();
+  private final DriveSubsystem m_driveSubsystem = new DriveSubsystem(() -> m_visionSubsystem.getRobotPosition(),
+      () -> m_visionSubsystem.getTimeStampEstimator());
   private final LEDSubsystem m_LEDSubsystem = new LEDSubsystem(() -> m_driveSubsystem.getRobotPitch());
-  private final ShooterSubsystem m_shooterSubsystem = new ShooterSubsystem(); 
+  private final ShooterSubsystem m_shooterSubsystem = new ShooterSubsystem();
   private final ShooterPivotSubsystem m_shooterPivotSubsystem = new ShooterPivotSubsystem();
   private final ShooterIndexSubsystem m_shooterIndexSubsystem = new ShooterIndexSubsystem();
   private final IntakeSubsystem m_intakeSubsystem = new IntakeSubsystem();
   private final IntakePivotSubsystem m_intakePivotSubsystem = new IntakePivotSubsystem();
 
-
   // The driver's controller
-  // final Joystick m_driverController = new Joystick(OIConstants.kDriverControllerPort);
+  // final Joystick m_driverController = new
+  // Joystick(OIConstants.kDriverControllerPort);
   final XboxController m_driverController = new XboxController(OIConstants.kDriverControllerPort);
   final XboxController m_coDriverController = new XboxController(OIConstants.kCoDriverControllerPort);
 
@@ -69,7 +71,7 @@ public class RobotContainer {
    */
   public RobotContainer() {
     // Configure the button bindings
-    
+
     configureButtonBindings();
 
     // Configure limelight default pipeline
@@ -86,41 +88,55 @@ public class RobotContainer {
                 -MathUtil.applyDeadband(m_driverController.getRightX(), OIConstants.kDriveDeadband),
                 true, true),
             m_driveSubsystem));
-        // Joystick equivalent:
-        // new RunCommand(
-        //     () -> m_robotDrive.drive(
-        //         -MathUtil.applyDeadband(m_driverController.getY(), OIConstants.kDriveDeadband),
-        //         -MathUtil.applyDeadband(m_driverController.getX(), OIConstants.kDriveDeadband),
-        //         -MathUtil.applyDeadband(m_driverController.getTwist(), OIConstants.kDriveDeadband),
-        //         true, true),
-        //     m_robotDrive));
-    
+    // Joystick equivalent:
+    // new RunCommand(
+    // () -> m_robotDrive.drive(
+    // -MathUtil.applyDeadband(m_driverController.getY(),
+    // OIConstants.kDriveDeadband),
+    // -MathUtil.applyDeadband(m_driverController.getX(),
+    // OIConstants.kDriveDeadband),
+    // -MathUtil.applyDeadband(m_driverController.getTwist(),
+    // OIConstants.kDriveDeadband),
+    // true, true),
+    // m_robotDrive));
+
     // "registerCommand" lets pathplanner identify our commands
     // Here's the autoalign as an example:
-    // NamedCommands.registerCommand("Auto Align", 
-    //     new AutoAim(
-    //       m_visionSubsystem,
-    //       m_robotDrive,
-    //       () -> m_driverController.getLeftY(),
-    //       () -> m_driverController.getLeftX()
-    //         )
+    // NamedCommands.registerCommand("Auto Align",
+    // new AutoAim(
+    // m_visionSubsystem,
+    // m_robotDrive,
+    // () -> m_driverController.getLeftY(),
+    // () -> m_driverController.getLeftX()
+    // )
     // );
 
-
-    //Adding options to the sendable chooser
+    // Adding options to the sendable chooser
     m_autonChooser.setDefaultOption("Template Auton", new TemplateAuton(m_driveSubsystem));
     m_autonChooser.addOption("Path Planner", new PathPlannerAuto("Move One Meter"));
     m_autonChooser.addOption("Path Planner", new PathPlannerAuto("Two Meter Spin"));
 
     // Put chooser on the dashboard
     Shuffleboard.getTab("Autonomous").add(m_autonChooser).withSize(2, 1)
-      .withProperties(Map.of("Title", "Auton Command"));
+        .withProperties(Map.of("Title", "Auton Command"));
 
-    // DEBUG: shuffleboard widget for resetting pose. For now I'm using a default pose of 0, 0 and a rotation of 0
+    // DEBUG: shuffleboard widget for resetting pose. For now I'm using a default
+    // pose of 0, 0 and a rotation of 0
     Shuffleboard.getTab("Swerve").add("reset pose", new InstantCommand(this::resetPose)).withSize(2, 1);
 
+    // DEBUG: shuffleboard widget for manually setting the odometry equal to the
+    // vision calculation
     Shuffleboard.getTab("Vision").add("update odometry", new UpdateOdometry(m_driveSubsystem, m_visionSubsystem));
 
+    // DEBUG: widgets for testing swerve modules
+    Shuffleboard.getTab("Swerve").add("Module Drive Test", new RunCommand(
+        () -> m_driveSubsystem.drive(
+            0.1,
+            0,
+            0,
+            false, true),
+        m_driveSubsystem));
+    Shuffleboard.getTab("Swerve").add("Module Turn Test", new TurningMotorsTest(m_driveSubsystem));
 
   }
 
@@ -135,53 +151,51 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
 
-    //Right bumper: puts drive into x mode
+    // Right bumper: puts drive into x mode
     new JoystickButton(m_driverController, Button.kRightBumper.value)
         .whileTrue(new RunCommand(
             () -> m_driveSubsystem.setX(),
             m_driveSubsystem));
-    
-    //Left bumper: sets gyro to 0 degrees
+
+    // Left bumper: sets gyro to 0 degrees
     new JoystickButton(m_driverController, Button.kLeftBumper.value)
         .onTrue(new InstantCommand(
             () -> m_driveSubsystem.zeroHeading(),
             m_driveSubsystem));
-    
+
     // Y button: auto aim
     // This is commented out until the Shooter pivot subsystem works
     // new JoystickButton(m_driverController, Button.kY.value)
-    //     .toggleOnTrue(
-    //         new AutoAim(
-    //           m_visionSubsystem,
-    //            m_robotDrive,
-    //           () -> m_driverController.getLeftY(),
-    //           () -> m_driverController.getLeftX()
-    //         )
-    //     );
-    
-    //A button: makes robot face 0 degrees
+    // .toggleOnTrue(
+    // new AutoAim(
+    // m_visionSubsystem,
+    // m_robotDrive,
+    // () -> m_driverController.getLeftY(),
+    // () -> m_driverController.getLeftX()
+    // )
+    // );
+
+    // A button: makes robot face 0 degrees
     new JoystickButton(m_driverController, Button.kA.value)
         .toggleOnTrue(
             new RobotGotoAngle(
-              m_driveSubsystem,
-              0,
-              () -> m_driverController.getLeftY(),
-              () -> m_driverController.getLeftX(),
-              () -> m_driverController.getRightX()
-            )
-        );
-    
+                m_driveSubsystem,
+                0,
+                () -> m_driverController.getLeftY(),
+                () -> m_driverController.getLeftX(),
+                () -> m_driverController.getRightX()));
+
     // Joystick equivalent:
     // new JoystickButton(m_driverController, Button.kA.value)
-    //     .toggleOnTrue(
-    //         new RobotGotoAngle(
-    //           m_robotDrive,
-    //           0,
-    //           () -> m_driverController.getY(),
-    //           () -> m_driverController.getX()
-    //         )
-    //     );
-    
+    // .toggleOnTrue(
+    // new RobotGotoAngle(
+    // m_robotDrive,
+    // 0,
+    // () -> m_driverController.getY(),
+    // () -> m_driverController.getX()
+    // )
+    // );
+
     // B button: sets gyro to 90 degrees
     new JoystickButton(m_driverController, Button.kB.value)
         .onTrue(new InstantCommand(
@@ -191,82 +205,66 @@ public class RobotContainer {
     // Button for testing shooter:
     new JoystickButton(m_coDriverController, Button.kX.value)
         .onTrue(new InstantCommand(
-          () -> m_shooterSubsystem.setBothSpeeds(20), m_shooterSubsystem
-        )
-        )
+            () -> m_shooterSubsystem.setBothSpeeds(20), m_shooterSubsystem))
         .onFalse(
-          new InstantCommand(
-            () -> m_shooterSubsystem.setPercent(0), m_shooterSubsystem
-          )
-        );
+            new InstantCommand(
+                m_shooterSubsystem::stopRollers, m_shooterSubsystem));
 
     // Button for testing shooter index:
     new JoystickButton(m_coDriverController, Button.kY.value)
-      .onTrue(
-        new InstantCommand(
-          () -> m_shooterIndexSubsystem.setSpeed(1)
-        )
-      )
-      .onFalse(
-        new InstantCommand(
-          () -> m_shooterIndexSubsystem.setSpeed(0)
-        )
-      );
-      
+        .onTrue(
+            new InstantCommand(
+                () -> m_shooterIndexSubsystem.setSpeed(1)))
+        .onFalse(
+            new InstantCommand(
+                () -> m_shooterIndexSubsystem.setSpeed(0)));
 
-    // Use bumpers for pivot
+    // Use bumpers for intake pivot
     new JoystickButton(m_coDriverController, Button.kLeftBumper.value)
-      .onTrue(
-        new InstantCommand(() -> m_intakePivotSubsystem.setSpeed(-0.5))
-      )
-      .onFalse(
-        new InstantCommand(() -> m_intakePivotSubsystem.setSpeed(0))
-      );
-    
+        .onTrue(
+            new InstantCommand(() -> m_intakePivotSubsystem.setSpeed(-0.5)))
+        .onFalse(
+            new InstantCommand(() -> m_intakePivotSubsystem.setSpeed(0)));
+
     new JoystickButton(m_coDriverController, Button.kRightBumper.value)
-      .onTrue(
-        new InstantCommand(() -> m_intakePivotSubsystem.setSpeed(0.3))
-      )
-      .onFalse(
-        new InstantCommand(() -> m_intakePivotSubsystem.setSpeed(0))
-      );
+        .onTrue(
+            new InstantCommand(() -> m_intakePivotSubsystem.setSpeed(0.3)))
+        .onFalse(
+            new InstantCommand(() -> m_intakePivotSubsystem.setSpeed(0)));
 
-
+    // Dpad up: shooter pivot up
     new POVButton(m_coDriverController, 0)
-      .onTrue(
-        new InstantCommand(() -> m_shooterPivotSubsystem.setSpeed(1))
-      )
-      .onFalse(
-        new InstantCommand(() -> m_shooterPivotSubsystem.setSpeed(0))
-      );
+        .onTrue(
+            new InstantCommand(() -> m_shooterPivotSubsystem.setSpeed(1)))
+        .onFalse(
+            new InstantCommand(() -> m_shooterPivotSubsystem.setSpeed(0)));
 
-      new POVButton(m_coDriverController, 180)
-      .onTrue(
-        new InstantCommand(() -> m_shooterPivotSubsystem.setSpeed(-1))
-      )
-      .onFalse(
-        new InstantCommand(() -> m_shooterPivotSubsystem.setSpeed(0))
-      );
+    // Dpad down: shooter pivot down
+    new POVButton(m_coDriverController, 180)
+        .onTrue(
+            new InstantCommand(() -> m_shooterPivotSubsystem.setSpeed(-1)))
+        .onFalse(
+            new InstantCommand(() -> m_shooterPivotSubsystem.setSpeed(0)));
 
     // Indexer button
     // new JoystickButton(m_coDriverController, Button.kB.value)
-    //   .onTrue(
-    //     new InstantCommand(() -> m_intakePivotSubsystem.setSpeed(-0.2))
-    //   )
-    //   .onFalse(
-    //     new InstantCommand(() -> m_intakePivotSubsystem.setSpeed(0))
-    //   );
+    // .onTrue(
+    // new InstantCommand(() -> m_intakePivotSubsystem.setSpeed(-0.2))
+    // )
+    // .onFalse(
+    // new InstantCommand(() -> m_intakePivotSubsystem.setSpeed(0))
+    // );
 
     // new JoystickButton(m_coDriverController, Button.kright)
-    //       .onTrue(new shoot(
-    //           () -> m_shooterSubsystem, m_shooterPivotSubsystem, m_shooterIndexSubsystem, .5,
-    //           .5));
+    // .onTrue(new shoot(
+    // () -> m_shooterSubsystem, m_shooterPivotSubsystem, m_shooterIndexSubsystem,
+    // .5,
+    // .5));
   }
 
-  public void resetPose(){
+  public void resetPose() {
     m_driveSubsystem.resetOdometry(
-        new Pose2d(0, 0, new Rotation2d(0))
-    );
+        new Pose2d(0, 0, new Rotation2d(0)));
   }
 
   /**
