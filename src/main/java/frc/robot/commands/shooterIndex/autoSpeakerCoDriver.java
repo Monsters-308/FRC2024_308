@@ -9,13 +9,13 @@ import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.Constants.AutoConstants;
 
 
-class autoAmpCoDriver extends SequentialCommandGroup  {
+class autoSpeakerCoDriver extends SequentialCommandGroup  {
 
     /** Moves the robot in front of the amp  */
-    public autoAmpCoDriver(ShooterPivotSubsystem shooterPivotSubsystem, DriveSubsystem driveSubsystem, ShooterSubsystem shooterSubsystem){
+    public autoSpeakerCoDriver(ShooterPivotSubsystem shooterPivotSubsystem, DriveSubsystem driveSubsystem, ShooterSubsystem shooterSubsystem){
         addCommands(
             new ParallelCommandGroup(
-                new autoWheelRevAndPivot(shooterPivotSubsystem, driveSubsystem, shooterSubsystem, AutoConstants.kWheelSpeedAmp, AutoConstants.kAngleAmp)
+                new autoWheelRevAndPivot(shooterPivotSubsystem, driveSubsystem, shooterSubsystem, AutoConstants.kWheelSpeedSpeaker, AutoConstants.kAngleSpeaker)
             )
         );
     }

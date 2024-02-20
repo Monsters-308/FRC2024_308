@@ -25,6 +25,7 @@ import frc.robot.commands.vision.UpdateOdometry;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.IntakePivotSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.subsystems.ShooterSubsystem; 
 import frc.robot.subsystems.ShooterPivotSubsystem; 
 import frc.robot.subsystems.ShooterIndexSubsystem; 
@@ -48,6 +49,7 @@ public class RobotContainer {
   // The robot's subsystems
   private final VisionSubsystem m_visionSubsystem = new VisionSubsystem(); 
   private final DriveSubsystem m_driveSubsystem = new DriveSubsystem(() -> m_visionSubsystem.getRobotPosition(), () -> m_visionSubsystem.getTimeStampEstimator());
+  private final LEDSubsystem m_LEDSubsystem = new LEDSubsystem(() -> m_driveSubsystem.getRobotPitch());
   private final ShooterSubsystem m_shooterSubsystem = new ShooterSubsystem(); 
   private final ShooterPivotSubsystem m_shooterPivotSubsystem = new ShooterPivotSubsystem();
   private final ShooterIndexSubsystem m_shooterIndexSubsystem = new ShooterIndexSubsystem();
@@ -67,6 +69,7 @@ public class RobotContainer {
    */
   public RobotContainer() {
     // Configure the button bindings
+    
     configureButtonBindings();
 
     // Configure limelight default pipeline
@@ -117,6 +120,8 @@ public class RobotContainer {
     Shuffleboard.getTab("Swerve").add("reset pose", new InstantCommand(this::resetPose)).withSize(2, 1);
 
     Shuffleboard.getTab("Vision").add("update odometry", new UpdateOdometry(m_driveSubsystem, m_visionSubsystem));
+
+
   }
 
   /**
