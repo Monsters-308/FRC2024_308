@@ -37,10 +37,12 @@ public class VisionSubsystem extends SubsystemBase {
     //ty vertical offset from crosshair to target
     //ta = target area 0% to 100%
     
+    /** Sets the limelight to a specific pipeline using network tables. */
     public void setPipeline(int pipeline){
         limelightTable.getEntry("pipeline").setNumber(pipeline);
     }
 
+    /** Returns the limelight's current pipeline. Returns -1 if no pipeline entry exists. */
     public int getPipeline(){
         return ((Double)limelightTable.getEntry("pipeline").getNumber(-1)).intValue();
     }
@@ -77,11 +79,12 @@ public class VisionSubsystem extends SubsystemBase {
                     "botpose_wpiblue"
             ).getDoubleArray(new double[6]);
 
-            // Turn pose data into pose2d object
+            // Return the latency to calculate april tag data
             return (robotPosArrary[6]);
         }
         return 0;
     }
+
     public double getTimeStampEstimator(){
         // Check if the limelight is actually viewing an apriltag
         if((getPipeline() == VisionConstants.kAprilTagPipeline) && (getTargets() > 0)) {
@@ -128,7 +131,6 @@ public class VisionSubsystem extends SubsystemBase {
         }
         return null;
     }
-
 
     @Override
     public void periodic(){

@@ -80,20 +80,43 @@ public class ShooterSubsystem extends SubsystemBase {
     // Add Values to shuffleboard
     shooterTab.addDouble("Top Roller Speed", () -> getTopSpeed());
     shooterTab.addDouble("Bottom Roller Speed", () -> getBottomSpeed());
+
+    shooterTab.addDouble("Top Roller percent", () -> m_topShooterMotor.get());
+    shooterTab.addDouble("Bottom Roller percent", () -> m_bottomShooterMotor.get());
   }
 
-  
+  /**
+   * Set the top shooter roller to a specific speed using PID.
+   * @param speed The speed in meters per second.
+   */
   public void setTopShooterSpeed(double speed){
     shooterMotorTopPIDController.setReference(speed, CANSparkBase.ControlType.kVelocity);
   } 
 
+  /**
+   * Set the bottom shooter roller to a specific speed using PID.
+   * @param speed The speed in meters per second.
+   */
   public void setBottomShooterSpeed(double speed){
     shooterMotorBottomPIDController.setReference(speed, CANSparkBase.ControlType.kVelocity);
   }
 
+  /**
+   * Set both shooter rollers to a specific speed using PID.
+   * @param speed The speed in meters per second.
+   */
   public void setBothSpeeds(double speed){
     shooterMotorTopPIDController.setReference(speed, CANSparkBase.ControlType.kVelocity);
     shooterMotorBottomPIDController.setReference(speed, CANSparkBase.ControlType.kVelocity);
+  }
+
+  /** 
+   * Stops the shooter rollers.
+   * NOTE: unlike setBothSpeeds(0), this lets the wheels naturally wind down.
+   */
+  public void stopRollers(){
+    m_topShooterMotor.set(0);
+    m_bottomShooterMotor.set(0);
   }
 
   //NOTE: this function is for testing purposes
@@ -102,10 +125,12 @@ public class ShooterSubsystem extends SubsystemBase {
     m_bottomShooterMotor.set(speed);
   }
 
+  /** Returns the speed of the top shooter roller in meters per second. */
   public double getTopSpeed(){
     return shooterMotorEncoderTop.getVelocity();
   }
 
+  /** Returns the speed of the bottom shooter roller in meters per second. */
   public double getBottomSpeed(){
     return shooterMotorEncoderBottom.getVelocity();
   }

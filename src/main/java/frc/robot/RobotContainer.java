@@ -19,6 +19,7 @@ import frc.robot.Constants.OIConstants;
 import frc.robot.commands.auton.TemplateAuton;
 import frc.robot.commands.drive.AutoAim;
 import frc.robot.commands.drive.RobotGotoAngle;
+import frc.robot.commands.drive.TurningMotorsTest;
 import frc.robot.commands.shooter.shoot;
 import frc.robot.commands.vision.DefaultLimelightPipeline;
 import frc.robot.commands.vision.UpdateOdometry;
@@ -116,7 +117,19 @@ public class RobotContainer {
     // DEBUG: shuffleboard widget for resetting pose. For now I'm using a default pose of 0, 0 and a rotation of 0
     Shuffleboard.getTab("Swerve").add("reset pose", new InstantCommand(this::resetPose)).withSize(2, 1);
 
+    // DEBUG: shuffleboard widget for manually setting the odometry equal to the vision calculation
     Shuffleboard.getTab("Vision").add("update odometry", new UpdateOdometry(m_driveSubsystem, m_visionSubsystem));
+
+    // DEBUG: widgets for testing swerve modules
+    Shuffleboard.getTab("Swerve").add("Module Drive Test", new RunCommand(
+      () -> m_driveSubsystem.drive(
+                0.1,
+                0,
+                0,
+                false, true),
+            m_driveSubsystem));
+    Shuffleboard.getTab("Swerve").add("Module Turn Test", new TurningMotorsTest(m_driveSubsystem));
+
   }
 
   /**
@@ -191,7 +204,7 @@ public class RobotContainer {
         )
         .onFalse(
           new InstantCommand(
-            () -> m_shooterSubsystem.setPercent(0), m_shooterSubsystem
+            m_shooterSubsystem::stopRollers, m_shooterSubsystem
           )
         );
 
@@ -208,8 +221,7 @@ public class RobotContainer {
         )
       );
       
-
-    // Use bumpers for pivot
+    // Use bumpers for intake pivot
     new JoystickButton(m_coDriverController, Button.kLeftBumper.value)
       .onTrue(
         new InstantCommand(() -> m_intakePivotSubsystem.setSpeed(-0.5))
@@ -226,7 +238,7 @@ public class RobotContainer {
         new InstantCommand(() -> m_intakePivotSubsystem.setSpeed(0))
       );
 
-
+    // Dpad up: shooter pivot up
     new POVButton(m_coDriverController, 0)
       .onTrue(
         new InstantCommand(() -> m_shooterPivotSubsystem.setSpeed(1))
@@ -235,7 +247,8 @@ public class RobotContainer {
         new InstantCommand(() -> m_shooterPivotSubsystem.setSpeed(0))
       );
 
-      new POVButton(m_coDriverController, 180)
+    // Dpad down: shooter pivot down
+    new POVButton(m_coDriverController, 180)
       .onTrue(
         new InstantCommand(() -> m_shooterPivotSubsystem.setSpeed(-1))
       )
