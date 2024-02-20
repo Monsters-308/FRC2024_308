@@ -39,7 +39,7 @@ public class IntakePivotSubsystem extends SubsystemBase {
     m_followerMotor.setInverted(!IntakePivotConstants.kInvertMotors);
 
     // Have motors use the same can ID because it's technically slightly more efficient
-    m_followerMotor.follow(m_masterMotor);
+    m_followerMotor.follow(m_masterMotor, true);
 
     // Save the motor controller's configuration
     m_masterMotor.burnFlash();
@@ -74,7 +74,7 @@ public class IntakePivotSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    manageState();
+    //manageState();
   }
 
   /** I made a separate function for this so we can more easily comment it out during testing. */

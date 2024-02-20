@@ -27,17 +27,20 @@ public class RobotGotoAngle extends Command {
 
     private final DoubleSupplier m_xSpeed;
     private final DoubleSupplier m_ySpeed;
+    private final DoubleSupplier m_driverRotation;
 
     /** 
      * Uses PID to make the robot rotate to a certain direction while still giving the driver control over the translation of the robot.
+     * This command automatically ends when the driver tries to rotate the robot.
      */
-    public RobotGotoAngle(DriveSubsystem subsystem, double angle, DoubleSupplier xSpeed, DoubleSupplier ySpeed) {
-        m_driveSubsystem = subsystem;
+    public RobotGotoAngle(DriveSubsystem driveSubsystem, double angle, DoubleSupplier xSpeed, DoubleSupplier ySpeed, DoubleSupplier driverRotation) {
+        m_driveSubsystem = driveSubsystem;
 
         m_desiredAngle = angle;
 
         m_xSpeed = xSpeed;
         m_ySpeed = ySpeed;
+        m_driverRotation = driverRotation;
 
         pidController.enableContinuousInput(-180, 180);
 
@@ -80,7 +83,11 @@ public class RobotGotoAngle extends Command {
             true, false
         );
         
-        if(pidController.atSetpoint()){
+        // if(pidController.atSetpoint()){
+        //     m_complete = true;
+        // }
+
+        if (m_driverRotation.getAsDouble() != 0){
             m_complete = true;
         }
     }

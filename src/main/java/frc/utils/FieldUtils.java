@@ -73,6 +73,21 @@ public class FieldUtils {
     }
 
     /**
+     * Mirrors a pose2d object's Y value and angle to line up on the red side if the robot is on the red alliance.
+     * @param position A pose2d object for the blue side.
+     * @return The translation object mirrored for the red side.
+     */
+    public static Pose2d flipRed(Pose2d position){
+        if (isRedAlliance()){
+            return new Pose2d(
+                flipRed(position.getTranslation()),
+                flipRedAngle(position.getRotation())
+            );
+        }
+        return position;
+    }
+
+    /**
      * Flips a y coordinate so that it'll line up on the red side if the robot is on the red alliance.
      * @param yPosition A number used to represent the y coordinate of a position.
      * @return The y value flipped.

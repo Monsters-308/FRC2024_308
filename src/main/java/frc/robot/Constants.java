@@ -217,7 +217,7 @@ public final class Constants {
 
   public static final class IntakePivotConstants {
     public static final int kMotorCanID = 15; 
-    public static final int KOtherMotorCanID = 13; 
+    public static final int KOtherMotorCanID = 12; 
 
     public static final int kMotorSmartCurrentLimit = 30; // Change
 
@@ -225,7 +225,7 @@ public final class Constants {
     public static final boolean kInvertMotors = false;
 
     public static final int kUpperLimitPort = 0; // Change
-    public static final int kLowerLimitPort = 0; // Change
+    public static final int kLowerLimitPort = 1; // Change
     
     public static final double kIntakeDownSpeed = 0.5;
     public static final double kIntakeUpSpeed = -0.5;
@@ -297,9 +297,9 @@ public final class Constants {
     public static final double kDrivingEncoderVelocityFactor = ((kWheelDiameterMeters * Math.PI)
         / kDrivingMotorReduction) / 60.0; // meters per second
 
-    public static final double kShooterP = 0.04;
+    public static final double kShooterP = 0.035;
     public static final double kShooterI = 0;
-    public static final double kShooterD = 0;
+    public static final double kShooterD = 0.3;
     public static final double kShooterFF = 1 / kDriveWheelFreeSpeedRps; 
     public static final double kShooterMinOutput = -1;
     public static final double kShooterMaxOutput = 1;
@@ -320,7 +320,7 @@ public final class Constants {
   }
 
   public static final class ShooterPivotConstants {
-    public static final int kShooterPivotMotorCanID = 20; 
+    public static final int kShooterPivotMotorCanID = 10; 
 
     // Positive will be tilting the pivot upwards
     public static final boolean kTurningMotorInverted = false; // Change
@@ -331,6 +331,9 @@ public final class Constants {
 
     public static final double kTurningEncoderPositionPIDMinInput = 0; // radians
     public static final double kTurningEncoderPositionPIDMaxInput = kShooterEncoderVelocityFactor; // radians
+
+    // Just like with the swerve wheels, this allows us to offset the encoder by a specific amount
+    public static final double kAngleOffset = 0; // Change
 
     // Safety: let's set max and min angles for the shooter pivot so we don't accidentally rotate too far in one direction
     public static final double kPivotMinAngle = 0; // radians
@@ -353,7 +356,7 @@ public final class Constants {
   }
 
   public static final class ShooterIndexConstants {
-    public static final int kMotorCanID = 10;
+    public static final int kMotorCanID = 11;
     public static final int kMotorCurrentLimit = 30; // Change
 
     public static final int kDigitalSensorPin = 9; 

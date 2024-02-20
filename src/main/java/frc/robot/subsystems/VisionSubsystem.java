@@ -1,12 +1,8 @@
 package frc.robot.subsystems;
 
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.VisionConstants;
-import frc.robot.commands.vision.UpdateOdometry;
 import frc.utils.FieldUtils;
-import edu.wpi.first.math.VecBuilder;
-import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.networktables.NetworkTable;
@@ -24,7 +20,6 @@ public class VisionSubsystem extends SubsystemBase {
 
     // Field to visualize april tag detection
     private final Field2d m_field = new Field2d();
-    private boolean setOdometry = false; 
     private final ShuffleboardTab visionTab = Shuffleboard.getTab("Vision");
 
     public VisionSubsystem(){
@@ -57,10 +52,6 @@ public class VisionSubsystem extends SubsystemBase {
         return tx.getDouble(0.0);
     }
 
-    public double getTV(){
-        return tv.getDouble(0.0);
-    }
-
     /**
      * Returns the vertical offset from the crosshair to the target. Returns 0 if the target can't be found.
      */
@@ -88,6 +79,13 @@ public class VisionSubsystem extends SubsystemBase {
 
             // Turn pose data into pose2d object
             return (robotPosArrary[6]);
+        }
+        return 0;
+    }
+    public double getTimeStampEstimator(){
+        // Check if the limelight is actually viewing an apriltag
+        if((getPipeline() == VisionConstants.kAprilTagPipeline) && (getTargets() > 0)) {
+            return (getLastTimeStamp() / 1e6 - getTimeStamp() / 1e3);
         }
         return 0;
     }

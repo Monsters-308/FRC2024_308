@@ -1,27 +1,18 @@
 package frc.robot.commands.shooter;
 
 import frc.robot.subsystems.ShooterPivotSubsystem;
-import frc.robot.subsystems.ShooterSubsystem;
-import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.subsystems.ShooterIndexSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 
 public class AmpAlign extends Command {
   private final ShooterPivotSubsystem m_shooterPivotSubsystem;
-  private final ShooterSubsystem m_shooterSubsystem;
-  private final ShooterIndexSubsystem m_shooterIndexSubsystem;
-  private final DriveSubsystem m_driveSubsystem;
 
   // variables for motor speeds/velocities
 
-  public AmpAlign(ShooterSubsystem Subsystem, ShooterPivotSubsystem pivotSubsystem,
-      ShooterIndexSubsystem indexSubsystem, DriveSubsystem driveSubsystem) {
-    m_shooterSubsystem = Subsystem;
+  public AmpAlign(ShooterPivotSubsystem pivotSubsystem) {
     m_shooterPivotSubsystem = pivotSubsystem;
-    m_shooterIndexSubsystem = indexSubsystem;
-    m_driveSubsystem = driveSubsystem;
 
-    addRequirements(m_shooterSubsystem, m_shooterPivotSubsystem, m_shooterIndexSubsystem);
+
+    addRequirements(m_shooterPivotSubsystem);
   }
 
   // Called when the command is initially scheduled.

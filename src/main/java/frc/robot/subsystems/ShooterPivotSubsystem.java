@@ -59,7 +59,11 @@ public class ShooterPivotSubsystem extends SubsystemBase {
   public double getPosition() {
     // Apply chassis angular offset to the encoder position to get the position
     // relative to the chassis.
-    return m_shooterPivotMotorEncoder.getPosition();
+    return m_shooterPivotMotorEncoder.getPosition() + ShooterPivotConstants.kAngleOffset;
+  }
+
+  public void setSpeed(double speed){
+     m_shooterPivotMotor.set(speed);
   }
 
   /**
@@ -74,17 +78,17 @@ public class ShooterPivotSubsystem extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
 
-    if(Math.abs(getPosition()-m_desiredAngle) > ShooterPivotConstants.kAngleTolerance){
-      if(getPosition() > m_desiredAngle){
-        m_shooterPivotMotor.set(-1);
-      }
-      else if (getPosition() < m_desiredAngle){
-        m_shooterPivotMotor.set(1);
-      }
-    }
-    else {
-      m_shooterPivotMotor.set(0);
-    }
+    // if(Math.abs(getPosition()-m_desiredAngle) > ShooterPivotConstants.kAngleTolerance){
+    //   if(getPosition() > m_desiredAngle){
+    //     m_shooterPivotMotor.set(-1);
+    //   }
+    //   else if (getPosition() < m_desiredAngle){
+    //     m_shooterPivotMotor.set(1);
+    //   }
+    // }
+    // else {
+    //   m_shooterPivotMotor.set(0);
+    // }
     
   }
 

@@ -5,21 +5,19 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.math.VecBuilder;
-import edu.wpi.first.math.estimator.DifferentialDrivePoseEstimator;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.util.WPIUtilJNI;
 
 import java.util.Map;
+import java.util.function.DoubleSupplier;
+import java.util.function.Supplier;
 
 import com.kauailabs.navx.frc.AHRS;
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -81,22 +79,12 @@ public class DriveSubsystem extends SubsystemBase {
   private final ShuffleboardTab swerveTab = Shuffleboard.getTab("Swerve");
   private final SimpleWidget AllianceWidget;
 
-  private final VisionSubsystem visionSubsystem = new VisionSubsystem(); 
+  // Suppliers for pose estimation with vision data
+  private final Supplier<Pose2d> m_visionPose;
+  private final DoubleSupplier m_visionTimestamp;
 
-  // Odometry class for tracking robot pose
-  private final SwerveDriveOdometry m_odometry = new SwerveDriveOdometry(
-      DriveConstants.kDriveKinematics,
-      Rotation2d.fromDegrees(getGyroAngle()),
-      new SwerveModulePosition[] {
-          m_frontLeft.getPosition(),
-          m_frontRight.getPosition(),
-          m_rearLeft.getPosition(),
-          m_rearRight.getPosition()
-      }
-  );
-
-  private final SwerveDrivePoseEstimator m_poseEstimator =
-  new SwerveDrivePoseEstimator(
+  // Swerve pose estimator
+  private final SwerveDrivePoseEstimator m_odometry = new SwerveDrivePoseEstimator(
       DriveConstants.kDriveKinematics,
       Rotation2d.fromDegrees(getGyroAngle()),
       new SwerveModulePosition[] {
@@ -115,10 +103,15 @@ public class DriveSubsystem extends SubsystemBase {
        * Standard deviations of the vision measurements. Increase these numbers to trust global measurements from vision
        * less. This matrix is in the form [x, y, theta]ᵀ, with units in meters and radians.
       */
-      VecBuilder.fill(1.5, 1.5, 1.5));
+      VecBuilder.fill(1.5, 1.5, 1.5)
+  );
 
   /** Creates a new DriveSubsystem. */
-  public DriveSubsystem() {
+  public DriveSubsystem(Supplier<Pose2d> visionPosition, DoubleSupplier visionTimestamp) {
+    m_visionPose = visionPosition;
+    m_visionTimestamp = visionTimestamp;
+
+
     // NOTE: is this really necessary??
     m_gyro.enableLogging(true);
 
@@ -165,15 +158,6 @@ public class DriveSubsystem extends SubsystemBase {
   public void periodic() {
     // Update the odometry in the periodic block
     m_odometry.update(
-        Rotation2d.fromDegrees(getGyroAngle()),
-        new SwerveModulePosition[] {
-            m_frontLeft.getPosition(),
-            m_frontRight.getPosition(),
-            m_rearLeft.getPosition(),
-            m_rearRight.getPosition()
-        });
-
-    m_poseEstimator.update(
       Rotation2d.fromDegrees(getGyroAngle()),
        new SwerveModulePosition[] {
           m_frontLeft.getPosition(),
@@ -182,12 +166,14 @@ public class DriveSubsystem extends SubsystemBase {
           m_rearRight.getPosition()
       });
       
-    var timestamp = visionSubsystem.getLastTimeStamp() / 1e6 - visionSubsystem.getTimeStamp() / 1e3;
+    
+    double timestamp = m_visionTimestamp.getAsDouble();
 
-    var pose = visionSubsystem.getRobotPosition();
-
-    m_poseEstimator.addVisionMeasurement(pose, timestamp);
-
+    Pose2d pose = m_visionPose.get();
+    
+    if(pose != null){
+      m_odometry.addVisionMeasurement(pose, timestamp);
+    }
     
     // Update field widget
     m_field.setRobotPose(FieldUtils.redWidgetFlip(getPose()));
@@ -223,13 +209,8 @@ public class DriveSubsystem extends SubsystemBase {
    * @return The pose.
    */
   public Pose2d getPose() {
-    return m_odometry.getPoseMeters();
+    return m_odometry.getEstimatedPosition();
   }
-
-  public Pose2d getCurrentPose() {
-    return m_poseEstimator.getEstimatedPosition();
-  }
-
   
   /**
    * Resets the odometry to the specified pose. Note: this also resets the angle of the robot.
@@ -367,7 +348,7 @@ public class DriveSubsystem extends SubsystemBase {
    */
   public double getHeading() {
     return SwerveUtils.angleConstrain(
-      m_odometry.getPoseMeters().getRotation().getDegrees()
+      m_odometry.getEstimatedPosition().getRotation().getDegrees()
     );
   }
 
