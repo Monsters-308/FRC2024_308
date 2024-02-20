@@ -37,6 +37,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.subsystems.VisionSubsystem;
+import frc.utils.FieldUtils;
 
 import java.util.Map;
 
@@ -137,6 +138,33 @@ public class RobotContainer {
         m_driveSubsystem));
     Shuffleboard.getTab("Swerve").add("Module Turn Test", new TurningMotorsTest(m_driveSubsystem));
 
+    // FAILSAFE: widgets for manually setting robot position in front of notes
+    Shuffleboard.getTab("Autonomous").add("Set Amp Side",
+      new InstantCommand(() -> m_driveSubsystem.resetOdometry(FieldUtils.flipRed(
+        new Pose2d(
+          1.5, 
+          7, 
+          Rotation2d.fromDegrees(180))
+      )))
+    );
+
+    Shuffleboard.getTab("Autonomous").add("Set Middle",
+      new InstantCommand(() -> m_driveSubsystem.resetOdometry(FieldUtils.flipRed(
+        new Pose2d(
+          1.5, 
+          5.55, 
+          Rotation2d.fromDegrees(180))
+      )))
+    );
+
+    Shuffleboard.getTab("Autonomous").add("Set Source Side",
+      new InstantCommand(() -> m_driveSubsystem.resetOdometry(FieldUtils.flipRed(
+        new Pose2d(
+          1.5, 
+          4.1, 
+          Rotation2d.fromDegrees(180))
+      )))
+    );
   }
 
   /**
