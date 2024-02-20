@@ -17,7 +17,7 @@ public class ShooterPivotSubsystem extends SubsystemBase {
   private final AbsoluteEncoder m_shooterPivotMotorEncoder;
   private double m_desiredAngle = ShooterPivotConstants.kPivotMinAngle;
 
-  private final ShuffleboardTab pivotTab = Shuffleboard.getTab("Pivot");
+  private final ShuffleboardTab pivotTab = Shuffleboard.getTab("Shooter");
 
   /** Creates a new ShooterPivotSubsystem. */
   public ShooterPivotSubsystem() {

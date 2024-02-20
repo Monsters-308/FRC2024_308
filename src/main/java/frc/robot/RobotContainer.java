@@ -117,16 +117,15 @@ public class RobotContainer {
     m_autonChooser.addOption("Path Planner", new PathPlannerAuto("Two Meter Spin"));
 
     // Put chooser on the dashboard
-    Shuffleboard.getTab("Autonomous").add(m_autonChooser).withSize(2, 1)
-        .withProperties(Map.of("Title", "Auton Command"));
+    Shuffleboard.getTab("Autonomous").add("Select Auton", m_autonChooser).withSize(2, 1);
 
     // DEBUG: shuffleboard widget for resetting pose. For now I'm using a default
     // pose of 0, 0 and a rotation of 0
-    Shuffleboard.getTab("Swerve").add("reset pose", new InstantCommand(this::resetPose)).withSize(2, 1);
+    Shuffleboard.getTab("Swerve").add("Reset Pose", new InstantCommand(this::resetPose));
 
     // DEBUG: shuffleboard widget for manually setting the odometry equal to the
     // vision calculation
-    Shuffleboard.getTab("Vision").add("update odometry", new UpdateOdometry(m_driveSubsystem, m_visionSubsystem));
+    Shuffleboard.getTab("Vision").add("Update Odometry", new UpdateOdometry(m_driveSubsystem, m_visionSubsystem));
 
     // DEBUG: widgets for testing swerve modules
     Shuffleboard.getTab("Swerve").add("Module Drive Test", new RunCommand(

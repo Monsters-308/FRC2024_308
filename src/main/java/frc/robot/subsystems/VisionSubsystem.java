@@ -29,7 +29,7 @@ public class VisionSubsystem extends SubsystemBase {
         setPipeline(VisionConstants.kDefaultPipeline);
 
         visionTab.addInteger("Pipeline", () -> getPipeline());
-        visionTab.add(m_field);
+        visionTab.add("Vision Estimates", m_field).withSize(7, 4);
     }
 
     //tv = valid targets

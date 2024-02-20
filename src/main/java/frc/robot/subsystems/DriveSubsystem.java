@@ -32,6 +32,7 @@ import frc.robot.Constants.HeadingConstants;
 import frc.robot.Constants.ModuleConstants;
 import frc.utils.FieldUtils;
 import frc.utils.SwerveUtils;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.shuffleboard.SimpleWidget;
@@ -111,17 +112,23 @@ public class DriveSubsystem extends SubsystemBase {
     m_visionPose = visionPosition;
     m_visionTimestamp = visionTimestamp;
 
-
     // NOTE: is this really necessary??
     m_gyro.enableLogging(true);
+   
+    // Widgets for swerve module angles 
+    swerveTab.addDouble("frontLeft angle", () -> SwerveUtils.angleConstrain(m_frontLeft.getPosition().angle.getDegrees()))
+      .withPosition(0, 0);
+    swerveTab.addDouble("frontRight angle", () -> SwerveUtils.angleConstrain(m_frontRight.getPosition().angle.getDegrees()))
+      .withPosition(1, 0);
+    swerveTab.addDouble("rearLeft angle", () -> SwerveUtils.angleConstrain(m_rearLeft.getPosition().angle.getDegrees()))
+      .withPosition(0, 1);
+    swerveTab.addDouble("rearRight angle", () -> SwerveUtils.angleConstrain(m_rearRight.getPosition().angle.getDegrees()))
+      .withPosition(1, 1);
 
-    // Shuffleboard values
-    swerveTab.addDouble("Robot Heading", () -> getHeading());
+    // Gyro widget
+    swerveTab.addDouble("Robot Heading", () -> getHeading()).withWidget(BuiltInWidgets.kGyro).withSize(2, 2);
     
-    swerveTab.addDouble("frontLeft angle", () -> SwerveUtils.angleConstrain(m_frontLeft.getPosition().angle.getDegrees()));
-    swerveTab.addDouble("frontRight angle", () -> SwerveUtils.angleConstrain(m_frontRight.getPosition().angle.getDegrees()));
-    swerveTab.addDouble("rearLeft angle", () -> SwerveUtils.angleConstrain(m_rearLeft.getPosition().angle.getDegrees()));
-    swerveTab.addDouble("rearRight angle", () -> SwerveUtils.angleConstrain(m_rearRight.getPosition().angle.getDegrees()));
+    // Field widget for displaying odometry estimation
     swerveTab.add("Field", m_field);
     
     swerveTab.addDouble("robot X", () -> getPose().getX());
@@ -151,7 +158,7 @@ public class DriveSubsystem extends SubsystemBase {
     );
 
     // Add alliance widget (it's just a boolean widget but I manually change the color)
-    AllianceWidget = swerveTab.add("Alliance", true);
+    AllianceWidget = swerveTab.add("Alliance", true).withSize(6, 3);
   }
 
   @Override
