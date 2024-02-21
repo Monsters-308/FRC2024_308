@@ -13,7 +13,9 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.auton.TemplateAuton;
 import frc.robot.commands.drive.AutoAim;
@@ -98,6 +100,12 @@ public class RobotContainer {
     // true, true),
     // m_robotDrive));
 
+    // Noah's shuffleboard Field testing:
+    Field2d field2d = new Field2d();
+    field2d.setRobotPose(new Pose2d(1, 0.4, new Rotation2d())); // Corrected pose
+    //field2d.setRobotPose(new Pose2d(FieldConstants.kFieldWidthMeters, FieldConstants.KFieldHeightMeters, new Rotation2d()));
+    Shuffleboard.getTab("Test").add("Test", field2d);
+
     // "registerCommand" lets pathplanner identify our commands
     // Here's the autoalign as an example:
     // NamedCommands.registerCommand("Auto Align",
@@ -143,6 +151,7 @@ public class RobotContainer {
           7, 
           Rotation2d.fromDegrees(180))
       )))
+      .ignoringDisable(true)
     );
 
     Shuffleboard.getTab("Autonomous").add("Set Middle",
@@ -152,6 +161,7 @@ public class RobotContainer {
           5.55, 
           Rotation2d.fromDegrees(180))
       )))
+      .ignoringDisable(true)
     );
 
     Shuffleboard.getTab("Autonomous").add("Set Source Side",
@@ -161,6 +171,7 @@ public class RobotContainer {
           4.1, 
           Rotation2d.fromDegrees(180))
       )))
+      .ignoringDisable(true)
     );
   }
 
@@ -184,8 +195,7 @@ public class RobotContainer {
     // Left bumper: sets gyro to 0 degrees
     new JoystickButton(m_driverController, Button.kLeftBumper.value)
         .onTrue(new InstantCommand(
-            () -> m_driveSubsystem.zeroHeading(),
-            m_driveSubsystem));
+            () -> m_driveSubsystem.zeroHeading()));
 
     // Y button: auto aim
     // This is commented out until the Shooter pivot subsystem works
@@ -223,10 +233,7 @@ public class RobotContainer {
     // B button: sets gyro to 90 degrees
     new JoystickButton(m_driverController, Button.kB.value)
         .onTrue(new InstantCommand(
-            () -> m_driveSubsystem.setHeading(90),
-            m_driveSubsystem));
-    
-    
+            () -> m_driveSubsystem.setHeading(90)));
 
     // Button for testing shooter:
     new JoystickButton(m_coDriverController, Button.kX.value)
@@ -240,37 +247,37 @@ public class RobotContainer {
     new JoystickButton(m_coDriverController, Button.kY.value)
         .onTrue(
             new InstantCommand(
-                () -> m_shooterIndexSubsystem.setSpeed(1)))
+                () -> m_shooterIndexSubsystem.setSpeed(1), m_shooterIndexSubsystem))
         .onFalse(
             new InstantCommand(
-                () -> m_shooterIndexSubsystem.setSpeed(0)));
+                () -> m_shooterIndexSubsystem.setSpeed(0), m_shooterIndexSubsystem));
 
     // Use bumpers for intake pivot
     new JoystickButton(m_coDriverController, Button.kLeftBumper.value)
         .onTrue(
-            new InstantCommand(() -> m_intakePivotSubsystem.setSpeed(-0.5)))
+            new InstantCommand(() -> m_intakePivotSubsystem.setSpeed(-0.5), m_intakePivotSubsystem))
         .onFalse(
-            new InstantCommand(() -> m_intakePivotSubsystem.setSpeed(0)));
+            new InstantCommand(() -> m_intakePivotSubsystem.setSpeed(0), m_intakePivotSubsystem));
 
     new JoystickButton(m_coDriverController, Button.kRightBumper.value)
         .onTrue(
-            new InstantCommand(() -> m_intakePivotSubsystem.setSpeed(0.3)))
+            new InstantCommand(() -> m_intakePivotSubsystem.setSpeed(0.3), m_intakePivotSubsystem))
         .onFalse(
-            new InstantCommand(() -> m_intakePivotSubsystem.setSpeed(0)));
+            new InstantCommand(() -> m_intakePivotSubsystem.setSpeed(0), m_intakePivotSubsystem));
 
     // Dpad up: shooter pivot up
     new POVButton(m_coDriverController, 0)
         .onTrue(
-            new InstantCommand(() -> m_shooterPivotSubsystem.setSpeed(1)))
+            new InstantCommand(() -> m_shooterPivotSubsystem.setSpeed(1), m_shooterPivotSubsystem))
         .onFalse(
-            new InstantCommand(() -> m_shooterPivotSubsystem.setSpeed(0)));
+            new InstantCommand(() -> m_shooterPivotSubsystem.setSpeed(0), m_shooterPivotSubsystem));
 
     // Dpad down: shooter pivot down
     new POVButton(m_coDriverController, 180)
         .onTrue(
-            new InstantCommand(() -> m_shooterPivotSubsystem.setSpeed(-1)))
+            new InstantCommand(() -> m_shooterPivotSubsystem.setSpeed(-1), m_shooterPivotSubsystem))
         .onFalse(
-            new InstantCommand(() -> m_shooterPivotSubsystem.setSpeed(0)));
+            new InstantCommand(() -> m_shooterPivotSubsystem.setSpeed(0), m_shooterPivotSubsystem));
 
     // Indexer button
     // new JoystickButton(m_coDriverController, Button.kB.value)

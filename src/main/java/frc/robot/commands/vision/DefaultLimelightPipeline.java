@@ -63,4 +63,10 @@ public class DefaultLimelightPipeline extends Command {
     public boolean isFinished(){
         return m_complete;
     }
+
+
+    @Override
+    public boolean runsWhenDisabled(){
+        return true;
+    }
 }
