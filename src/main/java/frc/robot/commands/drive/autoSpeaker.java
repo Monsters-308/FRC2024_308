@@ -1,9 +1,6 @@
-package frc.robot.commands.shooterIndex;
+package frc.robot.commands.drive;
 import frc.robot.Constants.AutoConstants;
-import frc.robot.commands.drive.AutoAim;
-import frc.robot.commands.drive.RobotGotoAngle;
 import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.commands.drive.RobotGotoFieldPos;
 import frc.robot.commands.shooter.TrapAlign;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;

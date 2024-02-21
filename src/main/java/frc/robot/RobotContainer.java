@@ -8,7 +8,6 @@ import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.XboxController;
@@ -38,8 +37,6 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.subsystems.VisionSubsystem;
 import frc.utils.FieldUtils;
-
-import java.util.Map;
 
 /*
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -131,7 +128,7 @@ public class RobotContainer {
     // DEBUG: widgets for testing swerve modules
     Shuffleboard.getTab("Swerve").add("Module Drive Test", new RunCommand(
         () -> m_driveSubsystem.drive(
-            0.1,
+            0.03,
             0,
             0,
             false, true),

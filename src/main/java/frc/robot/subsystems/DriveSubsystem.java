@@ -8,7 +8,6 @@ import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
@@ -126,10 +125,15 @@ public class DriveSubsystem extends SubsystemBase {
       .withPosition(1, 1);
 
     // Gyro widget
-    swerveTab.addDouble("Robot Heading", () -> getHeading()).withWidget(BuiltInWidgets.kGyro).withSize(2, 2);
+    swerveTab.addDouble("Robot Heading", () -> getHeading())
+      .withWidget(BuiltInWidgets.kGyro)
+      .withSize(2, 2)
+      .withProperties(Map.of(
+        "Counter Clockwise", true));
     
     // Field widget for displaying odometry estimation
-    swerveTab.add("Field", m_field);
+    swerveTab.add("Field", m_field)
+      .withSize(6, 3);
     
     swerveTab.addDouble("robot X", () -> getPose().getX());
     swerveTab.addDouble("robot Y", () -> getPose().getY());
@@ -158,7 +162,7 @@ public class DriveSubsystem extends SubsystemBase {
     );
 
     // Add alliance widget (it's just a boolean widget but I manually change the color)
-    AllianceWidget = swerveTab.add("Alliance", true).withSize(6, 3);
+    AllianceWidget = swerveTab.add("Alliance", true);
   }
 
   @Override

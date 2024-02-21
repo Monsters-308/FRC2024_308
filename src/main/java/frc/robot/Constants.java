@@ -49,15 +49,15 @@ public final class Constants {
     public static final double kBackRightChassisAngularOffset = 0;
 
     // SPARK MAX CAN IDs
-    public static final int kFrontLeftDrivingCanId = 2;
-    public static final int kRearLeftDrivingCanId = 8;
-    public static final int kFrontRightDrivingCanId = 4;
-    public static final int kRearRightDrivingCanId = 6;
+    public static final int kFrontLeftDrivingCanId = 8;
+    public static final int kRearLeftDrivingCanId = 6;
+    public static final int kFrontRightDrivingCanId = 2;
+    public static final int kRearRightDrivingCanId = 4;
 
-    public static final int kFrontLeftTurningCanId = 3;
-    public static final int kRearLeftTurningCanId = 9;
-    public static final int kFrontRightTurningCanId = 5;
-    public static final int kRearRightTurningCanId = 7;
+    public static final int kFrontLeftTurningCanId = 9;
+    public static final int kRearLeftTurningCanId = 7;
+    public static final int kFrontRightTurningCanId = 3;
+    public static final int kRearRightTurningCanId = 5;
   }
 
   // This is specifically for constants related to the individual swerve modules and not to the drive subsystem itself.
@@ -102,17 +102,17 @@ public final class Constants {
     // Inversion of drive motors
     // This will vary depending on how your wheels are oriented when you zero them.
     public static final boolean kLeftFrontInverted = false;
-    public static final boolean kLeftRearInverted = false;
-    public static final boolean kRightFrontInverted = true;
+    public static final boolean kLeftRearInverted = true;
+    public static final boolean kRightFrontInverted = false;
     public static final boolean kRightRearInverted = false;
 
     // Inversion of turning motors
     // Unless oriented differently, all of your turning motors should spin in the same direction.
-    public static final boolean kTurningMotorsInverted = false;
+    public static final boolean kTurningMotorsInverted = true;
 
     // Inversion of turning ENCODERS (not motors).
     // Unless oriented differently, all of your turning encoders should spin in the same direction.
-    public static final boolean kTurningEncoderInverted = true;
+    public static final boolean kTurningEncoderInverted = false;
 
     public static final IdleMode kDrivingMotorIdleMode = IdleMode.kBrake;
     public static final IdleMode kTurningMotorIdleMode = IdleMode.kBrake;
@@ -325,7 +325,7 @@ public final class Constants {
   }
 
   public static final class ShooterPivotConstants {
-    public static final int kShooterPivotMotorCanID = 10; 
+    public static final int kShooterPivotMotorCanID = 11; 
 
     // Positive will be tilting the pivot upwards
     public static final boolean kTurningMotorInverted = false; // Change
@@ -361,7 +361,7 @@ public final class Constants {
   }
 
   public static final class ShooterIndexConstants {
-    public static final int kMotorCanID = 11;
+    public static final int kMotorCanID = 13;
     public static final int kMotorCurrentLimit = 30; // Change
 
     public static final int kDigitalSensorPin = 9; 
