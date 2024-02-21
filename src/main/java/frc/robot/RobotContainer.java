@@ -22,6 +22,7 @@ import frc.robot.commands.drive.AutoAim;
 import frc.robot.commands.drive.RobotGotoAngle;
 import frc.robot.commands.drive.TurningMotorsTest;
 import frc.robot.commands.shooter.shoot;
+import frc.robot.commands.shooterIndex.IntakeNote;
 import frc.robot.commands.vision.DefaultLimelightPipeline;
 import frc.robot.commands.vision.UpdateOdometry;
 import frc.robot.subsystems.DriveSubsystem;
@@ -245,12 +246,9 @@ public class RobotContainer {
 
     // Button for testing shooter index:
     new JoystickButton(m_coDriverController, Button.kY.value)
-        .onTrue(
-            new InstantCommand(
-                () -> m_shooterIndexSubsystem.setSpeed(1), m_shooterIndexSubsystem))
-        .onFalse(
-            new InstantCommand(
-                () -> m_shooterIndexSubsystem.setSpeed(0), m_shooterIndexSubsystem));
+        .toggleOnTrue(
+          new IntakeNote(m_shooterIndexSubsystem)
+        );
 
     // Use bumpers for intake pivot
     new JoystickButton(m_coDriverController, Button.kLeftBumper.value)
