@@ -6,9 +6,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import java.util.function.DoubleSupplier;
 
-//NAVX libraries
-import com.kauailabs.navx.frc.AHRS;
-
 public class LEDSubsystem extends SubsystemBase {
  
   public enum LEDState {
@@ -116,26 +113,25 @@ public class LEDSubsystem extends SubsystemBase {
 
     m_led.setData(m_ledBuffer);
   }
+  
   public void green(int[] RGB) {
     for (var i = 0; i < m_ledBuffer.getLength(); i++) {
         //m_ledBuffer.setRGB(i, RGB[0], 255, 30);
         m_ledBuffer.setRGB(i, 0, 255, 0);
     }
 
-
-
     m_led.setData(m_ledBuffer);
   }
+
   public void orange() {
     for (var i = 0; i < m_ledBuffer.getLength(); i++) {
         //m_ledBuffer.setRGB(i, RGB[0], 255, 30);
         m_ledBuffer.setRGB(i, 255, 255, 0);
     }
 
-
-
     m_led.setData(m_ledBuffer);
   }
+
   public void greenAlign(int ammountGreen) {
     for (var i = 0; i < m_ledBuffer.getLength(); i++) {
         m_ledBuffer.setRGB(i, 0, ammountGreen, 30);
@@ -143,6 +139,7 @@ public class LEDSubsystem extends SubsystemBase {
 
     m_led.setData(m_ledBuffer);
   }
+
   public void red(int[] RGB) {
     for (var i = 0; i < m_ledBuffer.getLength(); i++) {
         //m_ledBuffer.setRGB(i, 255, 0, RGB[2]);
@@ -151,6 +148,7 @@ public class LEDSubsystem extends SubsystemBase {
 
     m_led.setData(m_ledBuffer);
   }
+
   public void yellow(int[] RGB) {
     for (var i = 0; i < m_ledBuffer.getLength(); i++) {
         m_ledBuffer.setRGB(i, 255, 255, 0);
@@ -221,6 +219,7 @@ public class LEDSubsystem extends SubsystemBase {
     m_TurboFirstPixelHue %= 180;
     m_led.setData(m_ledBuffer);
   }
+  
   private void frenzy() {
     // For every pixel
 

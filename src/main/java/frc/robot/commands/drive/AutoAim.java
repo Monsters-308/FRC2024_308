@@ -12,7 +12,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.HeadingConstants;
 import frc.robot.Constants.OIConstants;
-import frc.robot.Constants.ShooterPivotConstants;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ShooterPivotSubsystem;
@@ -130,6 +129,7 @@ public class AutoAim extends Command {
         //pivotController.setSetpoint(0);
         //double rotation = angleController.calculate(yCrosshairDistance);        
     }
+    
     /**
      * Gets the proper pivot to angle the shooter at the speaker according the the m_driveSubsystem.getPose() and FieldConstants.kSpeakerPosition, FieldConstants.kSpeakerHeight
      * @return The angle to pivot towards the speaker as a double
@@ -139,8 +139,8 @@ public class AutoAim extends Command {
         double anglePivot = ShooterUtils.shooterAngleToFacePoint(m_driveSubsystem.getPose().getTranslation(), FieldConstants.kSpeakerPosition, FieldConstants.kSpeakerHeight);
 
         m_shooterPivotSubsystem.setPosition(anglePivot);
-  
     }
+
     /*This function is called once when the command ends.
      * A command ends either when you tell it to end with the "isFinished()" function below, or when it is interupted.
      * Whether a command is interrupted or not is determined by "boolean interrupted."
