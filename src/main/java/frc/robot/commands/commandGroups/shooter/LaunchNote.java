@@ -1,4 +1,4 @@
-package frc.robot.commands.shooter;
+package frc.robot.commands.commandGroups.shooter;
 
 import frc.robot.subsystems.ShooterIndexSubsystem;
 

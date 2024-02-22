@@ -38,7 +38,7 @@ public class AutoAimStatic extends Command {
     private final DoubleSupplier m_ySpeed;
 
     /**
-     * This command rotates the robot in space using the pose estimator compared to the field element pose
+     * Sets the robot autoaim 
      * @param visionSubsystem
      * @param driveSubsystem
      * @param xSpeed

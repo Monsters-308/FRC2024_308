@@ -1,4 +1,4 @@
-package frc.robot.commands.drive;
+package frc.robot.commands.commandGroups.drive;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.commands.drive.RobotGotoFieldPos;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;

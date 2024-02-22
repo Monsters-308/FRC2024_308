@@ -1,6 +1,6 @@
-package frc.robot.commands.intake;
+package frc.robot.commands.commandGroups.intake;
 
-import frc.robot.commands.shooter.LaunchNote;
+import frc.robot.commands.commandGroups.shooter.LaunchNote;
 import frc.robot.subsystems.IndexSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterIndexSubsystem;

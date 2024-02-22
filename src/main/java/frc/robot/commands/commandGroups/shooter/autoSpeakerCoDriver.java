@@ -1,10 +1,11 @@
-package frc.robot.commands.shooter;
+package frc.robot.commands.commandGroups.shooter;
 import frc.robot.subsystems.DriveSubsystem;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystems.ShooterPivotSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.Constants.AutoConstants;
+import frc.robot.commands.shooter.autoWheelRevAndPivot;
 
 
 public class autoSpeakerCoDriver extends SequentialCommandGroup  {
