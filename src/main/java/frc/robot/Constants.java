@@ -237,14 +237,13 @@ public final class Constants {
     public static final double kAngleOffset = 0;
     public static final double kPivotMinAngle = 0;
     public static final int kEncoderPort = 0;
-    public static final double kAngleTolerance = 0;
+    public static final double kAngleTolerance = 1;
   
     public static final double kPivotP = 0.1;
     public static final double kPivotI = 0;
     public static final double kPivotD = 0.001;
 
     public static final double kShooterEncoderPositionFactor = 360; 
-    public static final int kDigitalSensorPin = 8;
     public static final int kIntakeDeckPostion = 45; //change
   }
 
@@ -270,9 +269,13 @@ public final class Constants {
   public static final class IntakeConstants {
     public static final int kIntakeMotorCanID = 14; 
 
+    public static final int kDigitalSensorPin = 8; // Change
+    public static final boolean kSensorInverted = true;
+
     // Positive intakes the piece, negative retracts the piece
     public static final boolean kIntakeMotorInverted = false; // Change
     public static final int kIntakeMotorCurrentLimit = 35; // Change
+
     public static final double kHumanPlayerIntakeSpeed = .8; //oh noes sp
     public static final double kIntakeSpeed = .8; //oh noes sp
     public static final double kIntakePivotDownPosition = 20; //change

@@ -11,7 +11,7 @@ import frc.utils.FieldUtils;
 
 public class autoAmp extends ParallelCommandGroup  {
 
-    /** Moves the robot in front of the amp  */
+    /** Moves the robot in front of the amp */
     public autoAmp(DriveSubsystem driveSubsystem, ShooterPivotSubsystem shooterPivotSubsystem, ShooterSubsystem shooterSubsystem){
         addCommands(
             new ParallelCommandGroup(

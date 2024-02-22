@@ -6,12 +6,15 @@ import edu.wpi.first.wpilibj2.command.Command;
 public class TrapAlign extends Command {
   private final ShooterPivotSubsystem m_shooterPivotSubsystem;
 
-  // variables for motor speeds/velocities
-
+  /**
+   * Aims shooter pivot at amp.
+   * This command only ends once the pivot is lined up with the amp.
+   * @param pivotSubsystem
+   */
   public TrapAlign(ShooterPivotSubsystem pivotSubsystem) {
     m_shooterPivotSubsystem = pivotSubsystem;
 
-    addRequirements( m_shooterPivotSubsystem);
+    addRequirements(m_shooterPivotSubsystem);
   }
 
   // Called when the command is initially scheduled.

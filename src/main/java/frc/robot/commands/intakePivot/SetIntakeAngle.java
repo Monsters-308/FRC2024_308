@@ -1,19 +1,24 @@
 package frc.robot.commands.intakePivot;
 
-import frc.robot.Constants.ShooterPivotConstants;
+import frc.robot.Constants.IntakePivotConstants;
 import frc.robot.subsystems.IntakePivotSubsystem;
-import frc.robot.subsystems.ShooterPivotSubsystem;
 import edu.wpi.first.wpilibj2.command.Command; 
     
-public class IntakeUp extends Command {
-  private final ShooterPivotSubsystem m_shooterPivotSubsystem; 
+public class SetIntakeAngle extends Command {
   private final IntakePivotSubsystem m_intakePivotSubsystem;
-  //variables for motor speeds/velocities
+  private final double m_desiredAngle;
 
-
-  public IntakeUp(ShooterPivotSubsystem shooterPivotSubsystem, IntakePivotSubsystem intakePivotSubsystem) {
-    m_shooterPivotSubsystem = shooterPivotSubsystem; 
+  /**
+   * Sets the intake pivot to a specific angle. 
+   * <p>
+   * NOTE: This is equivalent to "new InstantCommand(() -> m_intakePivotSubsystem.setPosition(angle))"
+   * except it only ends once the pivot reaches its target angle.
+   * @param intakePivotSubsystem
+   */
+  public SetIntakeAngle(IntakePivotSubsystem intakePivotSubsystem, double angle) {
     m_intakePivotSubsystem = intakePivotSubsystem;
+    m_desiredAngle = angle;
+
     addRequirements(intakePivotSubsystem);
   }
 
@@ -25,8 +30,7 @@ public class IntakeUp extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_shooterPivotSubsystem.setPosition(ShooterPivotConstants.kshooterPivotUpPosition);
-    //m_intakePivotSubsystem.intakeUp();
+    m_intakePivotSubsystem.setPosition(m_desiredAngle);
   }
 
   // Called once the command ends or is interrupted.
@@ -38,7 +42,6 @@ public class IntakeUp extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    //
-    return false;
+    return Math.abs(m_intakePivotSubsystem.getPosition() - m_desiredAngle) < IntakePivotConstants.kAngleTolerance;
   }
 }

@@ -12,11 +12,8 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Button;
-import edu.wpi.first.wpilibj.XboxController.Axis;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.auton.TemplateAuton;
 import frc.robot.commands.commandGroups.drive.autoAmp;
@@ -76,9 +73,7 @@ public class RobotContainer {
   private final IndexSubsystem m_indexSubsystem = new IndexSubsystem();
   private final HangingSubsystem m_hangingSubsystem = new HangingSubsystem();
 
-  // The driver's controller
-  // final Joystick m_driverController = new
-  // Joystick(OIConstants.kDriverControllerPort);
+  // Controllers
   final XboxController m_driverController = new XboxController(OIConstants.kDriverControllerPort);
   final XboxController m_coDriverController = new XboxController(OIConstants.kCoDriverControllerPort);
 
@@ -106,23 +101,6 @@ public class RobotContainer {
                 -MathUtil.applyDeadband(m_driverController.getRightX(), OIConstants.kDriveDeadband),
                 true, true),
             m_driveSubsystem));
-    // Joystick equivalent:
-    // new RunCommand(
-    // () -> m_robotDrive.drive(
-    // -MathUtil.applyDeadband(m_driverController.getY(),
-    // OIConstants.kDriveDeadband),
-    // -MathUtil.applyDeadband(m_driverController.getX(),
-    // OIConstants.kDriveDeadband),
-    // -MathUtil.applyDeadband(m_driverController.getTwist(),
-    // OIConstants.kDriveDeadband),
-    // true, true),
-    // m_robotDrive));
-
-    // Noah's shuffleboard Field testing:
-    // Field2d field2d = new Field2d();
-    // field2d.setRobotPose(new Pose2d(1, 0.4, new Rotation2d())); // Corrected pose
-    // //field2d.setRobotPose(new Pose2d(FieldConstants.kFieldWidthMeters, FieldConstants.KFieldHeightMeters, new Rotation2d()));
-    // Shuffleboard.getTab("Test").add("Test", field2d);
 
     // "registerCommand" lets pathplanner identify our commands
     // Here's the autoalign as an example:
@@ -145,7 +123,8 @@ public class RobotContainer {
 
     // DEBUG: shuffleboard widget for resetting pose. For now I'm using a default
     // pose of 0, 0 and a rotation of 0
-    Shuffleboard.getTab("Swerve").add("Reset Pose", new InstantCommand(this::resetPose));
+    Shuffleboard.getTab("Swerve").add("Reset Pose", new InstantCommand(() -> m_driveSubsystem.resetOdometry(
+        new Pose2d(0, 0, new Rotation2d(0)))));
 
     // DEBUG: shuffleboard widget for manually setting the odometry equal to the
     // vision calculation
@@ -203,6 +182,7 @@ public class RobotContainer {
    * {@link JoystickButton}.
    */
   private void configureButtonBindings() {
+
     //------------------------------------------- Driver buttons -------------------------------------------
 
     // Left bumper: sets gyro to 0 degrees
@@ -218,7 +198,8 @@ public class RobotContainer {
                 m_shooterPivotSubsystem,
                 m_shooterSubsystem
                 ));
-    // Auto Aim speaker
+
+    // Auto Aim Amp
     new JoystickButton(m_driverController, Button.kB.value)
         .toggleOnTrue(
             new autoAmp(
@@ -226,6 +207,8 @@ public class RobotContainer {
                 m_shooterPivotSubsystem,
                 m_shooterSubsystem
                 ));
+    
+    // Auto Aim trap
     new JoystickButton(m_driverController, Button.kY.value)
         .toggleOnTrue(
             new autoTrapShoot(
@@ -234,12 +217,12 @@ public class RobotContainer {
                 m_shooterSubsystem
                 ));
 
-    // B button: sets gyro to 90 degrees
+    // B button: sets gyro to 90 degrees (for testing)
     new JoystickButton(m_driverController, Button.kRightBumper.value)
         .onTrue(new InstantCommand(
             () -> m_driveSubsystem.setHeading(90)));
     
-    //  button: makes robot face 0 degrees
+    // Dpad up: makes robot face 0 degrees
     new POVButton(m_driverController, 0)
         .toggleOnTrue(
             new RobotGotoAngle(
@@ -248,16 +231,18 @@ public class RobotContainer {
                 () -> m_driverController.getLeftY(),
                 () -> m_driverController.getLeftX(),
                 () -> m_driverController.getRightX()));
-    //  button: makes robot face 90 degrees
+
+    //Dpad right: makes robot face 90 degrees to the right
     new POVButton(m_driverController, 90)
         .toggleOnTrue(
             new RobotGotoAngle(
                 m_driveSubsystem,
-                90,
+                -90,
                 () -> m_driverController.getLeftY(),
                 () -> m_driverController.getLeftX(),
                 () -> m_driverController.getRightX()));
-    //  button: makes robot face 180 degrees
+
+    // Dpad down: makes robot face 180 degrees
     new POVButton(m_driverController, 180)
         .toggleOnTrue(
             new RobotGotoAngle(
@@ -266,15 +251,17 @@ public class RobotContainer {
                 () -> m_driverController.getLeftY(),
                 () -> m_driverController.getLeftX(),
                 () -> m_driverController.getRightX()));
-    //  button: makes robot face 270 degrees
+                
+    // Dpad left: makes robot face 90 degrees to the left
     new POVButton(m_driverController, 270)
         .toggleOnTrue(
             new RobotGotoAngle(
                 m_driveSubsystem,
-                270,
+                90,
                 () -> m_driverController.getLeftY(),
                 () -> m_driverController.getLeftX(),
                 () -> m_driverController.getRightX()));
+
 
     //------------------------------------------- coDriver buttons -------------------------------------------
 
@@ -293,7 +280,6 @@ public class RobotContainer {
     //       new IntakeNote(m_shooterIndexSubsystem)
     //     );
   
-
     // new POVButton(m_coDriverController, 270)
     //    .toggleOnTrue(
     //     new SequentialCommandGroup(
@@ -316,12 +302,14 @@ public class RobotContainer {
     //     .onFalse(
     //         new InstantCommand(() -> m_intakePivotSubsystem.setSpeed(0), m_intakePivotSubsystem));
 
-
+    // Left bumper: Raise hanging arms
     new JoystickButton(m_coDriverController, Button.kLeftBumper.value)
         .toggleOnTrue(
             new RaiseBothArms(
                 m_hangingSubsystem
                 ));
+
+    // Right bumper: lower hanging arms
     new JoystickButton(m_coDriverController, Button.kRightBumper.value)
       .toggleOnTrue(
           new LowerBothArms(
@@ -329,6 +317,8 @@ public class RobotContainer {
               m_driveSubsystem,
               .5
               ));
+    
+    // Dpad up: intake note
     new POVButton(m_coDriverController, 0)
         .toggleOnTrue(
             new CompleteIntake(
@@ -338,22 +328,28 @@ public class RobotContainer {
               m_indexSubsystem, 
               m_intakePivotSubsystem
               ));
-    //SpeakerDefaultAlign
+
+    // A button: aim at speaker
     new JoystickButton(m_coDriverController, Button.kA.value)
       .toggleOnTrue(
           new SpeakerDefaultAlign(
               m_shooterPivotSubsystem
               ));
+
+    // B button: aim at amp
     new JoystickButton(m_coDriverController, Button.kB.value)
       .toggleOnTrue(
           new AmpAlign(
             m_shooterPivotSubsystem
               ));
+    
+    // Y button: aim at trap
     new JoystickButton(m_coDriverController, Button.kY.value)
     .toggleOnTrue(
         new TrapAlign(
           m_shooterPivotSubsystem
             ));
+
     // // Dpad up: shooter pivot up
     // new POVButton(m_coDriverController, 0)
     //     .onTrue(
@@ -377,16 +373,11 @@ public class RobotContainer {
     // new InstantCommand(() -> m_intakePivotSubsystem.setSpeed(0))
     // );
 
-    //shoot 
+    // Right trigger: shoot note 
     new Trigger(() -> m_coDriverController.getRightTriggerAxis() > .5)
       .toggleOnTrue(
         new LaunchNote(m_shooterIndexSubsystem)
       );
-  }
-
-  public void resetPose() {
-    m_driveSubsystem.resetOdometry(
-        new Pose2d(0, 0, new Rotation2d(0)));
   }
 
   /**

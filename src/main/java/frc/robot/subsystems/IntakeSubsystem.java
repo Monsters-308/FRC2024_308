@@ -4,12 +4,14 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.IntakeConstants;
 
 public class IntakeSubsystem extends SubsystemBase {
 
   private final CANSparkMax m_intakeMotor = new CANSparkMax(IntakeConstants.kIntakeMotorCanID, MotorType.kBrushed);
+  private final DigitalInput m_noteSensor = new DigitalInput(IntakeConstants.kDigitalSensorPin);
     
   /** Creates a new IntakeSubsystem. */
   public IntakeSubsystem() {
@@ -28,6 +30,17 @@ public class IntakeSubsystem extends SubsystemBase {
     // Save the motor controller's configuration
     m_intakeMotor.burnFlash();
   }
+
+  /**
+   * Returns whether or not there is a game piece in the intake.
+   * @return true if there's a game piece.
+   */
+  public boolean gamePieceDetected(){
+    if (IntakeConstants.kSensorInverted){
+      return !m_noteSensor.get();
+    }
+    return m_noteSensor.get();
+  }  
 
   /**
    * Sets the motor to a certain speed.

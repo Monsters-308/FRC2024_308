@@ -8,7 +8,8 @@ import frc.robot.commands.shooter.autoWheelRevAndPivot;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 
 public class autoTrapShoot extends ParallelCommandGroup  {
-
+    
+    /** Moves robot in front of trap */
     public autoTrapShoot(DriveSubsystem driveSubsystem, ShooterPivotSubsystem shooterPivotSubsystem, ShooterSubsystem shooterSubsystem){
         addCommands(
             new ParallelCommandGroup(

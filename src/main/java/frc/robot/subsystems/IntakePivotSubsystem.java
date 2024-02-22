@@ -5,22 +5,14 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.IntakePivotConstants;
-import frc.robot.Constants.ShooterIndexConstants;
 
 public class IntakePivotSubsystem extends SubsystemBase {
 
-  // Variable to represent the state of the intake: false is up, true is down
-  // I would turn this into an enum but it's only 2 states
-  //private boolean m_intakeState = false;
-  
   private final CANSparkMax m_masterMotor = new CANSparkMax(IntakePivotConstants.kMotorCanID, MotorType.kBrushed);
   private final CANSparkMax m_followerMotor = new CANSparkMax(IntakePivotConstants.KOtherMotorCanID, MotorType.kBrushed);
-  private final DigitalInput m_noteSensor = new DigitalInput(IntakePivotConstants.kDigitalSensorPin);
-
 
   private final DutyCycleEncoder m_intakePivotMotorEncoder = new DutyCycleEncoder(IntakePivotConstants.kEncoderPort);
 
@@ -78,6 +70,7 @@ public class IntakePivotSubsystem extends SubsystemBase {
   
   }
 
+  /** This function is for testing purposes */
   public void setSpeed(double speed){
      m_masterMotor.set(speed);
   }
@@ -95,14 +88,6 @@ public class IntakePivotSubsystem extends SubsystemBase {
     // This method will be called once per scheduler run
     //manageState();    
   }
-
-    public boolean gamePieceDetected(){
-        if (ShooterIndexConstants.kSensorInverted){
-            return !m_noteSensor.get();
-        }
-        return m_noteSensor.get();
-    }  
-
 
   /** Putting this in a separate function so we can comment it out easier */
   private void manageState(){

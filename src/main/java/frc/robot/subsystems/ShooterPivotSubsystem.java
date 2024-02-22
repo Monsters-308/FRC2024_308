@@ -61,8 +61,9 @@ public class ShooterPivotSubsystem extends SubsystemBase {
   
   }
 
+  /** This function is for testing purposes */
   public void setSpeed(double speed){
-     m_shooterPivotMotor.set(speed);
+    m_shooterPivotMotor.set(speed);
   }
 
   /**
