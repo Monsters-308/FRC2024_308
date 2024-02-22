@@ -23,6 +23,7 @@ import frc.robot.commands.drive.RobotGotoAngle;
 import frc.robot.commands.drive.TurningMotorsTest;
 import frc.robot.commands.shooter.shoot;
 import frc.robot.commands.shooterIndex.IntakeNote;
+import frc.robot.commands.shooterIndex.;
 import frc.robot.commands.vision.DefaultLimelightPipeline;
 import frc.robot.commands.vision.UpdateOdometry;
 import frc.robot.subsystems.DriveSubsystem;
@@ -102,10 +103,10 @@ public class RobotContainer {
     // m_robotDrive));
 
     // Noah's shuffleboard Field testing:
-    Field2d field2d = new Field2d();
-    field2d.setRobotPose(new Pose2d(1, 0.4, new Rotation2d())); // Corrected pose
-    //field2d.setRobotPose(new Pose2d(FieldConstants.kFieldWidthMeters, FieldConstants.KFieldHeightMeters, new Rotation2d()));
-    Shuffleboard.getTab("Test").add("Test", field2d);
+    // Field2d field2d = new Field2d();
+    // field2d.setRobotPose(new Pose2d(1, 0.4, new Rotation2d())); // Corrected pose
+    // //field2d.setRobotPose(new Pose2d(FieldConstants.kFieldWidthMeters, FieldConstants.KFieldHeightMeters, new Rotation2d()));
+    // Shuffleboard.getTab("Test").add("Test", field2d);
 
     // "registerCommand" lets pathplanner identify our commands
     // Here's the autoalign as an example:
@@ -248,6 +249,11 @@ public class RobotContainer {
     new JoystickButton(m_coDriverController, Button.kY.value)
         .toggleOnTrue(
           new IntakeNote(m_shooterIndexSubsystem)
+        );
+    
+    new JoystickButton(m_coDriverController, Button.kA.value)
+        .toggleOnTrue(
+          new IntakeNot(m_shooterIndexSubsystem)
         );
 
     // Use bumpers for intake pivot

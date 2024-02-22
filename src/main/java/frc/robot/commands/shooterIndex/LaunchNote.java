@@ -1,12 +1,13 @@
 package frc.robot.commands.shooterIndex;
 
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
-import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.subsystems.ShooterIndexSubsystem;
 
-class LaunchNote extends SequentialCommandGroup {
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
+
+class LaunchNote extends ParallelCommandGroup {
 
     public LaunchNote(ShooterIndexSubsystem shooterIndexSubsystem){
         addCommands(

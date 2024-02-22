@@ -26,7 +26,7 @@ public class IntakeDown extends Command {
   @Override
   public void execute() {
     m_shooterPivotSubsystem.setPosition(ShooterPivotConstants.kshooterPivotDownPosition);
-    m_intakePivotSubsystem.intakeDown();
+   // m_intakePivotSubsystem.intakeDown();
   }
 
   // Called once the command ends or is interrupted.
@@ -38,9 +38,9 @@ public class IntakeDown extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (m_intakePivotSubsystem.isIntakeDown()){
-      return true;
-    }
+    // if (m_intakePivotSubsystem.isIntakeDown()){
+    //   return true;
+    // }
     return false;
   }
 }

@@ -47,6 +47,15 @@ public class FieldUtils {
      * @return The new pose object, also relative to the blue side but shifted to the red side.
      */
     public static Pose2d redWidgetFlip(Pose2d pose){
+        // shift widget right by 1 meter
+        // NOTE: We are doing this because shuffleboard's field widget is bugged. You would 
+        // normally never have to do this.
+        pose = new Pose2d(
+            pose.getX()+1,
+            pose.getY(),
+            pose.getRotation()
+        );
+        
         if (isRedAlliance()){
             return new Pose2d(
                 FieldConstants.kFieldWidthMeters-pose.getX(),

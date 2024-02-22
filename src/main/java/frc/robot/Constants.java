@@ -30,7 +30,7 @@ public final class Constants {
     public static final double kMaxSpeedMetersPerSecond = 5;
     public static final double kMaxAngularSpeed = 2 * Math.PI; // radians per second
 
-    public static final double kMagnitudeSlewRate = 1.8 * kMaxSpeedMetersPerSecond; // meters per second^2
+    public static final double kMagnitudeSlewRate = 2.8 * kMaxSpeedMetersPerSecond; // meters per second^2
     public static final double kRotationalSlewRate = 2.0 * kMaxAngularSpeed;        // radians per second^2
 
     // Chassis configuration
@@ -222,18 +222,24 @@ public final class Constants {
 
   public static final class IntakePivotConstants {
     public static final int kMotorCanID = 15; 
-    public static final int KOtherMotorCanID = 12; 
+    public static final int KOtherMotorCanID = 13; 
 
     public static final int kMotorSmartCurrentLimit = 30; // Change
 
     // This will invert both motors at the same time
     public static final boolean kInvertMotors = false;
 
-    public static final int kUpperLimitPort = 0; // Change
-    public static final int kLowerLimitPort = 1; // Change
-    
-    public static final double kIntakeDownSpeed = 0.5;
-    public static final double kIntakeUpSpeed = -0.5;
+    public static final boolean kTurningMotorEncoderInverted = false;
+    public static final double kAngleOffset = 0;
+    public static final double kPivotMinAngle = 0;
+    public static final int kEncoderPort = 0;
+    public static final double kAngleTolerance = 0;
+  
+    public static final double kPivotP = 0.1;
+    public static final double kPivotI = 0;
+    public static final double kPivotD = 0.001;
+
+    public static final double kShooterEncoderPositionFactor = 360; 
   }
 
   public static final class HangingConstants {
@@ -256,7 +262,7 @@ public final class Constants {
   }
 
   public static final class IntakeConstants {
-    public static final int kIntakeMotorCanID = 14; // set
+    public static final int kIntakeMotorCanID = 14; 
 
     // Positive intakes the piece, negative retracts the piece
     public static final boolean kIntakeMotorInverted = false; // Change
@@ -266,7 +272,7 @@ public final class Constants {
   }
 
   public static final class IndexConstants {
-    public static final int kIndexMotorCanID = 12; // set
+    public static final int kIndexMotorCanID = 11; // set
 
     // Positive should bring the game piece to the shooter
     public static final boolean kIndexMotorInverted = false; // Change
@@ -325,17 +331,17 @@ public final class Constants {
   }
 
   public static final class ShooterPivotConstants {
-    public static final int kShooterPivotMotorCanID = 11; 
+    public static final int kShooterPivotMotorCanID = 12; 
+
+    public static final int kEncoderPort = 8;
 
     // Positive will be tilting the pivot upwards
     public static final boolean kTurningMotorInverted = false; // Change
     public static final boolean kTurningMotorEncoderInverted = false; // Change
     
     public static final double kShooterEncoderPositionFactor = (2 * Math.PI); // radians //TODO: this is assuming that the native unit for the encoder is revolutions. Double check
-    public static final double kShooterEncoderVelocityFactor = (2 * Math.PI) / 60.0; // radians per second
 
     public static final double kTurningEncoderPositionPIDMinInput = 0; // radians
-    public static final double kTurningEncoderPositionPIDMaxInput = kShooterEncoderVelocityFactor; // radians
 
     // Just like with the swerve wheels, this allows us to offset the encoder by a specific amount
     public static final double kAngleOffset = 0; // Change
@@ -361,7 +367,7 @@ public final class Constants {
   }
 
   public static final class ShooterIndexConstants {
-    public static final int kMotorCanID = 13;
+    public static final int kMotorCanID = 10;
     public static final int kMotorCurrentLimit = 30; // Change
 
     public static final int kDigitalSensorPin = 9; 

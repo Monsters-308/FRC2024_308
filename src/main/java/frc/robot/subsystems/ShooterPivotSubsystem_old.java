@@ -38,7 +38,7 @@ public class ShooterPivotSubsystem_old extends SubsystemBase {
     // native units for position and velocity are rotations and RPM, respectively.
     // TODO: SwerveModule.java sets both position factor and velocity, but I don't know why both would be required if we're only doing position control
     shooterPivotMotorEncoder.setPositionConversionFactor(ShooterPivotConstants.kShooterEncoderPositionFactor);
-    shooterPivotMotorEncoder.setVelocityConversionFactor(ShooterPivotConstants.kShooterEncoderVelocityFactor);
+    //shooterPivotMotorEncoder.setVelocityConversionFactor(ShooterPivotConstants.kShooterEncoderVelocityFactor);
 
     // Set the PID gains for the turning motor.
     // shooterPivotMotorPIDController.setP(ShooterPivotConstants.kTurningP);

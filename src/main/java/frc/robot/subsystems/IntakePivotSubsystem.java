@@ -4,7 +4,8 @@ import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 
-import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.IntakePivotConstants;
 
@@ -12,17 +13,28 @@ public class IntakePivotSubsystem extends SubsystemBase {
 
   // Variable to represent the state of the intake: false is up, true is down
   // I would turn this into an enum but it's only 2 states
-  private boolean m_intakeState = false;
+  //private boolean m_intakeState = false;
   
   private final CANSparkMax m_masterMotor = new CANSparkMax(IntakePivotConstants.kMotorCanID, MotorType.kBrushed);
   private final CANSparkMax m_followerMotor = new CANSparkMax(IntakePivotConstants.KOtherMotorCanID, MotorType.kBrushed);
 
-  private final DigitalInput m_upperLimit = new DigitalInput(IntakePivotConstants.kUpperLimitPort);
-  private final DigitalInput m_lowerLimit = new DigitalInput(IntakePivotConstants.kLowerLimitPort);
+  private final DutyCycleEncoder m_intakePivotMotorEncoder = new DutyCycleEncoder(IntakePivotConstants.kEncoderPort);
+
+  private double m_desiredAngle = IntakePivotConstants.kPivotMinAngle;
+
+  private final PIDController pidController = new PIDController(IntakePivotConstants.kPivotP, 
+                                                                IntakePivotConstants.kPivotI, 
+                                                                IntakePivotConstants.kPivotD);
 
   /** Creates a new IntakePivotSubsystem. */
   public IntakePivotSubsystem() {
-    // Reset the motor controller to a known state
+    m_intakePivotMotorEncoder.setDistancePerRotation(IntakePivotConstants.kShooterEncoderPositionFactor);
+    
+    pidController.setTolerance(IntakePivotConstants.kAngleTolerance);
+
+    pidController.reset();
+    pidController.setSetpoint(m_desiredAngle);
+
     m_masterMotor.restoreFactoryDefaults();
     m_followerMotor.restoreFactoryDefaults();
 
@@ -46,51 +58,46 @@ public class IntakePivotSubsystem extends SubsystemBase {
     m_followerMotor.burnFlash();
   }
 
-  /** Set speed of pivot (for testing purposes) */
+  /**
+   * Returns the angle the pivot is at.
+   * The angle is 0 when the pivot is parallel to the ground.
+   *
+   * @return The current position of the module (in radians).
+   */
+  public double getPosition() {
+    // Apply chassis angular offset to the encoder position to get the position
+    // relative to the chassis.
+    if(IntakePivotConstants.kTurningMotorEncoderInverted){
+      return -m_intakePivotMotorEncoder.getAbsolutePosition() + IntakePivotConstants.kAngleOffset;
+    }
+    return m_intakePivotMotorEncoder.getAbsolutePosition() + IntakePivotConstants.kAngleOffset;
+  
+  }
+
   public void setSpeed(double speed){
-    m_masterMotor.set(speed);
+     m_masterMotor.set(speed);
   }
 
-  /** Returns true if the intake is fully up and activating the upper limit switch. */
-  public boolean isIntakeUp(){
-    return m_upperLimit.get();
-  }
-
-  /** Returns true if the intake is fully down and activating the lower limit switch. */
-  public boolean isIntakeDown(){
-    return m_lowerLimit.get();
-  }
-
-  /** Makes the intake move down until it is touching the lower limit switch. */
-  public void intakeDown(){
-    m_intakeState = true;
-  }
-
-  /** Makes the intake move up until it is touching the upper limit switch. */
-  public void intakeUp(){
-    m_intakeState = false;
+  /**
+   * Set the shooter to a specific angle (in radians)
+   * @param angle The angle to set the shooter to (in radians)
+   */
+  public void setPosition(double angle) {
+    m_desiredAngle = angle;
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    //manageState();
+    //manageState();    
   }
 
-  /** I made a separate function for this so we can more easily comment it out during testing. */
+  /** Putting this in a separate function so we can comment it out easier */
   private void manageState(){
-    // Run motor forward if not down
-    if (m_intakeState && !isIntakeDown()){
-      m_masterMotor.set(IntakePivotConstants.kIntakeDownSpeed);
-    }
-    // Run motor backwards if not up
-    else if (!m_intakeState && !isIntakeUp()){
-      m_masterMotor.set(IntakePivotConstants.kIntakeUpSpeed);
-    }
-    // Stop movement otherwise
-    else {
-      m_masterMotor.set(0);
-    }
+    pidController.setSetpoint(m_desiredAngle);
+    double rotation = pidController.calculate(getPosition());
+
+    m_masterMotor.set(rotation);
   }
 
 }

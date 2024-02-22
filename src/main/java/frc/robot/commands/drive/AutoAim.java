@@ -27,7 +27,7 @@ public class AutoAim extends Command {
     //Import any instance variables that are passed into the file below here, such as the subsystem(s) your command interacts with.
     final VisionSubsystem m_visionSubsystem;
     final DriveSubsystem m_driveSubsystem;
-    final ShooterPivotSubsystem m_shooterPivotSubsystem;
+     
     private final PIDController angleController = new PIDController(HeadingConstants.kHeadingP, 
                                                                   HeadingConstants.kHeadingI, 
                                                                   HeadingConstants.kHeadingD);
@@ -37,17 +37,24 @@ public class AutoAim extends Command {
     private final DoubleSupplier m_xSpeed;
     private final DoubleSupplier m_ySpeed;
 
-    //Class Constructor
-    public AutoAim(VisionSubsystem visionSubsystem, DriveSubsystem driveSubsystem, ShooterPivotSubsystem shooterPivotSubsystem, DoubleSupplier xSpeed, DoubleSupplier ySpeed){
+    /**
+     * This command rotates the robot in space using the pose estimator compared to the field element pose
+     * @param visionSubsystem
+     * @param driveSubsystem
+     * @param xSpeed
+     * @param ySpeed
+     */
+    public AutoAim(VisionSubsystem visionSubsystem, DriveSubsystem driveSubsystem, DoubleSupplier xSpeed, DoubleSupplier ySpeed){
         m_driveSubsystem = driveSubsystem;
         m_visionSubsystem = visionSubsystem;
-        m_shooterPivotSubsystem = shooterPivotSubsystem;
         m_xSpeed = xSpeed;
         m_ySpeed = ySpeed;
+
+
         //If your command interacts with any subsystem(s), you should pass them into "addRequirements()"
         //This function makes it so your command will only run once these subsystem(s) are free from other commands.
         //This is really important as it will stop scenarios where two commands try to controll a motor at the same time.
-        addRequirements(m_visionSubsystem, m_shooterPivotSubsystem);
+        addRequirements(driveSubsystem);
     }
 
     /*This function is called once when the command is schedueled.
@@ -138,7 +145,7 @@ public class AutoAim extends Command {
         //change second parameter to shooter util robot pos
         double anglePivot = ShooterUtils.shooterAngleToFacePoint(m_driveSubsystem.getPose().getTranslation(), FieldConstants.kSpeakerPosition, FieldConstants.kSpeakerHeight);
 
-        m_shooterPivotSubsystem.setPosition(anglePivot);
+        //m_shooterPivotSubsystem.setPosition(anglePivot);
     }
 
     /*This function is called once when the command ends.
