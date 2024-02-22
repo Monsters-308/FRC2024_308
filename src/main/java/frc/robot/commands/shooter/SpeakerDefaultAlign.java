@@ -1,26 +1,20 @@
 package frc.robot.commands.shooter;
 import frc.robot.subsystems.ShooterPivotSubsystem;
-import frc.robot.subsystems.ShooterSubsystem; 
-import frc.robot.subsystems.ShooterIndexSubsystem;
 import edu.wpi.first.wpilibj2.command.Command; 
   
 
     
 public class SpeakerDefaultAlign extends Command {  
-  private final ShooterPivotSubsystem m_shooterPivotSubsystem;
-  private final ShooterSubsystem m_shooterSubsystem;    
-  private final ShooterIndexSubsystem m_shooterIndexSubsystem;
+  private final ShooterPivotSubsystem m_shooterPivotSubsystem;  
 
   //variables for motor speeds/velocities 
 
 
 
-  public SpeakerDefaultAlign(ShooterSubsystem Subsystem, ShooterPivotSubsystem pivotSubsystem, ShooterIndexSubsystem indexSubsystem) {
-    m_shooterSubsystem = Subsystem; 
+  public SpeakerDefaultAlign(ShooterPivotSubsystem pivotSubsystem) {
     m_shooterPivotSubsystem = pivotSubsystem; 
-    m_shooterIndexSubsystem = indexSubsystem;
 
-    addRequirements(m_shooterSubsystem, m_shooterPivotSubsystem, m_shooterIndexSubsystem);
+    addRequirements(m_shooterPivotSubsystem);
   }
 
   // Called when the command is initially scheduled.

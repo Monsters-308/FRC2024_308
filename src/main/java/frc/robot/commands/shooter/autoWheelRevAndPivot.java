@@ -16,7 +16,7 @@ public class autoWheelRevAndPivot extends Command {
   // variables for motor speeds/velocities
 
       /**
-     * Automatically revs the shooter wheels and sets the shooter pivot
+     * Automatically revs the shooter wheels (if robot position estimation is close to the field postion) and sets the shooter pivot
      * @param ShooterPivotSubsystem 
      * @param DriveSubsystem 
      * @param ShooterSubsystem 

@@ -366,6 +366,7 @@ public final class Constants {
     public static final double kPivotCenterOffsetInches = 0; // Change
 
     public static final double kshooterPivotDownPosition = 45; //in degrees
+    public static final double kshooterPivotUpPosition = 60;
 
     public static final Translation2d kPivotPostiton = new Translation2d(25, 25);
   }
