@@ -23,10 +23,11 @@ import frc.robot.commands.drive.RobotGotoAngle;
 import frc.robot.commands.drive.TurningMotorsTest;
 import frc.robot.commands.shooter.shoot;
 import frc.robot.commands.shooterIndex.IntakeNote;
-import frc.robot.commands.shooterIndex.;
+import frc.robot.commands.shooterIndex.IDK;
 import frc.robot.commands.vision.DefaultLimelightPipeline;
 import frc.robot.commands.vision.UpdateOdometry;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.IndexSubsystem;
 import frc.robot.subsystems.IntakePivotSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.LEDSubsystem;
@@ -59,6 +60,7 @@ public class RobotContainer {
   private final ShooterIndexSubsystem m_shooterIndexSubsystem = new ShooterIndexSubsystem();
   private final IntakeSubsystem m_intakeSubsystem = new IntakeSubsystem();
   private final IntakePivotSubsystem m_intakePivotSubsystem = new IntakePivotSubsystem();
+  private final IndexSubsystem m_IndexSubsystem = new IndexSubsystem();
 
   // The driver's controller
   // final Joystick m_driverController = new
@@ -122,7 +124,7 @@ public class RobotContainer {
     // Adding options to the sendable chooser
     m_autonChooser.setDefaultOption("Template Auton", new TemplateAuton(m_driveSubsystem));
     m_autonChooser.addOption("Path Planner", new PathPlannerAuto("Move One Meter"));
-    m_autonChooser.addOption("Path Planner", new PathPlannerAuto("Two Meter Spin"));
+    m_autonChooser.addOption("Path Planner2", new PathPlannerAuto("New Auto"));
 
     // Put chooser on the dashboard
     Shuffleboard.getTab("Autonomous").add("Select Auton", m_autonChooser).withSize(2, 1);
@@ -240,7 +242,7 @@ public class RobotContainer {
     // Button for testing shooter:
     new JoystickButton(m_coDriverController, Button.kX.value)
         .onTrue(new InstantCommand(
-            () -> m_shooterSubsystem.setBothSpeeds(20), m_shooterSubsystem))
+            () -> m_shooterSubsystem.setBothSpeeds(10), m_shooterSubsystem))
         .onFalse(
             new InstantCommand(
                 m_shooterSubsystem::stopRollers, m_shooterSubsystem));
@@ -253,8 +255,17 @@ public class RobotContainer {
     
     new JoystickButton(m_coDriverController, Button.kA.value)
         .toggleOnTrue(
-          new IntakeNot(m_shooterIndexSubsystem)
+          new IDK(m_shooterIndexSubsystem)
         );
+
+    new POVButton(m_coDriverController, 270)
+       .toggleOnTrue(
+        new SequentialCommandGroup(
+          new InstantCommand(() -> m_intakeSubsystem.setSpeed(1)),
+          new InstantCommand(() -> m_IndexSubsystem.setSpeed(1)),
+          new IntakeNote(m_shooterIndexSubsystem)
+        )
+      );
 
     // Use bumpers for intake pivot
     new JoystickButton(m_coDriverController, Button.kLeftBumper.value)
