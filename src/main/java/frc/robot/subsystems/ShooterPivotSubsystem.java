@@ -25,10 +25,12 @@ public class ShooterPivotSubsystem extends SubsystemBase {
     // them. This is useful in case a SPARK MAX is swapped out.
     m_shooterPivotMotor.restoreFactoryDefaults();
     
-    // Apply position conversion factor for the encoder. The
-    // native units for position and velocity are rotations and RPM, respectively.
-    // TODO: SwerveModule.java sets both position factor and velocity, but I don't know why both would be required if we're only doing position control
+    // Conversion factor from default unit of rotations
     m_shooterPivotMotorEncoder.setDistancePerRotation(ShooterPivotConstants.kShooterEncoderPositionFactor);
+    // Set DutyCycle range
+    m_shooterPivotMotorEncoder.setDutyCycleRange(
+        1 / ShooterPivotConstants.kEncoderPeriod, 
+        ShooterPivotConstants.kEncoderPeriod-1 / ShooterPivotConstants.kEncoderPeriod);
     
     m_shooterPivotMotor.setIdleMode(ShooterPivotConstants.kTurningMotorIdleMode);
     m_shooterPivotMotor.setSmartCurrentLimit(ShooterPivotConstants.kTurningMotorCurrentLimit);

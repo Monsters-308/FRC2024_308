@@ -341,6 +341,7 @@ public final class Constants {
     public static final int kShooterPivotMotorCanID = 12; 
 
     public static final int kEncoderPort = 8;
+    public static final double kEncoderPeriod = 1025;
 
     // Positive will be tilting the pivot upwards
     public static final boolean kTurningMotorInverted = false; // Change

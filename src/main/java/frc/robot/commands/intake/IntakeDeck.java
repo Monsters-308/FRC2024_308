@@ -17,7 +17,6 @@ public class IntakeDeck extends Command {
   private final ShooterIndexSubsystem m_shooterIndexSubsystem;
   private final IndexSubsystem m_hotdogRoller;
   private final IntakePivotSubsystem m_intakePivotSubsystem;
-  //variables for motor speeds/velocities
 
    /**
     * Runs the intake roller in the intaking position which collects a note, pivots and then rolls the note onto the deck. The deck rolls the note into the shooter loading the note for shooting.
