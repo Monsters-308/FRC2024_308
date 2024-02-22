@@ -244,6 +244,8 @@ public final class Constants {
     public static final double kPivotD = 0.001;
 
     public static final double kShooterEncoderPositionFactor = 360; 
+    public static final int kDigitalSensorPin = 8;
+    public static final int kIntakeDeckPostion = 45; //change
   }
 
   public static final class HangingConstants {
@@ -273,6 +275,7 @@ public final class Constants {
     public static final int kIntakeMotorCurrentLimit = 35; // Change
     public static final double kHumanPlayerIntakeSpeed = .8; //oh noes sp
     public static final double kIntakeSpeed = .8; //oh noes sp
+    public static final double kIntakePivotDownPosition = 20; //change
   }
 
   public static final class IndexConstants {
@@ -367,6 +370,7 @@ public final class Constants {
 
     public static final double kshooterPivotDownPosition = 45; //in degrees
     public static final double kshooterPivotUpPosition = 60;
+    public static final double kshooterPivotDeckPosition = 45;
 
     public static final Translation2d kPivotPostiton = new Translation2d(25, 25);
   }

@@ -22,18 +22,18 @@ import frc.robot.commands.auton.TemplateAuton;
 import frc.robot.commands.commandGroups.drive.autoAmp;
 import frc.robot.commands.commandGroups.drive.autoSpeaker;
 import frc.robot.commands.commandGroups.drive.autoTrapShoot;
+import frc.robot.commands.commandGroups.intake.CompleteIntake;
 import frc.robot.commands.commandGroups.shooter.LaunchNote;
 import frc.robot.commands.drive.AutoAimStatic;
 import frc.robot.commands.drive.RobotGotoAngle;
 import frc.robot.commands.drive.TurningMotorsTest;
 import frc.robot.commands.hanging.LowerBothArms;
 import frc.robot.commands.hanging.RaiseBothArms;
-import frc.robot.commands.intake.Intake;
+import frc.robot.commands.intake.IntakeNote;
 import frc.robot.commands.shooter.AmpAlign;
 import frc.robot.commands.shooter.SpeakerDefaultAlign;
 import frc.robot.commands.shooter.TrapAlign;
 import frc.robot.commands.shooter.shoot;
-import frc.robot.commands.shooterIndex.IntakeNote;
 import frc.robot.commands.vision.DefaultLimelightPipeline;
 import frc.robot.commands.vision.UpdateOdometry;
 import frc.robot.subsystems.DriveSubsystem;
@@ -331,11 +331,12 @@ public class RobotContainer {
               ));
     new POVButton(m_coDriverController, 0)
         .toggleOnTrue(
-            new Intake(
+            new CompleteIntake(
               m_intakeSubsystem,
               m_shooterPivotSubsystem,
               m_shooterIndexSubsystem,
-              m_indexSubsystem
+              m_indexSubsystem, 
+              m_intakePivotSubsystem
               ));
     //SpeakerDefaultAlign
     new JoystickButton(m_coDriverController, Button.kA.value)

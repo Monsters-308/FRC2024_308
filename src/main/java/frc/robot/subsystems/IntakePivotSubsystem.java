@@ -5,9 +5,11 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.IntakePivotConstants;
+import frc.robot.Constants.ShooterIndexConstants;
 
 public class IntakePivotSubsystem extends SubsystemBase {
 
@@ -17,6 +19,8 @@ public class IntakePivotSubsystem extends SubsystemBase {
   
   private final CANSparkMax m_masterMotor = new CANSparkMax(IntakePivotConstants.kMotorCanID, MotorType.kBrushed);
   private final CANSparkMax m_followerMotor = new CANSparkMax(IntakePivotConstants.KOtherMotorCanID, MotorType.kBrushed);
+  private final DigitalInput m_noteSensor = new DigitalInput(IntakePivotConstants.kDigitalSensorPin);
+
 
   private final DutyCycleEncoder m_intakePivotMotorEncoder = new DutyCycleEncoder(IntakePivotConstants.kEncoderPort);
 
@@ -91,6 +95,14 @@ public class IntakePivotSubsystem extends SubsystemBase {
     // This method will be called once per scheduler run
     //manageState();    
   }
+
+    public boolean gamePieceDetected(){
+        if (ShooterIndexConstants.kSensorInverted){
+            return !m_noteSensor.get();
+        }
+        return m_noteSensor.get();
+    }  
+
 
   /** Putting this in a separate function so we can comment it out easier */
   private void manageState(){
