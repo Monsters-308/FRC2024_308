@@ -1,6 +1,5 @@
-package frc.robot.commands.shooterIndex;
+package frc.robot.commands.shooter;
 import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.commands.shooter.autoWheelRevAndPivot;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystems.ShooterPivotSubsystem;

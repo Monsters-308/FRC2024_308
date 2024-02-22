@@ -161,6 +161,10 @@ public final class Constants {
 
     // Height to the bottom lip of speaker
     public static final double kSpeakerHeight = 0; // Change
+    public static final Translation2d kTrapPosition = new Translation2d(
+      0, 0 // Change
+    );
+    public static final double kTrapHeight = 0;
   }
 
   public static final class AutoConstants {
