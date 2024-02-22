@@ -23,7 +23,7 @@ import frc.robot.commands.drive.RobotGotoAngle;
 import frc.robot.commands.drive.TurningMotorsTest;
 import frc.robot.commands.shooter.shoot;
 import frc.robot.commands.shooterIndex.IntakeNote;
-import frc.robot.commands.shooterIndex.IDK;
+import frc.robot.commands.shooterIndex.LaunchNote;
 import frc.robot.commands.vision.DefaultLimelightPipeline;
 import frc.robot.commands.vision.UpdateOdometry;
 import frc.robot.subsystems.DriveSubsystem;
@@ -255,7 +255,7 @@ public class RobotContainer {
     
     new JoystickButton(m_coDriverController, Button.kA.value)
         .toggleOnTrue(
-          new IDK(m_shooterIndexSubsystem)
+          new LaunchNote(m_shooterIndexSubsystem)
         );
 
     new POVButton(m_coDriverController, 270)

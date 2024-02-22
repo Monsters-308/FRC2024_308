@@ -8,7 +8,7 @@ import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.Constants.AutoConstants;
 
 
-class autoSpeakerCoDriver extends SequentialCommandGroup  {
+public class autoSpeakerCoDriver extends SequentialCommandGroup  {
 
     /** Moves the robot in front of the amp  */
     public autoSpeakerCoDriver(ShooterPivotSubsystem shooterPivotSubsystem, DriveSubsystem driveSubsystem, ShooterSubsystem shooterSubsystem){

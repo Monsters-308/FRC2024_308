@@ -6,7 +6,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystems.ShooterIndexSubsystem;
 import frc.robot.subsystems.ShooterPivotSubsystem;
 
-class autoSpeaker extends SequentialCommandGroup  {
+public class autoSpeaker extends SequentialCommandGroup  {
 
     /**  */
     public autoSpeaker(DriveSubsystem driveSubsystem){
