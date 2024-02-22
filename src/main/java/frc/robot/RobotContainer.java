@@ -13,9 +13,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.auton.TemplateAuton;
 import frc.robot.commands.commandGroups.shooter.LaunchNote;
@@ -92,23 +90,6 @@ public class RobotContainer {
                 -MathUtil.applyDeadband(m_driverController.getRightX(), OIConstants.kDriveDeadband),
                 true, true),
             m_driveSubsystem));
-    // Joystick equivalent:
-    // new RunCommand(
-    // () -> m_robotDrive.drive(
-    // -MathUtil.applyDeadband(m_driverController.getY(),
-    // OIConstants.kDriveDeadband),
-    // -MathUtil.applyDeadband(m_driverController.getX(),
-    // OIConstants.kDriveDeadband),
-    // -MathUtil.applyDeadband(m_driverController.getTwist(),
-    // OIConstants.kDriveDeadband),
-    // true, true),
-    // m_robotDrive));
-
-    // Noah's shuffleboard Field testing:
-    // Field2d field2d = new Field2d();
-    // field2d.setRobotPose(new Pose2d(1, 0.4, new Rotation2d())); // Corrected pose
-    // //field2d.setRobotPose(new Pose2d(FieldConstants.kFieldWidthMeters, FieldConstants.KFieldHeightMeters, new Rotation2d()));
-    // Shuffleboard.getTab("Test").add("Test", field2d);
 
     // "registerCommand" lets pathplanner identify our commands
     // Here's the autoalign as an example:
@@ -129,9 +110,10 @@ public class RobotContainer {
     // Put chooser on the dashboard
     Shuffleboard.getTab("Autonomous").add("Select Auton", m_autonChooser).withSize(2, 1);
 
-    // DEBUG: shuffleboard widget for resetting pose. For now I'm using a default
-    // pose of 0, 0 and a rotation of 0
-    Shuffleboard.getTab("Swerve").add("Reset Pose", new InstantCommand(this::resetPose));
+    // DEBUG: shuffleboard widget for resetting pose. 
+    Shuffleboard.getTab("Swerve").add("Reset Pose", new InstantCommand(
+        () -> m_driveSubsystem.resetOdometry(
+            new Pose2d(0, 0, new Rotation2d(0)))));
 
     // DEBUG: shuffleboard widget for manually setting the odometry equal to the
     // vision calculation
@@ -190,6 +172,10 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
 
+    /*
+     * DRIVER BUTTONS:
+     */
+
     // Right bumper: puts drive into x mode
     new JoystickButton(m_driverController, Button.kRightBumper.value)
         .whileTrue(new RunCommand(
@@ -213,7 +199,7 @@ public class RobotContainer {
     // )
     // );
 
-    // A button: makes robot face 0 degrees
+    // A button: makes robot face 0 degrees (for testing)
     new JoystickButton(m_driverController, Button.kA.value)
         .toggleOnTrue(
             new RobotGotoAngle(
@@ -223,21 +209,15 @@ public class RobotContainer {
                 () -> m_driverController.getLeftX(),
                 () -> m_driverController.getRightX()));
 
-    // Joystick equivalent:
-    // new JoystickButton(m_driverController, Button.kA.value)
-    // .toggleOnTrue(
-    // new RobotGotoAngle(
-    // m_robotDrive,
-    // 0,
-    // () -> m_driverController.getY(),
-    // () -> m_driverController.getX()
-    // )
-    // );
-
-    // B button: sets gyro to 90 degrees
+    // B button: sets gyro to 90 degrees (for testing)
     new JoystickButton(m_driverController, Button.kB.value)
         .onTrue(new InstantCommand(
             () -> m_driveSubsystem.setHeading(90)));
+
+
+    /*
+     * CO-DRIVER BUTTONS:
+     */
 
     // Button for testing shooter:
     new JoystickButton(m_coDriverController, Button.kX.value)
@@ -253,11 +233,13 @@ public class RobotContainer {
           new IntakeNote(m_shooterIndexSubsystem)
         );
     
+    // A button: Launch note
     new JoystickButton(m_coDriverController, Button.kA.value)
         .toggleOnTrue(
           new LaunchNote(m_shooterIndexSubsystem)
         );
 
+    // Button for testing intake
     new POVButton(m_coDriverController, 270)
        .toggleOnTrue(
         new SequentialCommandGroup(
@@ -294,25 +276,12 @@ public class RobotContainer {
         .onFalse(
             new InstantCommand(() -> m_shooterPivotSubsystem.setSpeed(0), m_shooterPivotSubsystem));
 
-    // Indexer button
-    // new JoystickButton(m_coDriverController, Button.kB.value)
-    // .onTrue(
-    // new InstantCommand(() -> m_intakePivotSubsystem.setSpeed(-0.2))
-    // )
-    // .onFalse(
-    // new InstantCommand(() -> m_intakePivotSubsystem.setSpeed(0))
-    // );
 
     // new JoystickButton(m_coDriverController, Button.kright)
     // .onTrue(new shoot(
     // () -> m_shooterSubsystem, m_shooterPivotSubsystem, m_shooterIndexSubsystem,
     // .5,
     // .5));
-  }
-
-  public void resetPose() {
-    m_driveSubsystem.resetOdometry(
-        new Pose2d(0, 0, new Rotation2d(0)));
   }
 
   /**
