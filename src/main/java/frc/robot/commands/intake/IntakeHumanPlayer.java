@@ -12,8 +12,6 @@ public class IntakeHumanPlayer extends Command {
   private final ShooterPivotSubsystem m_shooterPivotSubsystem; 
   private final ShooterIndexSubsystem m_shooterIndexSubsystem;
   private final IndexSubsystem m_hotdogRoller;
-  //variables for motor speeds/velocities
-
 
   public IntakeHumanPlayer(ShooterPivotSubsystem shooterPivotSubsystem, ShooterIndexSubsystem shooterIndexSubsystem, 
                            IndexSubsystem indexSubsystem) {
@@ -32,7 +30,7 @@ public class IntakeHumanPlayer extends Command {
   @Override
   public void execute() {
   
-    if (m_shooterPivotSubsystem.getPosition() == ShooterPivotConstants.kshooterPivotDownPosition){
+    if (m_shooterPivotSubsystem.getPosition() == ShooterPivotConstants.kshooterPivotDeckPosition){
       m_hotdogRoller.setSpeed(IndexConstants.kIndexIntakeSpeed);
       m_shooterIndexSubsystem.setSpeed(ShooterIndexConstants.kIndexIntakeSpeed);
     }

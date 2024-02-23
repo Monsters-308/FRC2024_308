@@ -235,7 +235,11 @@ public final class Constants {
 
     public static final boolean kTurningMotorEncoderInverted = false;
     public static final double kAngleOffset = 0;
+
+    // Safety: prevent pivot from going beyond its minimum and maximum
     public static final double kPivotMinAngle = 0;
+    public static final double kPivotMaxAngle = 180;
+
     public static final int kEncoderPort = 0;
     public static final double kAngleTolerance = 1;
   
@@ -244,7 +248,12 @@ public final class Constants {
     public static final double kPivotD = 0.001;
 
     public static final double kShooterEncoderPositionFactor = 360; 
-    public static final int kIntakeDeckPostion = 45; //change
+
+    /*           Constants for pivot positions:            */
+
+    public static final double kIntakeDownPosition = 0; // Change
+    public static final double kIntakeDeckPostion = 45; // Change
+    public static final double kIntakeInPosition = 180; // Change
   }
 
   public static final class HangingConstants {
@@ -372,11 +381,11 @@ public final class Constants {
     // The horizontal distance between the center of the robot and the pivot
     public static final double kPivotCenterOffsetInches = 0; // Change
 
-    public static final double kshooterPivotDownPosition = 45; //in degrees
-    public static final double kshooterPivotUpPosition = 60;
-    public static final double kshooterPivotDeckPosition = 45;
+    public static final double kShooterPivotAmpPosition = 45;
+    public static final double kShooterPivotTrapPosition = 60;
+    public static final double kShooterPivotSpeakerPosition= 65;
 
-    public static final Translation2d kPivotPostiton = new Translation2d(25, 25);
+    public static final double kshooterPivotDeckPosition = 45;
   }
 
   public static final class ShooterIndexConstants {

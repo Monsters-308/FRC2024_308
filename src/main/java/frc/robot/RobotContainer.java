@@ -27,10 +27,10 @@ import frc.robot.commands.drive.TurningMotorsTest;
 import frc.robot.commands.hanging.LowerBothArms;
 import frc.robot.commands.hanging.RaiseBothArms;
 import frc.robot.commands.intake.IntakeNote;
-import frc.robot.commands.shooter.AmpAlign;
-import frc.robot.commands.shooter.SpeakerDefaultAlign;
-import frc.robot.commands.shooter.TrapAlign;
 import frc.robot.commands.shooter.shoot;
+import frc.robot.commands.shooterPivot.AmpAlign;
+import frc.robot.commands.shooterPivot.SpeakerDefaultAlign;
+import frc.robot.commands.shooterPivot.TrapAlign;
 import frc.robot.commands.vision.DefaultLimelightPipeline;
 import frc.robot.commands.vision.UpdateOdometry;
 import frc.robot.subsystems.DriveSubsystem;
@@ -104,14 +104,9 @@ public class RobotContainer {
 
     // "registerCommand" lets pathplanner identify our commands
     // Here's the autoalign as an example:
-    // NamedCommands.registerCommand("Auto Align",
-    // new AutoAim(
-    // m_visionSubsystem,
-    // m_robotDrive,
-    // () -> m_driverController.getLeftY(),
-    // () -> m_driverController.getLeftX()
-    // )
-    // );
+    NamedCommands.registerCommand("Intake Note",
+      new CompleteIntake(m_intakeSubsystem, m_shooterPivotSubsystem, m_shooterIndexSubsystem, m_indexSubsystem, m_intakePivotSubsystem)
+    );
 
     // Adding options to the sendable chooser
     m_autonChooser.setDefaultOption("Template Auton", new TemplateAuton(m_driveSubsystem));
