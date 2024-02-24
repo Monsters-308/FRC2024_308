@@ -257,11 +257,11 @@ public final class Constants {
   }
 
   public static final class HangingConstants {
-    public static final int kRightArmCanID = 17; // Change
+    public static final int kRightArmCanID = 18; // Change
     public static final int kRightArmUpperLimit = 8; // Change
     public static final int kRightArmLowerLimit = 9; // Change
 
-    public static final int kLeftArmCanID = 18; // Change
+    public static final int kLeftArmCanID = 19; // Change
     public static final int kLeftArmUpperLimit = 8; // Change
     public static final int kLeftArmLowerLimit = 9; // Change
 
@@ -291,7 +291,7 @@ public final class Constants {
   }
 
   public static final class IndexConstants {
-    public static final int kIndexMotorCanID = 11; // set
+    public static final int kIndexMotorCanID = 12; // set
 
     // Positive should bring the game piece to the shooter
     public static final boolean kIndexMotorInverted = false; // Change
@@ -350,7 +350,7 @@ public final class Constants {
   }
 
   public static final class ShooterPivotConstants {
-    public static final int kShooterPivotMotorCanID = 12; 
+    public static final int kShooterPivotMotorCanID = 11; 
 
     public static final int kEncoderPort = 8;
     public static final double kEncoderPeriod = 1025;

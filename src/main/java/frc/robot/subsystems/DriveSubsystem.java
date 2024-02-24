@@ -96,14 +96,14 @@ public class DriveSubsystem extends SubsystemBase {
       new Pose2d(),
       /**
        * VecBuilder -> Standard deviations of model states. Increase these numbers to trust your model's state estimates less. This
-       * matrix is in the form [x, y, theta]ᵀ, with units in meters and radians, then meters.
+       * matrix is in the form [x, y, theta]ᵀ, with units in meters and radians.
       */
       VecBuilder.fill(0.1, 0.1, .1),
       /**
        * Standard deviations of the vision measurements. Increase these numbers to trust global measurements from vision
        * less. This matrix is in the form [x, y, theta]ᵀ, with units in meters and radians.
       */
-      VecBuilder.fill(1.5, 1.5, 1.5)
+      VecBuilder.fill(1.5, 1.5, 2)
   );
 
   /** Creates a new DriveSubsystem. */
