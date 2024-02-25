@@ -8,29 +8,12 @@ import java.util.function.DoubleSupplier;
 
 public class LEDSubsystem extends SubsystemBase {
  
-  public enum LEDState {
-    //These comments were added in by Marcus
-    NONE, //Turn LEDs off
-    RAINBOW, //Static rainbow hew across LEDs
-    BLACKWHITE, //turbo mode rainbow red
-    SOLID, //Static single color
-    PULSE, //Flip between two colors at blink speed
-    STREAK, //One per LED color moves down the strip
-    BLINK, //Single color turns on and off
-    GREEN,
-    YELLOW,
-    TEAL,
-    TURBO,
-    ORANGE,
-    TEST,
-    RED
-  }
-
-  private LEDState m_ledMode;
+  private Runnable activeFunction; // Reference to the currently active LED function
   private AddressableLED m_led;
   private AddressableLEDBuffer m_ledBuffer;
   private int[] LEDColor = {255, 0, 0}; //RGB
   private int m_rainbowFirstPixelHue = 0;
+  private int m_policeLights = 0;
   private double robotPitch;
   private int m_TurboFirstPixelHue = 0;
   private int rainbowSunshine = 0;
@@ -38,7 +21,6 @@ public class LEDSubsystem extends SubsystemBase {
   public LEDSubsystem(DoubleSupplier Pitch){
     robotPitch = Pitch.getAsDouble();
     // Must be a PWM header, not MXP or DIO
-    m_ledMode = LEDState.RAINBOW;
     m_led = new AddressableLED(0);
 
     // Reuse buffer
@@ -50,53 +32,18 @@ public class LEDSubsystem extends SubsystemBase {
 
     // Set the data
     m_led.setData(m_ledBuffer);
-    m_led.start();    
+    m_led.start();
+    
+    activeFunction = this::rainbow;    
   }
 
   @Override
   public void periodic() {    
-    switch(m_ledMode) {
-      case RAINBOW:
-        rainbow();
-        break;
-      case SOLID:
-        solid(LEDColor);
-        break;
-      case BLACKWHITE:
-        red();
-        break;
-      case GREEN:
-        green();
-        break;
-      case YELLOW:
-        yellow();
-        break;
-      case RED:
-        red();
-        break;
-      case TEAL:
-        teal();
-        break;
-      case TURBO:
-        turbo();
-        break;
-      case ORANGE:
-        orange();
-        break;
-      case TEST:
-        test();
-        break;
-      default:
-        rainbow();
-        break;
-      
-    }
+    activeFunction.run();
+
     m_rainbowFirstPixelHue = Math.abs((int)robotPitch) + m_TurboFirstPixelHue;
   }
     
-  public void changeLEDState(LEDState mode) {
-    this.m_ledMode = mode;
-  }
 
   public void teal() {
     for (var i = 0; i < m_ledBuffer.getLength(); i++) {
@@ -154,7 +101,7 @@ public class LEDSubsystem extends SubsystemBase {
     m_led.setData(m_ledBuffer);
   }
 
-  private void rainbow() {
+  public void rainbow() {
 
     // For every pixel
     for (var i = 0; i < m_ledBuffer.getLength(); i++) {
@@ -171,45 +118,24 @@ public class LEDSubsystem extends SubsystemBase {
     m_led.setData(m_ledBuffer);
   }
 
-  private void test() {
-    // For every pixel
 
-    for (var i = 0; i < m_ledBuffer.getLength(); i++) {
-      // Calculate the hue - hue is easier for rainbows because the color
-      // shape is a circle so only one value needs to precess
-      final var hue = (m_TurboFirstPixelHue + (i * 180 / m_ledBuffer.getLength())) % 180;
-      
-      // Set the value
-      if (hue > 100){
-        m_ledBuffer.setRGB(i, hue, 0, 255);
-      }
-      else{
-        m_ledBuffer.setRGB(i, 255, 0, hue);
-      }
+  public void police() {
+    // Calculate the hue based on the overall policeLights value
+    for (int i = 0; i < m_ledBuffer.getLength(); i++) {
+        if (m_policeLights > 90) {
+            m_ledBuffer.setRGB(i, 0, 0, 255); // Set to blue
+        } else {
+            m_ledBuffer.setRGB(i, 255, 0, 0); // Set to red
+        }
     }
 
-    // Increase by to make the rainbow "move"
-    m_TurboFirstPixelHue += 3;
-    // Check bounds
-    m_TurboFirstPixelHue %= 180;
+    m_policeLights += 3;
+    m_policeLights %= 180;
     m_led.setData(m_ledBuffer);
-  }
+}
 
-  private void turbo() {
-    // For every pixel
-
-    for (var i = 0; i < m_ledBuffer.getLength(); i++) {
-      // Calculate the hue - hue is easier for rainbows because the color
-      // shape is a circle so only one value needs to precess
-      final var hue = (m_TurboFirstPixelHue + (i * 180 / m_ledBuffer.getLength())) % 180;
-      // Set the value
-      m_ledBuffer.setRGB(i, 200, hue, 0);
-    }
-    // Increase by to make the rainbow "move"
-    m_TurboFirstPixelHue += 3;
-    // Check bounds
-    m_TurboFirstPixelHue %= 180;
-    m_led.setData(m_ledBuffer);
-  }
-  
+public void setLEDFunction(Runnable function) {
+  // Set the LED function to be called periodically
+  activeFunction = function;
+}
 }

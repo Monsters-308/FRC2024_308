@@ -23,7 +23,6 @@ import frc.robot.commands.commandGroups.drive.autoSpeaker;
 import frc.robot.commands.commandGroups.drive.autoTrapShoot;
 import frc.robot.commands.commandGroups.intake.CompleteIntake;
 import frc.robot.commands.commandGroups.shooter.LaunchNote;
-import frc.robot.commands.drive.AutoAimStatic;
 import frc.robot.commands.drive.RobotGotoAngle;
 import frc.robot.commands.drive.TurningMotorsTest;
 import frc.robot.commands.hanging.LowerBothArms;
@@ -37,10 +36,9 @@ import frc.robot.commands.vision.UpdateOdometry;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.HangingSubsystem;
 import frc.robot.subsystems.IndexSubsystem;
+import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.subsystems.IntakePivotSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
-import frc.robot.subsystems.LEDSubsystem;
-import frc.robot.subsystems.LEDSubsystem.LEDState;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.ShooterPivotSubsystem;
 import frc.robot.subsystems.ShooterIndexSubsystem;
@@ -65,7 +63,7 @@ public class RobotContainer {
   private final VisionSubsystem m_visionSubsystem = new VisionSubsystem();
   private final DriveSubsystem m_driveSubsystem = new DriveSubsystem(() -> m_visionSubsystem.getRobotPosition(),
       () -> m_visionSubsystem.getTimeStampEstimator());
-  //private final LEDSubsystem m_LEDSubsystem = new LEDSubsystem(() -> m_driveSubsystem.getRobotPitch());
+  private final LEDSubsystem m_LEDSubsystem = new LEDSubsystem(() -> m_driveSubsystem.getRobotPitch());
   private final ShooterSubsystem m_shooterSubsystem = new ShooterSubsystem();
   private final ShooterPivotSubsystem m_shooterPivotSubsystem = new ShooterPivotSubsystem();
   private final ShooterIndexSubsystem m_shooterIndexSubsystem = new ShooterIndexSubsystem();
@@ -73,6 +71,7 @@ public class RobotContainer {
   private final IntakePivotSubsystem m_intakePivotSubsystem = new IntakePivotSubsystem();
   private final IndexSubsystem m_indexSubsystem = new IndexSubsystem();
   private final HangingSubsystem m_hangingSubsystem = new HangingSubsystem();
+
 
   // Controllers
   final XboxController m_driverController = new XboxController(OIConstants.kDriverControllerPort);
@@ -106,7 +105,7 @@ public class RobotContainer {
     // "registerCommand" lets pathplanner identify our commands
     // Here's the autoalign as an example:
     NamedCommands.registerCommand("Intake Note",
-      new CompleteIntake(m_intakeSubsystem, m_shooterPivotSubsystem, m_shooterIndexSubsystem, m_indexSubsystem, m_intakePivotSubsystem)
+      new CompleteIntake(m_intakeSubsystem, m_shooterPivotSubsystem, m_shooterIndexSubsystem, m_indexSubsystem, m_intakePivotSubsystem, m_LEDSubsystem)
     );
 
     // Adding options to the sendable chooser

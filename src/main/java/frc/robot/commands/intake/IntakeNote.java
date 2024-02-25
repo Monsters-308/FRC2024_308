@@ -52,4 +52,5 @@ public class IntakeNote extends Command {
   public boolean isFinished() {
     return m_intakeSubsystem.gamePieceDetected();
   }
+
 }
