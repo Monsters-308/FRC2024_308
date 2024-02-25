@@ -23,12 +23,14 @@ import frc.robot.commands.commandGroups.drive.autoSpeaker;
 import frc.robot.commands.commandGroups.drive.autoTrapShoot;
 import frc.robot.commands.commandGroups.intake.CompleteIntake;
 import frc.robot.commands.commandGroups.shooter.LaunchNote;
+import frc.robot.commands.drive.AutoAimDynamic;
 import frc.robot.commands.drive.RobotGotoAngle;
 import frc.robot.commands.drive.TurningMotorsTest;
 import frc.robot.commands.hanging.LowerBothArms;
 import frc.robot.commands.hanging.RaiseBothArms;
+import frc.robot.commands.index.RunIndex;
 import frc.robot.commands.intake.IntakeNote;
-import frc.robot.commands.shooterIndex.IndexNote;
+import frc.robot.commands.intake.RunIntake;
 import frc.robot.commands.shooterIndex.IndexNoteGood;
 import frc.robot.commands.shooterPivot.PivotGoToPose;
 import frc.robot.commands.vision.DefaultLimelightPipeline;
@@ -44,6 +46,7 @@ import frc.robot.subsystems.ShooterPivotSubsystem;
 import frc.robot.subsystems.ShooterIndexSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -189,11 +192,17 @@ public class RobotContainer {
     // Auto Aim speaker
     new JoystickButton(m_driverController, Button.kA.value)
         .toggleOnTrue(
-            new autoSpeaker(
-                m_driveSubsystem,
-                m_shooterPivotSubsystem,
-                m_shooterSubsystem
-                ));
+            // new autoSpeaker(
+            //     m_driveSubsystem,
+            //     m_shooterPivotSubsystem,
+            //     m_shooterSubsystem
+            //     ));
+            new AutoAimDynamic(
+              m_visionSubsystem, 
+              m_driveSubsystem, 
+              m_shooterPivotSubsystem,
+              () -> m_driverController.getLeftY(),
+              () -> m_driverController.getLeftX()));
 
     // Auto Aim Amp
     new JoystickButton(m_driverController, Button.kB.value)
@@ -368,19 +377,11 @@ public class RobotContainer {
 
     // Dpad Right: intaking test
     new POVButton(m_coDriverController, 90)
-        .onTrue(
-          new SequentialCommandGroup(
-            new InstantCommand(() -> m_indexSubsystem.setSpeed(IndexConstants.kIndexIntakeSpeed), m_indexSubsystem),
-            new InstantCommand(() -> m_intakeSubsystem.setSpeed(1), m_intakeSubsystem)
-          )
-        ) 
         .whileTrue(
-          new IndexNoteGood(m_shooterIndexSubsystem)
-        )
-        .onFalse(
-          new SequentialCommandGroup(
-            new InstantCommand(() -> m_indexSubsystem.setSpeed(0), m_indexSubsystem),
-            new InstantCommand(() -> m_intakeSubsystem.setSpeed(0), m_intakeSubsystem)
+          new ParallelCommandGroup(
+            new IndexNoteGood(m_shooterIndexSubsystem),
+            new RunIndex(m_indexSubsystem, IndexConstants.kIndexIntakeSpeed),
+            new RunIntake(m_intakeSubsystem, 1)
           )
         );
 

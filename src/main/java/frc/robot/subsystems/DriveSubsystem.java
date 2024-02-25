@@ -77,7 +77,11 @@ public class DriveSubsystem extends SubsystemBase {
 
   // Shuffleboard objects
   private final ShuffleboardTab swerveTab = Shuffleboard.getTab("Swerve");
-  private final SimpleWidget AllianceWidget;
+  // Add alliance widget (it's just a boolean widget but I manually change the color)
+  private final SimpleWidget m_allianceWidget = swerveTab.add("Alliance", true); 
+  // Widget for when the limelight breaks
+  private final SimpleWidget m_useLimelightData = swerveTab.add("Limelight Data", true)
+    .withWidget(BuiltInWidgets.kToggleSwitch); 
 
   // Suppliers for pose estimation with vision data
   private final Supplier<Pose2d> m_visionPose;
@@ -160,14 +164,12 @@ public class DriveSubsystem extends SubsystemBase {
         () -> FieldUtils.getAlliance() == Alliance.Red, 
         this // Reference to this subsystem to set requirements
     );
-
-    // Add alliance widget (it's just a boolean widget but I manually change the color)
-    AllianceWidget = swerveTab.add("Alliance", true);
+   
   }
 
   @Override
   public void periodic() {
-    // Update the odometry in the periodic block
+    // Update pose estimation with odometry data
     m_odometry.update(
       Rotation2d.fromDegrees(getGyroAngle()),
        new SwerveModulePosition[] {
@@ -177,35 +179,33 @@ public class DriveSubsystem extends SubsystemBase {
           m_rearRight.getPosition()
       });
       
-    
+    // Try to add vision data to pose estimation
     double timestamp = m_visionTimestamp.getAsDouble();
-
     Pose2d pose = m_visionPose.get();
     
-    if(pose != null){
+    if((pose != null) && (m_useLimelightData.getEntry().getBoolean(true))){
       m_odometry.addVisionMeasurement(pose, timestamp);
     }
     
     // Update field widget
     m_field.setRobotPose(FieldUtils.redWidgetFlip(getPose()));
   
-
     // Widget that shows color of alliance
     if (FieldUtils.getAlliance(true) == null) {
-      AllianceWidget.withProperties(Map.of(
+      m_allianceWidget.withProperties(Map.of(
           "Color when true", "Gray"
         ));
     }
     else {
       switch (FieldUtils.getAlliance(false)) {
         case Blue:
-          AllianceWidget.withProperties(Map.of(
+          m_allianceWidget.withProperties(Map.of(
             "Color when true", "Blue"
           ));
           break;
         
         case Red:
-          AllianceWidget.withProperties(Map.of(
+          m_allianceWidget.withProperties(Map.of(
             "Color when true", "Red"
           ));
           break;

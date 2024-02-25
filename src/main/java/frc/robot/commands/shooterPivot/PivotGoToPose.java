@@ -1,5 +1,4 @@
 package frc.robot.commands.shooterPivot;
-import frc.robot.Constants.ShooterPivotConstants;
 import frc.robot.subsystems.ShooterPivotSubsystem;
 import edu.wpi.first.wpilibj2.command.Command; 
   //:3
@@ -8,6 +7,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 public class PivotGoToPose extends Command {  
   private final ShooterPivotSubsystem m_shooterPivotSubsystem;  
   private final double m_pivotAngle;
+  
   public PivotGoToPose(ShooterPivotSubsystem pivotSubsystem, double pivotAngle) {
     m_shooterPivotSubsystem = pivotSubsystem; 
     m_pivotAngle = pivotAngle; 

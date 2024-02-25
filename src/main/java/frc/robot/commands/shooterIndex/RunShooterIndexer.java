@@ -9,7 +9,7 @@ public class RunShooterIndexer extends Command {
 
   /**
    * Runs the shooter indexer motor at a specified speed.
-   * NOTE: this is equivalent to new InstantCommand(() -> m_shooterIndexSubsystem.setSpeed(0), shooterIndexSubsystem) 
+   * NOTE: this is equivalent to new InstantCommand(() -> m_shooterIndexSubsystem.setSpeed(speed), shooterIndexSubsystem) 
    * except it stops the motor when interrupted.
    * @param indexSubsystem
    */

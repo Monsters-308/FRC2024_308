@@ -80,14 +80,14 @@ public class RobotGotoAngle extends Command {
             -MathUtil.applyDeadband(m_xSpeed.getAsDouble(), OIConstants.kJoystickDeadband),
             -MathUtil.applyDeadband(m_ySpeed.getAsDouble(), OIConstants.kJoystickDeadband),
             rotation,
-            true, false
+            true, true
         );
         
         // if(pidController.atSetpoint()){
         //     m_complete = true;
         // }
 
-        if (m_driverRotation.getAsDouble() != 0){
+        if (MathUtil.applyDeadband(m_driverRotation.getAsDouble(), OIConstants.kJoystickDeadband) != 0){
             m_complete = true;
         }
     }

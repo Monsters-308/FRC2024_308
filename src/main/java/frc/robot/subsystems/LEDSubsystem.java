@@ -132,10 +132,10 @@ public class LEDSubsystem extends SubsystemBase {
     m_policeLights += 3;
     m_policeLights %= 180;
     m_led.setData(m_ledBuffer);
-}
+  }
 
-public void setLEDFunction(Runnable function) {
-  // Set the LED function to be called periodically
-  activeFunction = function;
-}
+  public void setLEDFunction(Runnable function) {
+    // Set the LED function to be called periodically
+    activeFunction = function;
+  }
 }

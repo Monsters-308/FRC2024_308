@@ -7,7 +7,6 @@ import frc.robot.subsystems.ShooterPivotSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import frc.utils.FieldUtils;
 
 public class autoAmp extends ParallelCommandGroup  {
 

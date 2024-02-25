@@ -20,7 +20,7 @@ import frc.robot.subsystems.ShooterPivotSubsystem;
 
 import frc.robot.subsystems.VisionSubsystem;
 import frc.utils.OdometryUtils;
-import frc.utils.ShooterUtils;
+//import frc.utils.ShooterUtils;
 
 public class AutoAimDynamic extends Command {
 
@@ -89,7 +89,7 @@ public class AutoAimDynamic extends Command {
 
         SmartDashboard.putNumber("Distance to goal", distanceToTarget);
         SmartDashboard.putNumber("Angle to goal", angleToTarget.getDegrees());
-        SmartDashboard.putNumber("limelightX", m_visionSubsystem.getX());
+        //SmartDashboard.putNumber("limelightX", m_visionSubsystem.getX());
 
 
 
@@ -102,10 +102,10 @@ public class AutoAimDynamic extends Command {
             2. Move the shooter to meet that pot value, do this by using PID to go to the angleToTarget
             3. Shoot the note at the fastest possible speed, lets see how it works
         */
-        double encoderValue = 0;
-        double offset = 1; 
-        double speedAngleChange = 0;
-        double maxDistanceShot = 20;
+        // double encoderValue = 0;
+        // double offset = 1; 
+        // double speedAngleChange = 0;
+        // double maxDistanceShot = 20;
 
         
 
@@ -123,33 +123,33 @@ public class AutoAimDynamic extends Command {
             
     }
 
-    public void shooterPivotToCrosshair(){
-        double xCrosshairDistance = m_visionSubsystem.getX();
-        double yCrosshairDistance = m_visionSubsystem.getY();
-        //Translation2d pos1 = m_driveSubsystem.getPose().getTranslation(); // Position of robot on field
-        Translation2d pos1 = new Translation2d(0, 0); //assuming the limelight has crosshair offset setup
-        Translation2d pos2 = new Translation2d(xCrosshairDistance, yCrosshairDistance); //speaker position 
+    // public void shooterPivotToCrosshair(){
+    //     double xCrosshairDistance = m_visionSubsystem.getX();
+    //     double yCrosshairDistance = m_visionSubsystem.getY();
+    //     //Translation2d pos1 = m_driveSubsystem.getPose().getTranslation(); // Position of robot on field
+    //     Translation2d pos1 = new Translation2d(0, 0); //assuming the limelight has crosshair offset setup
+    //     Translation2d pos2 = new Translation2d(xCrosshairDistance, yCrosshairDistance); //speaker position 
 
-        Rotation2d angleToTarget = OdometryUtils.anglePoseToPose(pos1, pos2); // Angle to make robot face speacker
-
-
-        //here we need to calculate the angle required to make a shot
+    //     Rotation2d angleToTarget = OdometryUtils.anglePoseToPose(pos1, pos2); // Angle to make robot face speacker
 
 
-        //pivotController.setSetpoint(0);
-        //double rotation = angleController.calculate(yCrosshairDistance);        
-    }
+    //     //here we need to calculate the angle required to make a shot
+
+
+    //     //pivotController.setSetpoint(0);
+    //     //double rotation = angleController.calculate(yCrosshairDistance);        
+    // }
     
     /**
      * Gets the proper pivot to angle the shooter at the speaker according the the m_driveSubsystem.getPose() and FieldConstants.kSpeakerPosition, FieldConstants.kSpeakerHeight
      * @return The angle to pivot towards the speaker as a double
      */
-    public void shooterPivotToSpeakerField(){
-        //change second parameter to shooter util robot pos
-        double anglePivot = ShooterUtils.shooterAngleToFacePoint(m_driveSubsystem.getPose().getTranslation(), FieldConstants.kSpeakerPosition, FieldConstants.kSpeakerHeight);
+    // public void shooterPivotToSpeakerField(){
+    //     //change second parameter to shooter util robot pos
+    //     double anglePivot = ShooterUtils.shooterAngleToFacePoint(m_driveSubsystem.getPose().getTranslation(), FieldConstants.kSpeakerPosition, FieldConstants.kSpeakerHeight);
 
-        m_shooterPivotSubsystem.setPosition(anglePivot);
-    }
+    //     m_shooterPivotSubsystem.setPosition(anglePivot);
+    // }
 
     /*This function is called once when the command ends.
      * A command ends either when you tell it to end with the "isFinished()" function below, or when it is interupted.

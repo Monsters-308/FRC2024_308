@@ -54,7 +54,7 @@ public class OdometryUtils {
         double x2 = pointB.getX();
         double y2 = pointB.getY();
 
-        double distance = Math.sqrt(Math.abs(Math.pow(x1-x2,2))+Math.abs(Math.pow(y1-y2,2)));
+        double distance = Math.sqrt(Math.abs(Math.pow(x1-x2, 2)) + Math.abs(Math.pow(y1-y2, 2)));
 
         return distance;
     }
