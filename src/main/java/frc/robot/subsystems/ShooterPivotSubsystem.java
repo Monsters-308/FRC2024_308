@@ -6,8 +6,7 @@ import com.revrobotics.CANSparkMax;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;  
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc.robot.Constants.ShooterPivotConstants;
@@ -28,11 +27,12 @@ public class ShooterPivotSubsystem extends SubsystemBase {
     m_shooterPivotMotor.restoreFactoryDefaults();
     
     // Conversion factor from default unit of rotations to RADIANS
-    //returns a distance of kShooterEncoderPositionFactor for every rotation
-    m_shooterPivotMotorEncoder.setDistancePerRotation(Math.PI * 2);
+    // returns a distance of kShooterEncoderPositionFactor for every rotation
+    m_shooterPivotMotorEncoder.setDistancePerRotation(ShooterPivotConstants.kShooterEncoderPositionFactor);
     //m_shooterPivotMotorEncoder.setDistancePerRotation(0.5); TEST
+
     // Set DutyCycle range (Note: This should fix everything but)
-    //what would happen if we dont set the value??
+    // what would happen if we dont set the value??
     m_shooterPivotMotorEncoder.setDutyCycleRange(
         1 / ShooterPivotConstants.kEncoderPeriod, 
         (ShooterPivotConstants.kEncoderPeriod-1) / ShooterPivotConstants.kEncoderPeriod);
@@ -52,6 +52,10 @@ public class ShooterPivotSubsystem extends SubsystemBase {
     m_shooterPivotMotor.burnFlash();
 
     pivotTab.addDouble("Pivot Angle", () -> getPosition().getDegrees());
+    pivotTab.addDouble("Get", () -> m_shooterPivotMotorEncoder.get());
+    pivotTab.addDouble("Get Absolute", () -> m_shooterPivotMotorEncoder.getAbsolutePosition());
+    pivotTab.addDouble("Get Distance", () -> m_shooterPivotMotorEncoder.getDistance());
+    pivotTab.addBoolean("ShooterPivot Connected", () -> m_shooterPivotMotorEncoder.isConnected());
   }
 
   /**
@@ -110,9 +114,6 @@ public class ShooterPivotSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    SmartDashboard.putBoolean("ShooterPivot Connected", m_shooterPivotMotorEncoder.isConnected());
-    SmartDashboard.putNumber("ShooterPivot value", m_shooterPivotMotorEncoder.getAbsolutePosition());
-    SmartDashboard.putNumber("ShooterPivot Radians", m_shooterPivotMotorEncoder.getAbsolutePosition()* 2.0 * Math.PI);
     manageState();    
   }
 

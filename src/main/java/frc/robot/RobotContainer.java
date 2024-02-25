@@ -384,15 +384,6 @@ public class RobotContainer {
           )
         );
 
-    // Indexer button
-    // new JoystickButton(m_coDriverController, Button.kB.value)
-    // .onTrue(
-    // new InstantCommand(() -> m_intakePivotSubsystem.setSpeed(-0.2))
-    // )
-    // .onFalse(
-    // new InstantCommand(() -> m_intakePivotSubsystem.setSpeed(0))
-    // );
-
     // Right trigger: shoot note 
     new Trigger(() -> m_coDriverController.getRightTriggerAxis() > .5)
       .toggleOnTrue(
