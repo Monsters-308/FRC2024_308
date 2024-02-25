@@ -2,15 +2,15 @@ package frc.robot.commands.shooterPivot;
 import frc.robot.Constants.ShooterPivotConstants;
 import frc.robot.subsystems.ShooterPivotSubsystem;
 import edu.wpi.first.wpilibj2.command.Command; 
-  
+  //:3
 
     
-public class SpeakerDefaultAlign extends Command {  
+public class PivotGoToPose extends Command {  
   private final ShooterPivotSubsystem m_shooterPivotSubsystem;  
-
-  public SpeakerDefaultAlign(ShooterPivotSubsystem pivotSubsystem) {
+  private final double m_pivotAngle;
+  public PivotGoToPose(ShooterPivotSubsystem pivotSubsystem, double pivotAngle) {
     m_shooterPivotSubsystem = pivotSubsystem; 
-
+    m_pivotAngle = pivotAngle; 
     addRequirements(m_shooterPivotSubsystem);
   }
 
@@ -23,7 +23,7 @@ public class SpeakerDefaultAlign extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_shooterPivotSubsystem.setPosition(ShooterPivotConstants.kShooterPivotSpeakerPosition); //
+    m_shooterPivotSubsystem.setPosition(m_pivotAngle); 
 
   }
 
@@ -37,9 +37,6 @@ public class SpeakerDefaultAlign extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (m_shooterPivotSubsystem.getPosition() == ShooterPivotConstants.kShooterPivotSpeakerPosition){
-        return true; 
-    } 
-    return false;
+    return m_shooterPivotSubsystem.inPosition();
   }
 }

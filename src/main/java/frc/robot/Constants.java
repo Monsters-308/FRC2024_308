@@ -6,6 +6,8 @@ package frc.robot;
 
 import com.revrobotics.CANSparkBase.IdleMode;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
@@ -87,7 +89,6 @@ public final class Constants {
     public static final double kDrivingP = 0.04;
     public static final double kDrivingI = 0;
     public static final double kDrivingD = 0;
-    //TODO: We need to figure out how feedforwards work and how to use them.
     public static final double kDrivingFF = 1 / kDriveWheelFreeSpeedRps; 
     public static final double kDrivingMinOutput = -1;
     public static final double kDrivingMaxOutput = 1;
@@ -127,6 +128,7 @@ public final class Constants {
     public static final boolean kGyroReversed = true;
 
     // This is used for making the robot face a certain direction
+    // TODO: look make sure you test these
     public static final double kHeadingP = 0.05;
     public static final double kHeadingI = 0;
     public static final double kHeadingD = 0.001;
@@ -137,14 +139,15 @@ public final class Constants {
     public static final double kTranslationP = 5;
     public static final double kTranslationI = 0;
     public static final double kTranslationD = 0;
-    public static final double kTranslationMaxOutput = 0.5; // Percent
+    public static final double kTranslationMaxOutput = 0.5; // Percent // TODO: remember to set this to 1 after testing
     public static final double kTranslationTolerance = Units.inchesToMeters(3); // Meters
   }
 
   public static final class OIConstants {
     public static final int kDriverControllerPort = 0;
     public static final int kCoDriverControllerPort = 1;
-    public static final double kDriveDeadband = 0.05;
+    public static final double kJoystickDeadband = 0.05;
+    public static final double kTriggerDeadband = 0.5;
   }
 
   public static final class FieldConstants{
@@ -154,17 +157,35 @@ public final class Constants {
     public static final double KFieldHeightMeters = 8.2;
     
     // Position of the speaker on the field (in meters)
-    // This will need to be flipped for red alliance
     public static final Translation2d kSpeakerPosition = new Translation2d(
       0, 0 // Change
     );
 
     // Height to the bottom lip of speaker
     public static final double kSpeakerHeight = 0; // Change
+
     public static final Translation2d kTrapPosition = new Translation2d(
       0, 0 // Change
     );
     public static final double kTrapHeight = 0;
+
+    public static final Pose2d kAmpScoringPosition = new Pose2d(
+      0,
+      0, 
+      Rotation2d.fromDegrees(0)
+    );
+
+    public static final Pose2d kSpeakerScoringPosition = new Pose2d(
+      0,
+      0,
+      Rotation2d.fromDegrees(0)
+    );
+    
+    public static final Pose2d kTrapScoringPosition = new Pose2d(
+      0,
+      0,
+      Rotation2d.fromDegrees(0)
+    );
   }
 
   public static final class AutoConstants {
@@ -193,26 +214,6 @@ public final class Constants {
   }
 
   public static final class VisionConstants {
-    // How many degrees is your limelight rotated from perfectly vertical
-    public static final double kLimelightMountAngle = 0; // Change
-
-    // Limelight lens height from floor in inches
-    public static final double kLimelightLensHeight = 20; // Change
-
-    // Distance between your limelight lense and the center of the robot in inches
-    public static final double kLimelightDistanceFromCenter = 4.5; // Change
-
-    // public static final double kSpeakerHeightFromLimelightHeightInches = 71.25;
-    // public static final double kBottomReflectiveTapeHeight = 24;
-
-    // public static final double kTopPoleDesiredDistance = 24;
-    // public static final double kDistanceTolerance = 2;
-    // public static final double kMaxForwardSpeed = 0.7;
-    // public static final double kForwardSpeedPConstant = 0.1;
-
-    // public static final double kRotationSpeed = 0.2;
-    // public static final double kRotationTolerance = 2;
-
     // Pipeline constants
     public static final int kAprilTagPipeline = 0;
     // public static final int kReflectiveTapePipeline = 3;
@@ -260,17 +261,17 @@ public final class Constants {
     public static final int kRightArmCanID = 18; // Change
     public static final int kRightArmUpperLimit = 8; // Change
     public static final int kRightArmLowerLimit = 9; // Change
+    public static final boolean kRightArmInverted = false; // Change
 
     public static final int kLeftArmCanID = 19; // Change
     public static final int kLeftArmUpperLimit = 8; // Change
     public static final int kLeftArmLowerLimit = 9; // Change
+    public static final boolean kLeftArmInverted = false; // Change
 
     public static final double kPitchP = 0.05;
     public static final double kPitchI = 0;
     public static final double kPitchD = 0.001;
 
-    // Forwards should be extension, Reverse should be retraction
-    public static final boolean kHangingMotorInverted = false; // Change
     public static final int kHangingMotorCurrentLimit = 35;
 
   }
@@ -278,7 +279,7 @@ public final class Constants {
   public static final class IntakeConstants {
     public static final int kIntakeMotorCanID = 14; 
 
-    public static final int kDigitalSensorPin = 8; // Change
+    public static final int kDigitalSensorPin = 7;
     public static final boolean kSensorInverted = true;
 
     // Positive intakes the piece, negative retracts the piece
@@ -294,9 +295,9 @@ public final class Constants {
     public static final int kIndexMotorCanID = 12; // set
 
     // Positive should bring the game piece to the shooter
-    public static final boolean kIndexMotorInverted = false; // Change
+    public static final boolean kIndexMotorInverted = true; 
     public static final int kIndexMotorCurrentLimit = 35; // Change
-    public static final double kIndexIntakeSpeed = .8;
+    public static final double kIndexIntakeSpeed = .5;
   }
 
   public static final class ShooterConstants {
@@ -337,7 +338,7 @@ public final class Constants {
     //                ************* Super important constants for math **************
 
     // Offsets from pivot to end of shooter
-    public static final double kShooterVerticalOffset = 2; // Inches // Change
+    public static final double kShooterVerticalOffset = 3; // Inches // Change
     public static final double kShooterHorizontalOffset = 5; // Inches // Change
 
     // Angle of depression
@@ -356,21 +357,19 @@ public final class Constants {
     public static final double kEncoderPeriod = 1025;
 
     // Positive will be tilting the pivot upwards
-    public static final boolean kTurningMotorInverted = false; // Change
+    public static final boolean kTurningMotorInverted = true; 
     public static final boolean kTurningMotorEncoderInverted = false; // Change
     
-    public static final double kShooterEncoderPositionFactor = (2 * Math.PI); // radians //TODO: this is assuming that the native unit for the encoder is revolutions. Double check
-
-    public static final double kTurningEncoderPositionPIDMinInput = 0; // radians
+    public static final double kShooterEncoderPositionFactor = (2 * Math.PI); // radians
 
     // Just like with the swerve wheels, this allows us to offset the encoder by a specific amount
-    public static final double kAngleOffset = 0; // Change
+    public static final double kAngleOffset = Math.toRadians(-2.9); // Change
 
     // Safety: let's set max and min angles for the shooter pivot so we don't accidentally rotate too far in one direction
-    public static final double kPivotMinAngle = 0; // radians
-    public static final double kPivotMaxAngle = Math.toRadians(80); // radians
+    public static final double kPivotMinAngle = Math.toRadians(30.5);
+    public static final double kPivotMaxAngle = Math.toRadians(64); 
 
-    public static final double kAngleTolerance = Math.toRadians(0.5);
+    public static final double kAngleTolerance = 1;
     
     public static final IdleMode kTurningMotorIdleMode = IdleMode.kBrake;
     public static final int kTurningMotorCurrentLimit = 20; // amps
@@ -383,14 +382,14 @@ public final class Constants {
 
     public static final double kShooterPivotAmpPosition = 45;
     public static final double kShooterPivotTrapPosition = 60;
-    public static final double kShooterPivotSpeakerPosition= 65;
+    public static final double kShooterPivotSpeakerPosition = 64;
 
-    public static final double kshooterPivotDeckPosition = 45;
+    public static final double kshooterPivotDeckPosition = 34;
   }
 
   public static final class ShooterIndexConstants {
     public static final int kMotorCanID = 10;
-    public static final int kMotorCurrentLimit = 30; // Change
+    public static final int kMotorCurrentLimit = 30; 
 
     public static final int kDigitalSensorPin = 9; 
 
@@ -398,6 +397,6 @@ public final class Constants {
     public static final boolean kInvertMotor = true;
     public static final boolean kSensorInverted = true;
     
-    public static final double kIndexIntakeSpeed = .8;
+    public static final double kIndexIntakeSpeed = .75;
   }
 }

@@ -18,7 +18,7 @@ public class HangingArm {
      * @param upperLimitPort The port number of the upper magnet sensor.
      * @param lowerLimitPort The port number of the lower magnet sensor.
      */
-    public HangingArm(int canID, int upperLimitPort, int lowerLimitPort){
+    public HangingArm(int canID, int upperLimitPort, int lowerLimitPort, boolean invertMotor){
         m_motor = new CANSparkMax(canID, MotorType.kBrushed);
 
         // Restore the motor controller to a known state (in case it's swapped out)
@@ -31,7 +31,7 @@ public class HangingArm {
         m_motor.setIdleMode(IdleMode.kBrake);
 
         // Set inverted
-        m_motor.setInverted(HangingConstants.kHangingMotorInverted);
+        m_motor.setInverted(invertMotor);
 
         // Save the motor controller's configuration
         m_motor.burnFlash();

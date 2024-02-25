@@ -1,5 +1,5 @@
 package frc.robot.commands.commandGroups.drive;
-
+import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.commands.drive.RobotGotoFieldPos;
 import frc.robot.commands.shooter.autoWheelRevAndPivot;
@@ -15,7 +15,7 @@ public class autoAmp extends ParallelCommandGroup  {
     public autoAmp(DriveSubsystem driveSubsystem, ShooterPivotSubsystem shooterPivotSubsystem, ShooterSubsystem shooterSubsystem){
         addCommands(
             new ParallelCommandGroup(
-                new RobotGotoFieldPos(driveSubsystem, 40, FieldUtils.flipRedY(69), FieldUtils.flipRedAngle(-90)),
+                new RobotGotoFieldPos(driveSubsystem, FieldConstants.kAmpScoringPosition),
                 new autoWheelRevAndPivot(shooterPivotSubsystem, driveSubsystem, shooterSubsystem, AutoConstants.kWheelSpeedAmp, AutoConstants.kAngleAmp)
             )
         );

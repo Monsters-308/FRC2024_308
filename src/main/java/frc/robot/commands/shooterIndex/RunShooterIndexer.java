@@ -1,16 +1,21 @@
 package frc.robot.commands.shooterIndex;
 
-import frc.robot.Constants.IndexConstants;
-import frc.robot.subsystems.ShooterIndexSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.subsystems.ShooterIndexSubsystem;
 
-public class IndexNote extends Command {
+public class RunShooterIndexer extends Command {
   private final ShooterIndexSubsystem m_shooterIndexSubsystem;
+  private final double m_speed;
 
-  // variables for motor speeds/velocities
-
-  public IndexNote(ShooterIndexSubsystem indexSubsystem) {
+  /**
+   * Runs the shooter indexer motor at a specified speed.
+   * NOTE: this is equivalent to new InstantCommand(() -> m_shooterIndexSubsystem.setSpeed(0), shooterIndexSubsystem) 
+   * except it stops the motor when interrupted.
+   * @param indexSubsystem
+   */
+  public RunShooterIndexer(ShooterIndexSubsystem indexSubsystem, double speed) {
     m_shooterIndexSubsystem = indexSubsystem;
+    m_speed = speed;
 
     addRequirements(m_shooterIndexSubsystem);
   }
@@ -24,7 +29,7 @@ public class IndexNote extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_shooterIndexSubsystem.setSpeed(IndexConstants.kIndexIntakeSpeed);
+    m_shooterIndexSubsystem.setSpeed(m_speed);
   }
 
   // Called once the command ends or is interrupted.
@@ -33,9 +38,4 @@ public class IndexNote extends Command {
     m_shooterIndexSubsystem.setSpeed(0);
   }
 
-  // Returns true when the command should end.
-  @Override
-  public boolean isFinished() {
-    return m_shooterIndexSubsystem.gamePieceDetected();
-  }
 }

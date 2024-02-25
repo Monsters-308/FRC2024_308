@@ -2,7 +2,9 @@
   "robotWidth": 0.7874,
   "robotLength": 0.7874,
   "holonomicMode": true,
-  "pathFolders": [],
+  "pathFolders": [
+    "Noah's shit"
+  ],
   "autoFolders": [],
   "defaultMaxVel": 3.0,
   "defaultMaxAccel": 3.0,

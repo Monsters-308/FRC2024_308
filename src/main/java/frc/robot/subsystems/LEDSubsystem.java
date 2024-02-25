@@ -29,7 +29,7 @@ public class LEDSubsystem extends SubsystemBase {
   private LEDState m_ledMode;
   private AddressableLED m_led;
   private AddressableLEDBuffer m_ledBuffer;
-  private int[] LEDColor = {255,0,0}; //RGB
+  private int[] LEDColor = {255, 0, 0}; //RGB
   private int m_rainbowFirstPixelHue = 0;
   private double robotPitch;
   private int m_TurboFirstPixelHue = 0;
@@ -63,16 +63,16 @@ public class LEDSubsystem extends SubsystemBase {
         solid(LEDColor);
         break;
       case BLACKWHITE:
-        red(LEDColor);
+        red();
         break;
       case GREEN:
-        green(LEDColor);
+        green();
         break;
       case YELLOW:
-        yellow(LEDColor);
+        yellow();
         break;
       case RED:
-        red(LEDColor);
+        red();
         break;
       case TEAL:
         teal();
@@ -114,9 +114,8 @@ public class LEDSubsystem extends SubsystemBase {
     m_led.setData(m_ledBuffer);
   }
   
-  public void green(int[] RGB) {
+  public void green() {
     for (var i = 0; i < m_ledBuffer.getLength(); i++) {
-        //m_ledBuffer.setRGB(i, RGB[0], 255, 30);
         m_ledBuffer.setRGB(i, 0, 255, 0);
     }
 
@@ -125,7 +124,6 @@ public class LEDSubsystem extends SubsystemBase {
 
   public void orange() {
     for (var i = 0; i < m_ledBuffer.getLength(); i++) {
-        //m_ledBuffer.setRGB(i, RGB[0], 255, 30);
         m_ledBuffer.setRGB(i, 255, 255, 0);
     }
 
@@ -140,16 +138,15 @@ public class LEDSubsystem extends SubsystemBase {
     m_led.setData(m_ledBuffer);
   }
 
-  public void red(int[] RGB) {
+  public void red() {
     for (var i = 0; i < m_ledBuffer.getLength(); i++) {
-        //m_ledBuffer.setRGB(i, 255, 0, RGB[2]);
         m_ledBuffer.setRGB(i, 255, 0, 0);
     }
 
     m_led.setData(m_ledBuffer);
   }
 
-  public void yellow(int[] RGB) {
+  public void yellow() {
     for (var i = 0; i < m_ledBuffer.getLength(); i++) {
         m_ledBuffer.setRGB(i, 255, 255, 0);
     }
@@ -157,13 +154,9 @@ public class LEDSubsystem extends SubsystemBase {
     m_led.setData(m_ledBuffer);
   }
 
-  public void blink(int[] RGB) { }
-
   private void rainbow() {
-    // For every pixel
 
     // For every pixel
-
     for (var i = 0; i < m_ledBuffer.getLength(); i++) {
       // Calculate the hue - hue is easier for rainbows because the color
       // shape is a circle so only one value needs to precess
@@ -193,9 +186,8 @@ public class LEDSubsystem extends SubsystemBase {
       else{
         m_ledBuffer.setRGB(i, 255, 0, hue);
       }
-
-      
     }
+
     // Increase by to make the rainbow "move"
     m_TurboFirstPixelHue += 3;
     // Check bounds
@@ -220,20 +212,4 @@ public class LEDSubsystem extends SubsystemBase {
     m_led.setData(m_ledBuffer);
   }
   
-  private void frenzy() {
-    // For every pixel
-
-    for (var i = 0; i < m_ledBuffer.getLength(); i++) {
-      // Calculate the hue - hue is easier for rainbows because the color
-      // shape is a circle so only one value needs to precess
-      final var hue = (m_rainbowFirstPixelHue + (i * 180 / m_ledBuffer.getLength())) % 180;
-      // Set the value
-      m_ledBuffer.setRGB(i, hue, 0, 0);
-    }
-    // Increase by to make the rainbow "move"
-    m_rainbowFirstPixelHue += 3;
-    // Check bounds
-    m_rainbowFirstPixelHue %= 180;
-    m_led.setData(m_ledBuffer);
-  }
 }

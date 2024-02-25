@@ -9,7 +9,7 @@ import frc.robot.subsystems.ShooterIndexSubsystem;
 import frc.robot.subsystems.IndexSubsystem;
 import frc.robot.subsystems.IntakePivotSubsystem;
 import frc.robot.commands.intake.IntakeNote;
-import frc.robot.commands.shooterIndex.IndexNote;
+import frc.robot.commands.shooterIndex.IndexNoteGood;
 import frc.robot.Constants.ShooterPivotConstants;
 import frc.robot.commands.intake.IntakeDeck;
 
@@ -23,7 +23,7 @@ public class CompleteIntake extends SequentialCommandGroup  {
             new IntakeNote(intakeSubsystem, intakePivotSubsystem),
 
             new ParallelDeadlineGroup(
-                new IndexNote(shooterIndexSubsystem), 
+                new IndexNoteGood(shooterIndexSubsystem), 
                 new IntakeDeck(intakeSubsystem, shooterPivotSubsystem, indexSubsystem, intakePivotSubsystem)
             )
         );

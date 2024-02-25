@@ -9,10 +9,12 @@ public class HangingSubsystem extends SubsystemBase {
 
   private final HangingArm m_rightArm = new HangingArm(HangingConstants.kRightArmCanID,
                                                        HangingConstants.kRightArmUpperLimit, 
-                                                       HangingConstants.kRightArmLowerLimit);
+                                                       HangingConstants.kRightArmLowerLimit,
+                                                       HangingConstants.kRightArmInverted);
   private final HangingArm m_leftArm = new HangingArm(HangingConstants.kLeftArmCanID,
                                                       HangingConstants.kLeftArmUpperLimit, 
-                                                      HangingConstants.kLeftArmLowerLimit);
+                                                      HangingConstants.kLeftArmLowerLimit,
+                                                      HangingConstants.kLeftArmInverted);
   
   
   private final ShuffleboardTab hangingTab = Shuffleboard.getTab("Hanging");

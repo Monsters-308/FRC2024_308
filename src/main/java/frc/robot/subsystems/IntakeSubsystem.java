@@ -5,6 +5,7 @@ import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.IntakeConstants;
 
@@ -22,13 +23,15 @@ public class IntakeSubsystem extends SubsystemBase {
     m_intakeMotor.setSmartCurrentLimit(IntakeConstants.kIntakeMotorCurrentLimit);
 
     // Set to coast mode
-    m_intakeMotor.setIdleMode(IdleMode.kCoast);
+    m_intakeMotor.setIdleMode(IdleMode.kBrake);
 
     // Set inverted
     m_intakeMotor.setInverted(IntakeConstants.kIntakeMotorInverted);
 
     // Save the motor controller's configuration
     m_intakeMotor.burnFlash();
+
+    Shuffleboard.getTab("Intake").addBoolean("Game Piece", () -> !m_noteSensor.get());
   }
 
   /**

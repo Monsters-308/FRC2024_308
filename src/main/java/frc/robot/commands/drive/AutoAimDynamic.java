@@ -115,8 +115,8 @@ public class AutoAimDynamic extends Command {
 
         
         m_driveSubsystem.drive(
-            -MathUtil.applyDeadband(m_xSpeed.getAsDouble(), OIConstants.kDriveDeadband),
-            -MathUtil.applyDeadband(m_ySpeed.getAsDouble(), OIConstants.kDriveDeadband),
+            -MathUtil.applyDeadband(m_xSpeed.getAsDouble(), OIConstants.kJoystickDeadband),
+            -MathUtil.applyDeadband(m_ySpeed.getAsDouble(), OIConstants.kJoystickDeadband),
             rotation,
             true, true
         );

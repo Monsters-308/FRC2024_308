@@ -1,5 +1,6 @@
 package frc.robot.commands.commandGroups.drive;
 import frc.robot.Constants.AutoConstants;
+import frc.robot.Constants.FieldConstants;
 import frc.robot.commands.drive.RobotGotoFieldPos;
 import frc.robot.commands.shooter.autoWheelRevAndPivot;
 import frc.robot.subsystems.DriveSubsystem;
@@ -14,7 +15,7 @@ public class autoSpeaker extends ParallelCommandGroup  {
     public autoSpeaker(DriveSubsystem driveSubsystem, ShooterPivotSubsystem shooterPivotSubsystem, ShooterSubsystem shooterSubsystem){
         addCommands(
             new ParallelCommandGroup(
-                new RobotGotoFieldPos(driveSubsystem, 40, FieldUtils.flipRedY(69), FieldUtils.flipRedAngle(-90)), // x y and z of the postion the robot should be in to score the amp, depends on alliance??
+                new RobotGotoFieldPos(driveSubsystem, FieldConstants.kSpeakerScoringPosition), // x y and z of the postion the robot should be in to score the amp, depends on alliance??
                 new autoWheelRevAndPivot(shooterPivotSubsystem, driveSubsystem, shooterSubsystem, AutoConstants.kWheelSpeedSpeaker, AutoConstants.kAngleSpeaker)
             )
         );

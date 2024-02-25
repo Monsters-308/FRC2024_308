@@ -7,7 +7,6 @@ import frc.robot.subsystems.ShooterPivotSubsystem;
 import edu.wpi.first.wpilibj2.command.Command; 
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.IndexConstants;
-import frc.robot.Constants.ShooterPivotConstants; 
 import frc.robot.Constants.IntakePivotConstants;
     
 public class IntakeDeck extends Command {
@@ -48,7 +47,7 @@ public class IntakeDeck extends Command {
       m_intakeSubsystem.setSpeed(IndexConstants.kIndexIntakeSpeed);
     }
     //gets a note in the shooter
-    if (m_shooterPivotSubsystem.getPosition() == ShooterPivotConstants.kshooterPivotDeckPosition){
+    if (m_shooterPivotSubsystem.inPosition()){
       m_intakeSubsystem.setSpeed(IntakeConstants.kIntakeSpeed);
       m_hotdogRoller.setSpeed(IndexConstants.kIndexIntakeSpeed);
     }

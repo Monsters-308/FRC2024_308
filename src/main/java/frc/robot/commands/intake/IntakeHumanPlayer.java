@@ -5,7 +5,6 @@ import frc.robot.subsystems.ShooterPivotSubsystem;
 import frc.robot.subsystems.ShooterIndexSubsystem;
 import edu.wpi.first.wpilibj2.command.Command; 
 import frc.robot.Constants.IndexConstants;
-import frc.robot.Constants.ShooterPivotConstants; 
 import frc.robot.Constants.ShooterIndexConstants;
     
 public class IntakeHumanPlayer extends Command {
@@ -30,7 +29,7 @@ public class IntakeHumanPlayer extends Command {
   @Override
   public void execute() {
   
-    if (m_shooterPivotSubsystem.getPosition() == ShooterPivotConstants.kshooterPivotDeckPosition){
+    if (m_shooterPivotSubsystem.inPosition()){
       m_hotdogRoller.setSpeed(IndexConstants.kIndexIntakeSpeed);
       m_shooterIndexSubsystem.setSpeed(ShooterIndexConstants.kIndexIntakeSpeed);
     }
