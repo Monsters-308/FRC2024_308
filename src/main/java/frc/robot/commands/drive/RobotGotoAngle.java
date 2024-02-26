@@ -13,6 +13,7 @@ import edu.wpi.first.math.controller.PIDController;
 import frc.robot.Constants.HeadingConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.utils.FieldUtils;
 
 public class RobotGotoAngle extends Command {
 
@@ -24,6 +25,7 @@ public class RobotGotoAngle extends Command {
     private boolean m_complete = false;
 
     private final double m_desiredAngle;
+    private final boolean m_allianceRelative;
 
     private final DoubleSupplier m_xSpeed;
     private final DoubleSupplier m_ySpeed;
@@ -33,10 +35,11 @@ public class RobotGotoAngle extends Command {
      * Uses PID to make the robot rotate to a certain direction while still giving the driver control over the translation of the robot.
      * This command automatically ends when the driver tries to rotate the robot.
      */
-    public RobotGotoAngle(DriveSubsystem driveSubsystem, double angle, DoubleSupplier xSpeed, DoubleSupplier ySpeed, DoubleSupplier driverRotation) {
+    public RobotGotoAngle(DriveSubsystem driveSubsystem, double angle, boolean allianceRelative, DoubleSupplier xSpeed, DoubleSupplier ySpeed, DoubleSupplier driverRotation) {
         m_driveSubsystem = driveSubsystem;
 
         m_desiredAngle = angle;
+        m_allianceRelative = allianceRelative;
 
         m_xSpeed = xSpeed;
         m_ySpeed = ySpeed;
@@ -60,7 +63,13 @@ public class RobotGotoAngle extends Command {
     public void initialize() {
         m_complete = false;
         pidController.reset();
-        pidController.setSetpoint(m_desiredAngle);
+        
+        if(m_allianceRelative){
+            pidController.setSetpoint(FieldUtils.flipRedAngle(m_desiredAngle));
+        }
+        else {
+            pidController.setSetpoint(m_desiredAngle);
+        }
     }
 
     /*

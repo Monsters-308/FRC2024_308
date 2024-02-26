@@ -228,6 +228,7 @@ public class RobotContainer {
             new RobotGotoAngle(
                 m_driveSubsystem,
                 0,
+                false,
                 () -> m_driverController.getLeftY(),
                 () -> m_driverController.getLeftX(),
                 () -> m_driverController.getRightX()));
@@ -238,6 +239,7 @@ public class RobotContainer {
             new RobotGotoAngle(
                 m_driveSubsystem,
                 -90,
+                false,
                 () -> m_driverController.getLeftY(),
                 () -> m_driverController.getLeftX(),
                 () -> m_driverController.getRightX()));
@@ -248,6 +250,7 @@ public class RobotContainer {
             new RobotGotoAngle(
                 m_driveSubsystem,
                 180,
+                false,
                 () -> m_driverController.getLeftY(),
                 () -> m_driverController.getLeftX(),
                 () -> m_driverController.getRightX()));
@@ -258,6 +261,7 @@ public class RobotContainer {
             new RobotGotoAngle(
                 m_driveSubsystem,
                 90,
+                false,
                 () -> m_driverController.getLeftY(),
                 () -> m_driverController.getLeftX(),
                 () -> m_driverController.getRightX()));

@@ -14,7 +14,7 @@ public class autoTrapShoot extends ParallelCommandGroup  {
     public autoTrapShoot(DriveSubsystem driveSubsystem, ShooterPivotSubsystem shooterPivotSubsystem, ShooterSubsystem shooterSubsystem){
         addCommands(
             new ParallelCommandGroup(
-                new RobotGotoFieldPos(driveSubsystem, FieldConstants.kTrapScoringPosition), // x y and z of the postion the robot should be in to score the amp, depends on alliance??
+                new RobotGotoFieldPos(driveSubsystem, FieldConstants.kTrapScoringPosition, true),
                 new autoWheelRevAndPivot(shooterPivotSubsystem, driveSubsystem, shooterSubsystem, AutoConstants.kWheelSpeedAmp, AutoConstants.kAngleAmp)
             )
         );

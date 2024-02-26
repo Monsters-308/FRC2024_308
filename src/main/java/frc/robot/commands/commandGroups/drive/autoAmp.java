@@ -14,7 +14,7 @@ public class autoAmp extends ParallelCommandGroup  {
     public autoAmp(DriveSubsystem driveSubsystem, ShooterPivotSubsystem shooterPivotSubsystem, ShooterSubsystem shooterSubsystem){
         addCommands(
             new ParallelCommandGroup(
-                new RobotGotoFieldPos(driveSubsystem, FieldConstants.kAmpScoringPosition),
+                new RobotGotoFieldPos(driveSubsystem, FieldConstants.kAmpScoringPosition, true),
                 new autoWheelRevAndPivot(shooterPivotSubsystem, driveSubsystem, shooterSubsystem, AutoConstants.kWheelSpeedAmp, AutoConstants.kAngleAmp)
             )
         );

@@ -98,8 +98,8 @@ public class FieldUtils {
 
     /**
      * Flips a y coordinate so that it'll line up on the red side if the robot is on the red alliance.
-     * @param yPosition A number used to represent the y coordinate of a position.
-     * @return The y value flipped.
+     * @param yPosition A number used to represent the y coordinate of a position (in meters).
+     * @return The y value mirrored down the middle of the field (in meters).
      */
     public static double flipRedY(double yPosition){
         if (isRedAlliance()){
@@ -127,10 +127,10 @@ public class FieldUtils {
      * @param angle An angle in degrees or radians, as long as it's from -180 to 180 or -Pi to Pi.
      * @return The flipped angle.
      */
-    public static double flipRedAngle(double angleDegrees){
+    public static double flipRedAngle(double angle){
         if (isRedAlliance()){
-            return -angleDegrees;
+            return -angle;
         }
-        return angleDegrees;
+        return angle;
     }
 }

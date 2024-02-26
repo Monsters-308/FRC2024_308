@@ -14,7 +14,7 @@ public class autoSpeaker extends ParallelCommandGroup  {
     public autoSpeaker(DriveSubsystem driveSubsystem, ShooterPivotSubsystem shooterPivotSubsystem, ShooterSubsystem shooterSubsystem){
         addCommands(
             new ParallelCommandGroup(
-                new RobotGotoFieldPos(driveSubsystem, FieldConstants.kSpeakerScoringPosition), // x y and z of the postion the robot should be in to score the amp, depends on alliance??
+                new RobotGotoFieldPos(driveSubsystem, FieldConstants.kSpeakerScoringPosition, true), 
                 new autoWheelRevAndPivot(shooterPivotSubsystem, driveSubsystem, shooterSubsystem, AutoConstants.kWheelSpeedSpeaker, AutoConstants.kAngleSpeaker)
             )
         );

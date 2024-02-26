@@ -19,6 +19,7 @@ import frc.robot.subsystems.ShooterPivotSubsystem;
 //Import subsystem(s) this command interacts with below
 
 import frc.robot.subsystems.VisionSubsystem;
+import frc.utils.FieldUtils;
 import frc.utils.OdometryUtils;
 //import frc.utils.ShooterUtils;
 
@@ -80,7 +81,7 @@ public class AutoAimDynamic extends Command {
         double angle = m_driveSubsystem.getHeading(); //navx
         
         Translation2d pos1 = m_driveSubsystem.getPose().getTranslation(); // Position of robot on field
-        Translation2d pos2 = FieldConstants.kSpeakerPosition; //speaker position 
+        Translation2d pos2 = FieldUtils.flipRed(FieldConstants.kSpeakerPosition); //speaker position 
         Rotation2d angleToTarget = OdometryUtils.anglePoseToPose(pos1, pos2); // Angle to make robot face speacker
         double distanceToTarget = OdometryUtils.getDistacnePosToPos(pos1, pos2); //distance in inches from limelight to speaker
 
@@ -91,9 +92,7 @@ public class AutoAimDynamic extends Command {
         SmartDashboard.putNumber("Angle to goal", angleToTarget.getDegrees());
         //SmartDashboard.putNumber("limelightX", m_visionSubsystem.getX());
 
-
-
-
+        // Set pid controller to angle to make robot face speaker
         angleController.setSetpoint(angleToTarget.getDegrees());
 
         /* 
@@ -106,8 +105,6 @@ public class AutoAimDynamic extends Command {
         // double offset = 1; 
         // double speedAngleChange = 0;
         // double maxDistanceShot = 20;
-
-        
 
         double rotation = angleController.calculate(angle); //speed needed to rotate robot to set point
 
