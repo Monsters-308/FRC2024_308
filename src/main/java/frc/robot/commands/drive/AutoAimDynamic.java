@@ -22,6 +22,7 @@ import frc.robot.subsystems.VisionSubsystem;
 import frc.utils.FieldUtils;
 import frc.utils.OdometryUtils;
 //import frc.utils.ShooterUtils;
+import frc.utils.ShooterUtils;
 
 public class AutoAimDynamic extends Command {
 
@@ -141,12 +142,12 @@ public class AutoAimDynamic extends Command {
      * Gets the proper pivot to angle the shooter at the speaker according the the m_driveSubsystem.getPose() and FieldConstants.kSpeakerPosition, FieldConstants.kSpeakerHeight
      * @return The angle to pivot towards the speaker as a double
      */
-    // public void shooterPivotToSpeakerField(){
-    //     //change second parameter to shooter util robot pos
-    //     double anglePivot = ShooterUtils.shooterAngleToFacePoint(m_driveSubsystem.getPose().getTranslation(), FieldConstants.kSpeakerPosition, FieldConstants.kSpeakerHeight);
+    public void shooterPivotToSpeakerField(){
+        //change second parameter to shooter util robot pos
+        double anglePivot = ShooterUtils.shooterAngleToFacePoint(m_driveSubsystem.getPose().getTranslation(), FieldConstants.kSpeakerPosition, FieldConstants.kSpeakerHeightInches);
 
-    //     m_shooterPivotSubsystem.setPosition(anglePivot);
-    // }
+        //m_shooterPivotSubsystem.setPosition(anglePivot);
+    }
 
     /*This function is called once when the command ends.
      * A command ends either when you tell it to end with the "isFinished()" function below, or when it is interupted.

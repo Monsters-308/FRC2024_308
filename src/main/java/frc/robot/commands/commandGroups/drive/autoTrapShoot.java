@@ -14,7 +14,7 @@ public class autoTrapShoot extends ParallelCommandGroup  {
     public autoTrapShoot(DriveSubsystem driveSubsystem, ShooterPivotSubsystem shooterPivotSubsystem, ShooterSubsystem shooterSubsystem){
         addCommands(
             new ParallelCommandGroup(
-                new RobotGotoFieldPos(driveSubsystem, FieldConstants.kTrapScoringPosition, true),
+                new RobotGotoFieldPos(driveSubsystem, FieldConstants.kTrapPositionAmpSide, true),
                 new autoWheelRevAndPivot(shooterPivotSubsystem, driveSubsystem, shooterSubsystem, AutoConstants.kWheelSpeedAmp, AutoConstants.kAngleAmp)
             )
         );

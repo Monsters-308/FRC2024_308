@@ -146,11 +146,12 @@ public final class Constants {
   public static final class OIConstants {
     public static final int kDriverControllerPort = 0;
     public static final int kCoDriverControllerPort = 1;
+    
     public static final double kJoystickDeadband = 0.05;
     public static final double kTriggerDeadband = 0.5;
   }
 
-  public static final class FieldConstants{
+  public static final class FieldConstants {
     /** X axis: long side */
     public static final double kFieldWidthMeters = 16.54175;
     /** Y axis: short side */
@@ -158,34 +159,43 @@ public final class Constants {
     
     // Position of the speaker on the field (in meters)
     public static final Translation2d kSpeakerPosition = new Translation2d(
-      0, 0 // Change
+      0, 5.53 
     );
-
     // Height to the bottom lip of speaker
-    public static final double kSpeakerHeight = 0; // Change
-
-    public static final Translation2d kTrapPosition = new Translation2d(
-      0, 0 // Change
-    );
-    public static final double kTrapHeight = 0;
+    public static final double kSpeakerHeightInches = 78.129;
 
     public static final Pose2d kAmpScoringPosition = new Pose2d(
-      0,
-      0, 
-      Rotation2d.fromDegrees(0)
+      1.83,
+      7.67,
+      Rotation2d.fromDegrees(90)
     );
 
     public static final Pose2d kSpeakerScoringPosition = new Pose2d(
-      0,
-      0,
-      Rotation2d.fromDegrees(0)
+      1.38,
+      5.53,
+      Rotation2d.fromDegrees(180)
     );
     
-    public static final Pose2d kTrapScoringPosition = new Pose2d(
+    // TODO: figure out trap constants
+    public static final Pose2d kTrapPositionAmpSide = new Pose2d(
       0,
       0,
       Rotation2d.fromDegrees(0)
     );
+    public static final Pose2d kTrapPositionSourceSide = new Pose2d(
+      0,
+      0,
+      Rotation2d.fromDegrees(0)
+    );
+    public static final Pose2d kTrapPositionCenterStage = new Pose2d(
+      0,
+      0,
+      Rotation2d.fromDegrees(0)
+    );
+    public static final double kTrapHeight = 0;
+
+    public static final double kTrapCenterY = 4.1;
+    public static final double kTrapCenterStageX = 5.63;
   }
 
   public static final class AutoConstants {
@@ -283,12 +293,11 @@ public final class Constants {
     public static final boolean kSensorInverted = true;
 
     // Positive intakes the piece, negative retracts the piece
-    public static final boolean kIntakeMotorInverted = false; // Change
+    public static final boolean kIntakeMotorInverted = false; 
     public static final int kIntakeMotorCurrentLimit = 35; // Change
 
     public static final double kHumanPlayerIntakeSpeed = .8; //oh noes sp
     public static final double kIntakeSpeed = .8; //oh noes sp
-    public static final double kIntakePivotDownPosition = 20; //change
   }
 
   public static final class IndexConstants {
@@ -346,7 +355,7 @@ public final class Constants {
     public static final double kDistanceFromPivotToShooter = Math.hypot(kShooterVerticalOffset, kShooterHorizontalOffset);
 
     // How far upwards to aim up into the speaker (in inches)
-    public static final double kSpeakerAimHeight = 0; // Change
+    public static final double kSpeakerAimHeightInches = 3; // Adjust as needed
 
   }
 

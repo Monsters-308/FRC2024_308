@@ -390,7 +390,7 @@ public class RobotContainer {
         );
 
     // Right trigger: shoot note 
-    new Trigger(() -> m_coDriverController.getRightTriggerAxis() > .5)
+    new Trigger(() -> m_coDriverController.getRightTriggerAxis() > OIConstants.kTriggerDeadband)
       .toggleOnTrue(
         new LaunchNote(m_shooterIndexSubsystem).andThen(
           new InstantCommand(() -> m_shooterIndexSubsystem.setSpeed(0), m_shooterIndexSubsystem)

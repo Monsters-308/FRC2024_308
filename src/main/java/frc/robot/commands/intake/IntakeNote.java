@@ -3,7 +3,7 @@ package frc.robot.commands.intake;
 import frc.robot.subsystems.IntakePivotSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import edu.wpi.first.wpilibj2.command.Command; 
-import frc.robot.Constants.IntakeConstants;
+import frc.robot.Constants.IntakePivotConstants;
 import frc.robot.Constants.IndexConstants;
 
 public class IntakeNote extends Command {
@@ -34,9 +34,9 @@ public class IntakeNote extends Command {
   @Override
   public void execute() {
     //gets a note in the intake
-    m_intakePivotSubsystem.setPosition(IntakeConstants.kIntakePivotDownPosition);
+    m_intakePivotSubsystem.setPosition(IntakePivotConstants.kIntakeDownPosition);
     
-    if (m_intakePivotSubsystem.getPosition() == IntakeConstants.kIntakePivotDownPosition){
+    if (m_intakePivotSubsystem.getPosition() == IntakePivotConstants.kIntakeDownPosition){
       m_intakeSubsystem.setSpeed(IndexConstants.kIndexIntakeSpeed);
     }
   }
