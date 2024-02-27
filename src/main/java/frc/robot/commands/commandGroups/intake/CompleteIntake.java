@@ -10,7 +10,9 @@ import frc.robot.subsystems.IndexSubsystem;
 import frc.robot.subsystems.IntakePivotSubsystem;
 import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.commands.intake.IntakeNote;
+import frc.robot.commands.intakePivot.SetIntakeAngle;
 import frc.robot.commands.shooterIndex.IndexNoteGood;
+import frc.robot.Constants.IntakePivotConstants;
 import frc.robot.Constants.ShooterPivotConstants;
 import frc.robot.commands.intake.IntakeDeck;
 import frc.robot.commands.LED.setLED;
@@ -21,15 +23,18 @@ public class CompleteIntake extends SequentialCommandGroup  {
     public CompleteIntake(IntakeSubsystem intakeSubsystem, ShooterPivotSubsystem shooterPivotSubsystem, ShooterIndexSubsystem shooterIndexSubsystem, IndexSubsystem indexSubsystem, IntakePivotSubsystem intakePivotSubsystem, LEDSubsystem LEDsubsystem){
         addCommands(
             // Get the shooter pivot started early
-            new SequentialCommandGroup(
-                new setLED(LEDsubsystem, LEDsubsystem::teal)
-            ),
+            // ew SequentialCommandGroup(
+            //     new setLED(LEDsubsystem, LEDsubsystem::teal)
+            // ),n
             new InstantCommand(() -> shooterPivotSubsystem.setPosition(ShooterPivotConstants.kshooterPivotDeckPosition)),
+            new SetIntakeAngle(intakePivotSubsystem, IntakePivotConstants.kIntakeDownPosition),
             new IntakeNote(intakeSubsystem, intakePivotSubsystem),
+
+            new SetIntakeAngle(intakePivotSubsystem, IntakePivotConstants.kIntakeDeckPostion),
 
             new ParallelDeadlineGroup(
                 new IndexNoteGood(shooterIndexSubsystem), 
-                new IntakeDeck(intakeSubsystem, shooterPivotSubsystem, indexSubsystem, intakePivotSubsystem)
+                new IntakeDeck(intakeSubsystem, shooterPivotSubsystem, indexSubsystem, intakePivotSubsystem) 
             ),
             // Add an InstantCommand to reset the LED state after the command group finishes
             new InstantCommand(() -> LEDsubsystem.setLEDFunction(LEDsubsystem::rainbow))

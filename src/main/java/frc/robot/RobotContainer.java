@@ -7,6 +7,7 @@ package frc.robot;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -15,6 +16,7 @@ import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import frc.robot.Constants.IndexConstants;
+import frc.robot.Constants.IntakePivotConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.ShooterPivotConstants;
 import frc.robot.commands.auton.TemplateAuton;
@@ -86,6 +88,8 @@ public class RobotContainer {
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
+
+    CameraServer.startAutomaticCapture();
     // Configure the button bindings
 
     configureButtonBindings();
@@ -115,7 +119,7 @@ public class RobotContainer {
     m_autonChooser.setDefaultOption("Template Auton", new TemplateAuton(m_driveSubsystem));
     m_autonChooser.addOption("One Meter", new PathPlannerAuto("Move One Meter"));
     m_autonChooser.addOption("Middle Test", new PathPlannerAuto("Simple Middle Test"));
-    m_autonChooser.addOption("4 Note Auto", new PathPlannerAuto("4 note test"));
+    m_autonChooser.addOption("4 Note Auto", new PathPlannerAuto("Simple 4 note auton"));
 
     // Put chooser on the dashboard
     Shuffleboard.getTab("Autonomous").add("Select Auton", m_autonChooser).withSize(2, 1);
@@ -189,38 +193,38 @@ public class RobotContainer {
         .onTrue(new InstantCommand(
             () -> m_driveSubsystem.zeroHeading()));
 
-    // Auto Aim speaker
-    new JoystickButton(m_driverController, Button.kA.value)
-        .toggleOnTrue(
-            // new autoSpeaker(
-            //     m_driveSubsystem,
-            //     m_shooterPivotSubsystem,
-            //     m_shooterSubsystem
-            //     ));
-            new AutoAimDynamic(
-              m_visionSubsystem, 
-              m_driveSubsystem, 
-              m_shooterPivotSubsystem,
-              () -> m_driverController.getLeftY(),
-              () -> m_driverController.getLeftX()));
+    // // Auto Aim speaker
+    // new JoystickButton(m_driverController, Button.kA.value)
+    //     .toggleOnTrue(
+    //         // new autoSpeaker(
+    //         //     m_driveSubsystem,
+    //         //     m_shooterPivotSubsystem,
+    //         //     m_shooterSubsystem
+    //         //     ));
+    //         new AutoAimDynamic(
+    //           m_visionSubsystem, 
+    //           m_driveSubsystem, 
+    //           m_shooterPivotSubsystem,
+    //           () -> m_driverController.getLeftY(),
+    //           () -> m_driverController.getLeftX()));
 
-    // Auto Aim Amp
-    new JoystickButton(m_driverController, Button.kB.value)
-        .toggleOnTrue(
-            new autoAmp(
-                m_driveSubsystem,
-                m_shooterPivotSubsystem,
-                m_shooterSubsystem
-                ));
+    // // Auto Aim Amp
+    // new JoystickButton(m_driverController, Button.kB.value)
+    //     .toggleOnTrue(
+    //         new autoAmp(
+    //             m_driveSubsystem,
+    //             m_shooterPivotSubsystem,
+    //             m_shooterSubsystem
+    //             ));
     
-    // Auto Aim trap
-    new JoystickButton(m_driverController, Button.kY.value)
-        .toggleOnTrue(
-            new autoTrapShoot(
-                m_driveSubsystem,
-                m_shooterPivotSubsystem,
-                m_shooterSubsystem
-                ));
+    // // Auto Aim trap
+    // new JoystickButton(m_driverController, Button.kY.value)
+    //     .toggleOnTrue(
+    //         new autoTrapShoot(
+    //             m_driveSubsystem,
+    //             m_shooterPivotSubsystem,
+    //             m_shooterSubsystem
+    //             ));
     
     // Dpad up: makes robot face 0 degrees
     new POVButton(m_driverController, 0)
@@ -290,15 +294,15 @@ public class RobotContainer {
     // // Use bumpers for intake pivot
     new JoystickButton(m_coDriverController, Button.kRightBumper.value)
         .onTrue(
-            new InstantCommand(() -> m_intakePivotSubsystem.setSpeed(0.8), m_intakePivotSubsystem))
+            new InstantCommand(() -> m_hangingSubsystem.setRightSpeed(0.8), m_hangingSubsystem))
         .onFalse(
-            new InstantCommand(() -> m_intakePivotSubsystem.setSpeed(0), m_intakePivotSubsystem));
+            new InstantCommand(() -> m_hangingSubsystem.setRightSpeed(0), m_hangingSubsystem));
 
     new JoystickButton(m_coDriverController, Button.kLeftBumper.value)
         .onTrue(
-            new InstantCommand(() -> m_intakePivotSubsystem.setSpeed(-0.8), m_intakePivotSubsystem))
+            new InstantCommand(() -> m_hangingSubsystem.setRightSpeed(-0.8), m_hangingSubsystem))
         .onFalse(
-            new InstantCommand(() -> m_intakePivotSubsystem.setSpeed(0), m_intakePivotSubsystem));
+            new InstantCommand(() -> m_hangingSubsystem.setRightSpeed(0), m_hangingSubsystem));
 
     // Left bumper: Raise hanging arms
     // new JoystickButton(m_coDriverController, Button.kLeftBumper.value)
@@ -346,10 +350,8 @@ public class RobotContainer {
     // Y button: aim at trap
     new JoystickButton(m_coDriverController, Button.kY.value)
     .toggleOnTrue(
-        new PivotGoToPose(
-          m_shooterPivotSubsystem,
-          ShooterPivotConstants.kShooterPivotTrapPosition
-            ));
+      new CompleteIntake(m_intakeSubsystem, m_shooterPivotSubsystem, m_shooterIndexSubsystem, m_indexSubsystem, m_intakePivotSubsystem, m_LEDSubsystem)
+    );
 
     // // Dpad up: shooter pivot up
     // new POVButton(m_coDriverController, 0)
@@ -368,21 +370,23 @@ public class RobotContainer {
     // Dpad up: Hanging arm up
     new POVButton(m_coDriverController, 0)
         .onTrue(
-            new InstantCommand(() -> m_hangingSubsystem.setLeftSpeed(1), m_hangingSubsystem))
+            new InstantCommand(() -> m_shooterPivotSubsystem.setSpeed(1), m_shooterPivotSubsystem))
         .onFalse(
-            new InstantCommand(() -> m_hangingSubsystem.setLeftSpeed(0), m_hangingSubsystem));
+          new InstantCommand(() -> m_shooterPivotSubsystem.setSpeed(0), m_shooterPivotSubsystem));
 
     // Dpad down: Hanging arm down
     new POVButton(m_coDriverController, 180)
-        .onTrue(
-            new InstantCommand(() -> m_hangingSubsystem.setLeftSpeed(-1), m_hangingSubsystem))
-        .onFalse(
-            new InstantCommand(() -> m_hangingSubsystem.setLeftSpeed(0), m_hangingSubsystem));
+    .onTrue(
+      new InstantCommand(() -> m_shooterPivotSubsystem.setSpeed(-1), m_shooterPivotSubsystem))
+  .onFalse(
+    new InstantCommand(() -> m_shooterPivotSubsystem.setSpeed(0), m_shooterPivotSubsystem));
 
     // Dpad Right: intaking test
     new POVButton(m_coDriverController, 90)
         .whileTrue(
           new ParallelCommandGroup(
+            new InstantCommand(() -> m_shooterPivotSubsystem.setPosition(ShooterPivotConstants.kshooterPivotDeckPosition), m_shooterPivotSubsystem),
+            new InstantCommand(() -> m_intakePivotSubsystem.setPosition(IntakePivotConstants.kIntakeDownPosition), m_intakePivotSubsystem),
             new IndexNoteGood(m_shooterIndexSubsystem),
             new RunIndex(m_indexSubsystem, IndexConstants.kIndexIntakeSpeed),
             new RunIntake(m_intakeSubsystem, 1)

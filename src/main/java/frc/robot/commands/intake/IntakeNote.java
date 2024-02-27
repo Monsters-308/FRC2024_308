@@ -36,9 +36,9 @@ public class IntakeNote extends Command {
     //gets a note in the intake
     m_intakePivotSubsystem.setPosition(IntakePivotConstants.kIntakeDownPosition);
     
-    if (m_intakePivotSubsystem.getPosition() == IntakePivotConstants.kIntakeDownPosition){
-      m_intakeSubsystem.setSpeed(IndexConstants.kIndexIntakeSpeed);
-    }
+    //if (m_intakePivotSubsystem.inPosition()){
+      m_intakeSubsystem.setSpeed(1);
+    //}
   }
 
   // Called once the command ends or is interrupted.

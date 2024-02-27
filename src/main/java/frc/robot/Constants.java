@@ -32,8 +32,8 @@ public final class Constants {
     public static final double kMaxSpeedMetersPerSecond = 5;
     public static final double kMaxAngularSpeed = 2 * Math.PI; // radians per second
 
-    public static final double kMagnitudeSlewRate = 2.8 * kMaxSpeedMetersPerSecond; // meters per second^2
-    public static final double kRotationalSlewRate = 2.0 * kMaxAngularSpeed;        // radians per second^2
+    public static final double kMagnitudeSlewRate = 5 * kMaxSpeedMetersPerSecond; // meters per second^2
+    public static final double kRotationalSlewRate = 5 * kMaxAngularSpeed;        // radians per second^2
 
     // Chassis configuration
     public static final double kTrackWidth = Units.inchesToMeters(22.75); // Distance between centers of right and left wheels on robot
@@ -245,16 +245,16 @@ public final class Constants {
     public static final boolean kInvertMotors = false;
 
     public static final boolean kTurningMotorEncoderInverted = false;
-    public static final double kAngleOffset = 0;
+    public static final double kAngleOffset = -56.8;
 
     // Safety: prevent pivot from going beyond its minimum and maximum
-    public static final double kPivotMinAngle = 0;
-    public static final double kPivotMaxAngle = 180;
+    public static final Rotation2d kPivotMinAngle = Rotation2d.fromDegrees(-178.8);
+    public static final Rotation2d kPivotMaxAngle = Rotation2d.fromDegrees(180);
 
-    public static final int kEncoderPort = 0;
-    public static final double kAngleTolerance = 1;
+    public static final int kEncoderPort = 1;
+    public static final double kAngleTolerance = 10;
   
-    public static final double kPivotP = 0.1;
+    public static final double kPivotP = 0.025;
     public static final double kPivotI = 0;
     public static final double kPivotD = 0.001;
 
@@ -262,20 +262,20 @@ public final class Constants {
 
     /*           Constants for pivot positions:            */
 
-    public static final double kIntakeDownPosition = 0; // Change
-    public static final double kIntakeDeckPostion = 45; // Change
-    public static final double kIntakeInPosition = 180; // Change
+    public static final double kIntakeDownPosition = -126.7; // Change
+    public static final double kIntakeDeckPostion = -37.2; // Change
+    public static final double kIntakeInPosition = 14.7; // Change
   }
 
   public static final class HangingConstants {
     public static final int kRightArmCanID = 18; // Change
-    public static final int kRightArmUpperLimit = 8; // Change
-    public static final int kRightArmLowerLimit = 9; // Change
-    public static final boolean kRightArmInverted = false; // Change
+    public static final int kRightArmUpperLimit = 4; 
+    public static final int kRightArmLowerLimit = 5; 
+    public static final boolean kRightArmInverted = true; // Change
 
     public static final int kLeftArmCanID = 19; // Change
-    public static final int kLeftArmUpperLimit = 8; // Change
-    public static final int kLeftArmLowerLimit = 9; // Change
+    public static final int kLeftArmUpperLimit = 2; 
+    public static final int kLeftArmLowerLimit = 3; 
     public static final boolean kLeftArmInverted = false; // Change
 
     public static final double kPitchP = 0.05;
@@ -362,21 +362,21 @@ public final class Constants {
   public static final class ShooterPivotConstants {
     public static final int kShooterPivotMotorCanID = 11; 
 
-    public static final int kEncoderPort = 8;
+    public static final int kEncoderPort = 9;
     public static final double kEncoderPeriod = 1025;
 
     // Positive will be tilting the pivot upwards
-    public static final boolean kTurningMotorInverted = true; 
+    public static final boolean kTurningMotorInverted = false; 
     public static final boolean kTurningMotorEncoderInverted = false; // Change
     
-    public static final double kShooterEncoderPositionFactor = (2 * Math.PI); // radians
+    public static final double kShooterEncoderPositionFactor = 360; // radians
 
     // Just like with the swerve wheels, this allows us to offset the encoder by a specific amount
-    public static final double kAngleOffset = Math.toRadians(-2.9); // Change
+    public static final double kAngleOffset = 178.2; // Change
 
     // Safety: let's set max and min angles for the shooter pivot so we don't accidentally rotate too far in one direction
     public static final double kPivotMinAngle = Math.toRadians(30.5);
-    public static final double kPivotMaxAngle = Math.toRadians(64); 
+    public static final double kPivotMaxAngle = Math.toRadians(60); 
 
     public static final double kAngleTolerance = 1;
     
@@ -391,7 +391,7 @@ public final class Constants {
 
     public static final double kShooterPivotAmpPosition = 45;
     public static final double kShooterPivotTrapPosition = 60;
-    public static final double kShooterPivotSpeakerPosition = 64;
+    public static final double kShooterPivotSpeakerPosition = 59;
 
     public static final double kshooterPivotDeckPosition = 34;
   }
@@ -400,7 +400,7 @@ public final class Constants {
     public static final int kMotorCanID = 10;
     public static final int kMotorCurrentLimit = 30; 
 
-    public static final int kDigitalSensorPin = 9; 
+    public static final int kDigitalSensorPin = 8; 
 
     // Positive is intaking
     public static final boolean kInvertMotor = true;

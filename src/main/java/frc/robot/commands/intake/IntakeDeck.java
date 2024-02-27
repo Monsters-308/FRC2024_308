@@ -43,14 +43,14 @@ public class IntakeDeck extends Command {
   public void execute() {
     //gets a note on the deck
     m_intakePivotSubsystem.setPosition(IntakePivotConstants.kIntakeDeckPostion);
-    if (m_intakePivotSubsystem.getPosition() == IntakePivotConstants.kIntakeDeckPostion){
+    //if (m_intakePivotSubsystem.inPosition()){
       m_intakeSubsystem.setSpeed(IndexConstants.kIndexIntakeSpeed);
-    }
+    //}
     //gets a note in the shooter
-    if (m_shooterPivotSubsystem.inPosition()){
+    //if (m_shooterPivotSubsystem.inPosition()){
       m_intakeSubsystem.setSpeed(IntakeConstants.kIntakeSpeed);
       m_hotdogRoller.setSpeed(IndexConstants.kIndexIntakeSpeed);
-    }
+    //}
   }
 
   // Called once the command ends or is interrupted.

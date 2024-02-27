@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc.robot.Constants.ShooterPivotConstants;
+import frc.utils.SwerveUtils;
 
 public class ShooterPivotSubsystem extends SubsystemBase {
 
@@ -52,11 +53,10 @@ public class ShooterPivotSubsystem extends SubsystemBase {
     m_shooterPivotMotor.burnFlash();
 
     pivotTab.addDouble("Pivot Angle", () -> getPosition().getDegrees());
-    pivotTab.addDouble("Get", () -> m_shooterPivotMotorEncoder.get());
-    pivotTab.addDouble("Get Absolute", () -> m_shooterPivotMotorEncoder.getAbsolutePosition());
-    pivotTab.addDouble("Get Distance", () -> m_shooterPivotMotorEncoder.getDistance());
+
     pivotTab.addBoolean("ShooterPivot Connected", () -> m_shooterPivotMotorEncoder.isConnected());
   }
+
 
   /**
    * Returns the angle the shooter is at.
@@ -65,17 +65,14 @@ public class ShooterPivotSubsystem extends SubsystemBase {
    * @return The current position of the module (in radians).
    */
   public Rotation2d getPosition() {
-    double angleDegrees;
+    //double angleDegrees;
 
     if(ShooterPivotConstants.kTurningMotorEncoderInverted){
-      angleDegrees = Math.toDegrees(-m_shooterPivotMotorEncoder.getAbsolutePosition() + ShooterPivotConstants.kAngleOffset);
+      return Rotation2d.fromRadians(-m_shooterPivotMotorEncoder.getDistance() + ShooterPivotConstants.kAngleOffset);
     }
-    else {
-      angleDegrees = Math.toDegrees(m_shooterPivotMotorEncoder.getAbsolutePosition() + ShooterPivotConstants.kAngleOffset);
-    }
-    
-    // Stupid conversion math
-    return Rotation2d.fromDegrees(((angleDegrees - 30.5) * 6.3659) + 30.5);
+    return Rotation2d.fromDegrees(
+      SwerveUtils.angleConstrain(m_shooterPivotMotorEncoder.getAbsolutePosition() * ShooterPivotConstants.kShooterEncoderPositionFactor + ShooterPivotConstants.kAngleOffset) 
+    );
   }
 
   /** This function is for testing purposes */
