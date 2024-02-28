@@ -193,20 +193,20 @@ public class RobotContainer {
         .onTrue(new InstantCommand(
             () -> m_driveSubsystem.zeroHeading()));
 
-    // // Auto Aim speaker
-    // new JoystickButton(m_driverController, Button.kA.value)
-    //     .toggleOnTrue(
-    //         // new autoSpeaker(
-    //         //     m_driveSubsystem,
-    //         //     m_shooterPivotSubsystem,
-    //         //     m_shooterSubsystem
-    //         //     ));
-    //         new AutoAimDynamic(
-    //           m_visionSubsystem, 
-    //           m_driveSubsystem, 
-    //           m_shooterPivotSubsystem,
-    //           () -> m_driverController.getLeftY(),
-    //           () -> m_driverController.getLeftX()));
+  // // Auto Aim speaker
+  // new JoystickButton(m_driverController, Button.kA.value)
+  //     .toggleOnTrue(
+  //         // new autoSpeaker(
+  //         //     m_driveSubsystem,
+  //         //     m_shooterPivotSubsystem,
+  //         //     m_shooterSubsystem
+  //         //     ));
+  //         new AutoAimDynamic(
+  //           m_visionSubsystem, 
+  //           m_driveSubsystem, 
+  //           m_shooterPivotSubsystem,
+  //           () -> m_driverController.getLeftY(),
+  //           () -> m_driverController.getLeftX()));
 
     // // Auto Aim Amp
     // new JoystickButton(m_driverController, Button.kB.value)
@@ -294,15 +294,15 @@ public class RobotContainer {
     // // Use bumpers for intake pivot
     new JoystickButton(m_coDriverController, Button.kRightBumper.value)
         .onTrue(
-            new InstantCommand(() -> m_hangingSubsystem.setRightSpeed(0.8), m_hangingSubsystem))
+            new InstantCommand(() -> m_hangingSubsystem.setBothSpeed(0.8), m_hangingSubsystem))
         .onFalse(
-            new InstantCommand(() -> m_hangingSubsystem.setRightSpeed(0), m_hangingSubsystem));
+            new InstantCommand(() -> m_hangingSubsystem.setBothSpeed(0.8), m_hangingSubsystem));
 
     new JoystickButton(m_coDriverController, Button.kLeftBumper.value)
         .onTrue(
-            new InstantCommand(() -> m_hangingSubsystem.setRightSpeed(-0.8), m_hangingSubsystem))
+            new InstantCommand(() -> m_hangingSubsystem.setBothSpeed(0.8), m_hangingSubsystem))
         .onFalse(
-            new InstantCommand(() -> m_hangingSubsystem.setRightSpeed(0), m_hangingSubsystem));
+            new InstantCommand(() -> m_hangingSubsystem.setBothSpeed(0.8), m_hangingSubsystem));
 
     // Left bumper: Raise hanging arms
     // new JoystickButton(m_coDriverController, Button.kLeftBumper.value)
@@ -367,19 +367,19 @@ public class RobotContainer {
     //     .onFalse(
     //         new InstantCommand(() -> m_shooterPivotSubsystem.setSpeed(0), m_shooterPivotSubsystem));
 
-    // Dpad up: Hanging arm up
-    new POVButton(m_coDriverController, 0)
-        .onTrue(
-            new InstantCommand(() -> m_shooterPivotSubsystem.setSpeed(1), m_shooterPivotSubsystem))
-        .onFalse(
-          new InstantCommand(() -> m_shooterPivotSubsystem.setSpeed(0), m_shooterPivotSubsystem));
+  //   // Dpad up: Hanging arm up
+  //   new POVButton(m_coDriverController, 0)
+  //       .onTrue(
+  //           new InstantCommand(() -> m_shooterPivotSubsystem.setSpeed(1), m_shooterPivotSubsystem))
+  //       .onFalse(
+  //         new InstantCommand(() -> m_shooterPivotSubsystem.setSpeed(0), m_shooterPivotSubsystem));
 
-    // Dpad down: Hanging arm down
-    new POVButton(m_coDriverController, 180)
-    .onTrue(
-      new InstantCommand(() -> m_shooterPivotSubsystem.setSpeed(-1), m_shooterPivotSubsystem))
-  .onFalse(
-    new InstantCommand(() -> m_shooterPivotSubsystem.setSpeed(0), m_shooterPivotSubsystem));
+  //   // Dpad down: Hanging arm down
+  //   new POVButton(m_coDriverController, 180)
+  //   .onTrue(
+  //     new InstantCommand(() -> m_shooterPivotSubsystem.setSpeed(-1), m_shooterPivotSubsystem))
+  // .onFalse(
+  //   new InstantCommand(() -> m_shooterPivotSubsystem.setSpeed(0), m_shooterPivotSubsystem));
 
     // Dpad Right: intaking test
     new POVButton(m_coDriverController, 90)
