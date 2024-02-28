@@ -45,7 +45,7 @@ public class autoWheelRevAndPivot extends Command {
   public void execute() {
     m_shooterPivotSubsystem.setPosition(angle);
 
-    if(m_driveSubsystem.getPose().getX() < FieldConstants.kFieldWidthMeters/2){
+    if(m_driveSubsystem.getPose().getX() < FieldConstants.kFieldWidthMeters / 4){
       m_shooterSubsystem.setBothSpeeds(wheelSpeed);
     }
 
@@ -54,6 +54,6 @@ public class autoWheelRevAndPivot extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-
+    m_shooterSubsystem.stopRollers();
   }
 }

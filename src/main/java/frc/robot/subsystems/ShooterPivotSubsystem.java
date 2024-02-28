@@ -26,20 +26,11 @@ public class ShooterPivotSubsystem extends SubsystemBase {
     // Factory reset, so we get the SPARKS MAX to a known state before configuring
     // them. This is useful in case a SPARK MAX is swapped out.
     m_shooterPivotMotor.restoreFactoryDefaults();
-    
-    // Conversion factor from default unit of rotations to RADIANS
-    // returns a distance of kShooterEncoderPositionFactor for every rotation
-    m_shooterPivotMotorEncoder.setDistancePerRotation(ShooterPivotConstants.kShooterEncoderPositionFactor);
-    //m_shooterPivotMotorEncoder.setDistancePerRotation(0.5); TEST
 
-    // Set DutyCycle range (Note: This should fix everything but)
-    // what would happen if we dont set the value??
+    // Set DutyCycle range 
     m_shooterPivotMotorEncoder.setDutyCycleRange(
         1 / ShooterPivotConstants.kEncoderPeriod, 
         (ShooterPivotConstants.kEncoderPeriod-1) / ShooterPivotConstants.kEncoderPeriod);
-
-    //m_shooterPivotMotorEncoder.setDutyCycleRange(1.0 / 1025.0, 1024.0/1025.0); TEST
-    //what happens if we get the raw data and multiply it by 360?
         
     // More motor configuration
     m_shooterPivotMotor.setIdleMode(ShooterPivotConstants.kTurningMotorIdleMode);
@@ -57,21 +48,18 @@ public class ShooterPivotSubsystem extends SubsystemBase {
     pivotTab.addBoolean("ShooterPivot Connected", () -> m_shooterPivotMotorEncoder.isConnected());
   }
 
-
   /**
    * Returns the angle the shooter is at.
    * The angle is 0 when the shooter is parallel to the ground.
    *
-   * @return The current position of the module (in radians).
+   * @return The current position of the module.
    */
   public Rotation2d getPosition() {
-    //double angleDegrees;
-
-    if(ShooterPivotConstants.kTurningMotorEncoderInverted){
-      return Rotation2d.fromRadians(-m_shooterPivotMotorEncoder.getDistance() + ShooterPivotConstants.kAngleOffset);
-    }
     return Rotation2d.fromDegrees(
-      SwerveUtils.angleConstrain(m_shooterPivotMotorEncoder.getAbsolutePosition() * ShooterPivotConstants.kShooterEncoderPositionFactor + ShooterPivotConstants.kAngleOffset) 
+      SwerveUtils.angleConstrain(
+        (ShooterPivotConstants.kTurningMotorEncoderInverted ? -1 : 1) * 
+        m_shooterPivotMotorEncoder.getAbsolutePosition() * ShooterPivotConstants.kShooterEncoderPositionFactor + ShooterPivotConstants.kAngleOffset
+      ) 
     );
   }
 
@@ -96,7 +84,6 @@ public class ShooterPivotSubsystem extends SubsystemBase {
     m_desiredAngle = angle;
   }
 
-
   /**
    * Returns whether the shooter pivot is at its desired position within an amount of tolerance.
    * @return true if in its desired position.
@@ -105,7 +92,7 @@ public class ShooterPivotSubsystem extends SubsystemBase {
     double currentAngleDegrees = getPosition().getDegrees();
     double desiredAngleDegrees = m_desiredAngle.getDegrees();
 
-    return Math.abs(currentAngleDegrees - desiredAngleDegrees) > ShooterPivotConstants.kAngleTolerance;
+    return Math.abs(currentAngleDegrees - desiredAngleDegrees) < ShooterPivotConstants.kAngleTolerance;
   }
 
   @Override

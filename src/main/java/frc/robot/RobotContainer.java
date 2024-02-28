@@ -31,7 +31,6 @@ import frc.robot.commands.drive.TurningMotorsTest;
 import frc.robot.commands.hanging.LowerBothArms;
 import frc.robot.commands.hanging.RaiseBothArms;
 import frc.robot.commands.index.RunIndex;
-import frc.robot.commands.intake.IntakeNote;
 import frc.robot.commands.intake.RunIntake;
 import frc.robot.commands.shooterIndex.IndexNoteGood;
 import frc.robot.commands.shooterPivot.PivotGoToPose;
@@ -89,9 +88,10 @@ public class RobotContainer {
    */
   public RobotContainer() {
 
+    // Put camera on shuffleboard
     CameraServer.startAutomaticCapture();
-    // Configure the button bindings
 
+    // Configure the button bindings
     configureButtonBindings();
 
     // Configure limelight default pipeline
@@ -346,9 +346,9 @@ public class RobotContainer {
     
     // Y button: aim at trap
     new JoystickButton(m_coDriverController, Button.kY.value)
-    .toggleOnTrue(
-      new CompleteIntake(m_intakeSubsystem, m_shooterPivotSubsystem, m_shooterIndexSubsystem, m_indexSubsystem, m_intakePivotSubsystem, m_LEDSubsystem)
-    );
+      .toggleOnTrue(
+        new CompleteIntake(m_intakeSubsystem, m_shooterPivotSubsystem, m_shooterIndexSubsystem, m_indexSubsystem, m_intakePivotSubsystem, m_LEDSubsystem)
+      );
 
     // // Dpad up: shooter pivot up
     // new POVButton(m_coDriverController, 0)
@@ -367,16 +367,16 @@ public class RobotContainer {
     // Dpad up: Hanging arm up
     new POVButton(m_coDriverController, 0)
         .onTrue(
-            new InstantCommand(() -> m_hangingSubsystem.setBothSpeed(1), m_shooterPivotSubsystem))
+          new InstantCommand(() -> m_hangingSubsystem.setBothSpeed(1), m_shooterPivotSubsystem))
         .onFalse(
           new InstantCommand(() -> m_hangingSubsystem.setBothSpeed(0), m_shooterPivotSubsystem));
 
     // Dpad down: Hanging arm down
     new POVButton(m_coDriverController, 180)
-    .onTrue(
-      new InstantCommand(() -> m_hangingSubsystem.setBothSpeed(-1), m_shooterPivotSubsystem))
-  .onFalse(
-    new InstantCommand(() -> m_hangingSubsystem.setBothSpeed(0), m_shooterPivotSubsystem));
+      .onTrue(
+        new InstantCommand(() -> m_hangingSubsystem.setBothSpeed(-1), m_shooterPivotSubsystem))
+      .onFalse(
+        new InstantCommand(() -> m_hangingSubsystem.setBothSpeed(0), m_shooterPivotSubsystem));
 
     // Dpad Right: intaking test
     new POVButton(m_coDriverController, 90)

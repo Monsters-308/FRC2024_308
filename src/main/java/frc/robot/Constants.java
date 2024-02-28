@@ -245,26 +245,28 @@ public final class Constants {
     public static final boolean kInvertMotors = false;
 
     public static final boolean kTurningMotorEncoderInverted = false;
+    public static final int kEncoderPort = 1;
+    public static final double kAngleTolerance = 5;
     public static final double kAngleOffset = -56.8;
 
-    // Safety: prevent pivot from going beyond its minimum and maximum
-    public static final Rotation2d kPivotMinAngle = Rotation2d.fromDegrees(-178.8);
-    public static final Rotation2d kPivotMaxAngle = Rotation2d.fromDegrees(180);
+    public static final double kShooterEncoderPositionFactor = 360; 
 
-    public static final int kEncoderPort = 1;
-    public static final double kAngleTolerance = 10;
-  
+    // Safety: prevent pivot from going beyond its minimum and maximum
+    public static final Rotation2d kPivotMinAngle = Rotation2d.fromDegrees(-126.7);
+    public static final Rotation2d kPivotMaxAngle = Rotation2d.fromDegrees(14.7);
+    
+    // Unused PID constants
     public static final double kPivotP = 0.025;
     public static final double kPivotI = 0;
     public static final double kPivotD = 0.001;
 
-    public static final double kShooterEncoderPositionFactor = 360; 
+    public static final double kPivotSpeed = 0.8;
 
     /*           Constants for pivot positions:            */
 
-    public static final double kIntakeDownPosition = -126.7; // Change
-    public static final double kIntakeDeckPostion = -37.2; // Change
-    public static final double kIntakeInPosition = 14.7; // Change
+    public static final double kIntakeDownPosition = -126.7;
+    public static final double kIntakeDeckPostion = -37.2;
+    public static final double kIntakeInPosition = 14.7;
   }
 
   public static final class HangingConstants {
@@ -297,7 +299,7 @@ public final class Constants {
     public static final int kIntakeMotorCurrentLimit = 35; // Change
 
     public static final double kHumanPlayerIntakeSpeed = .8; //oh noes sp
-    public static final double kIntakeSpeed = .8; //oh noes sp
+    public static final double kIntakeSpeed = 1; //Speed used for intaking notes
   }
 
   public static final class IndexConstants {

@@ -9,10 +9,8 @@ public class SetIntakeAngle extends Command {
   private final double m_desiredAngle;
 
   /**
-   * Sets the intake pivot to a specific angle. 
-   * <p>
-   * NOTE: This is equivalent to "new InstantCommand(() -> m_intakePivotSubsystem.setPosition(angle))"
-   * except it only ends once the pivot reaches its target angle.
+   * Moves the intake pivot to a specific angle. 
+   * This command ends once the arm has reached its desired angle.
    * @param intakePivotSubsystem
    */
   public SetIntakeAngle(IntakePivotSubsystem intakePivotSubsystem, double angle) {
@@ -31,10 +29,10 @@ public class SetIntakeAngle extends Command {
   @Override
   public void execute() {
     if(m_desiredAngle - m_intakePivotSubsystem.getPosition().getDegrees() < 0){
-        m_intakePivotSubsystem.setSpeed(0.8);
+      m_intakePivotSubsystem.setSpeed(IntakePivotConstants.kPivotSpeed);
     }
     else if (m_desiredAngle - m_intakePivotSubsystem.getPosition().getDegrees() > 0){
-      m_intakePivotSubsystem.setSpeed(-0.8);
+      m_intakePivotSubsystem.setSpeed(-IntakePivotConstants.kPivotSpeed);
     }
   }
 
@@ -47,6 +45,6 @@ public class SetIntakeAngle extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return Math.abs(m_desiredAngle - m_intakePivotSubsystem.getPosition().getDegrees()) < 5;
+    return Math.abs(m_desiredAngle - m_intakePivotSubsystem.getPosition().getDegrees()) < IntakePivotConstants.kAngleTolerance;
   }
 }

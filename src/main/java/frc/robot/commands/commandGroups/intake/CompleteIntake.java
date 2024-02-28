@@ -3,6 +3,7 @@ package frc.robot.commands.commandGroups.intake;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.subsystems.ShooterPivotSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterIndexSubsystem;
@@ -22,19 +23,23 @@ public class CompleteIntake extends SequentialCommandGroup  {
     /** Intakes a note from the ground and then puts it into the shooter index */
     public CompleteIntake(IntakeSubsystem intakeSubsystem, ShooterPivotSubsystem shooterPivotSubsystem, ShooterIndexSubsystem shooterIndexSubsystem, IndexSubsystem indexSubsystem, IntakePivotSubsystem intakePivotSubsystem, LEDSubsystem LEDsubsystem){
         addCommands(
+            new SequentialCommandGroup(
+                new setLED(LEDsubsystem, LEDsubsystem::teal)
+            ),
+
             // Get the shooter pivot started early
-            // ew SequentialCommandGroup(
-            //     new setLED(LEDsubsystem, LEDsubsystem::teal)
-            // ),n
             new InstantCommand(() -> shooterPivotSubsystem.setPosition(ShooterPivotConstants.kshooterPivotDeckPosition)),
+            
             new SetIntakeAngle(intakePivotSubsystem, IntakePivotConstants.kIntakeDownPosition),
-            new IntakeNote(intakeSubsystem, intakePivotSubsystem),
+            new IntakeNote(intakeSubsystem),
 
             new SetIntakeAngle(intakePivotSubsystem, IntakePivotConstants.kIntakeDeckPostion),
 
+            new WaitUntilCommand(() -> shooterPivotSubsystem.inPosition()),
+
             new ParallelDeadlineGroup(
                 new IndexNoteGood(shooterIndexSubsystem), 
-                new IntakeDeck(intakeSubsystem, shooterPivotSubsystem, indexSubsystem, intakePivotSubsystem) 
+                new IntakeDeck(intakeSubsystem, indexSubsystem) 
             ),
             // Add an InstantCommand to reset the LED state after the command group finishes
             new InstantCommand(() -> LEDsubsystem.setLEDFunction(LEDsubsystem::rainbow))

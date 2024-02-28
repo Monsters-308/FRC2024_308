@@ -99,10 +99,10 @@ public class IntakePivotSubsystem extends SubsystemBase {
     m_desiredAngle = angle;
   }
 
-    /** This function is for testing purposes */
-    public void setSpeed(double speed){
-      m_masterMotor.set(speed);
-    }
+  /** This function is for testing purposes */
+  public void setSpeed(double speed){
+    m_masterMotor.set(speed);
+  }
 
   /**
    * Returns whether the shooter pivot is at its desired position within an amount of tolerance.
