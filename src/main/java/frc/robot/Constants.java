@@ -32,8 +32,8 @@ public final class Constants {
     public static final double kMaxSpeedMetersPerSecond = 5;
     public static final double kMaxAngularSpeed = 2 * Math.PI; // radians per second
 
-    public static final double kMagnitudeSlewRate = 5.5 * kMaxSpeedMetersPerSecond; // meters per second^2
-    public static final double kRotationalSlewRate = 5.5 * kMaxAngularSpeed;        // radians per second^2
+    public static final double kMagnitudeSlewRate = 5 * kMaxSpeedMetersPerSecond; // meters per second^2
+    public static final double kRotationalSlewRate = 5 * kMaxAngularSpeed;        // radians per second^2
 
     // Chassis configuration
     public static final double kTrackWidth = Units.inchesToMeters(22.75); // Distance between centers of right and left wheels on robot
@@ -271,7 +271,7 @@ public final class Constants {
     public static final int kRightArmCanID = 18; // Change
     public static final int kRightArmUpperLimit = 4; 
     public static final int kRightArmLowerLimit = 5; 
-    public static final boolean kRightArmInverted = true; // Change
+    public static final boolean kRightArmInverted = false; // Change
 
     public static final int kLeftArmCanID = 19; // Change
     public static final int kLeftArmUpperLimit = 2; 
@@ -389,7 +389,7 @@ public final class Constants {
     // The horizontal distance between the center of the robot and the pivot
     public static final double kPivotCenterOffsetInches = 0; // Change
 
-    public static final double kShooterPivotAmpPosition = 45;
+    public static final double kShooterPivotAmpPosition = 58;
     public static final double kShooterPivotTrapPosition = 60;
     public static final double kShooterPivotSpeakerPosition = 59;
 

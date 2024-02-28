@@ -16,7 +16,7 @@ public class RaiseBothArms extends Command {
   public RaiseBothArms(HangingSubsystem hangingSubsystem) {
     m_hangingSubsystem = hangingSubsystem;
     
-    addRequirements(hangingSubsystem);
+    addRequirements(m_hangingSubsystem);
   }
 
   // Called when the command is initially scheduled.

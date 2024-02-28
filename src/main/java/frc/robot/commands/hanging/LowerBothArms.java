@@ -9,51 +9,27 @@ import edu.wpi.first.math.controller.PIDController;
 //skeleton made by nico
 public class LowerBothArms extends Command {
   private final HangingSubsystem m_hangingSubsystem;
-  private final DriveSubsystem m_driveSubsystem;
-
-  private final double m_hangingSpeed;
-  private boolean m_complete = false;
-
-  private final PIDController pitchController = new PIDController(HangingConstants.kPitchP,
-      HangingConstants.kPitchI,
-      HangingConstants.kPitchD);
 
   /**
    * Creates a new ExampleCommand.
    *
    * @param subsystem The subsystem used by this command.
    */
-  public LowerBothArms(HangingSubsystem hangingSubsystem, DriveSubsystem driveSubsystem, double hangingSpeed) {
+  public LowerBothArms(HangingSubsystem hangingSubsystem) {
     m_hangingSubsystem = hangingSubsystem;
-    m_driveSubsystem = driveSubsystem;
 
-    m_hangingSpeed = hangingSpeed;
-
-    // NOTE: don't add driveSubsystem because we're just using it to get data
     addRequirements(m_hangingSubsystem);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    pitchController.reset();
-    pitchController.setSetpoint(0);
-    m_complete = false;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double robotTilt = m_driveSubsystem.getRobotRoll();
-
-    double speedDifference = pitchController.calculate(robotTilt); // speed needed to set roll of robot with hangers
-
-    m_hangingSubsystem.setLeftSpeed(m_hangingSpeed + speedDifference);
-    m_hangingSubsystem.setRightSpeed(m_hangingSpeed - speedDifference);
-
-    if (m_hangingSubsystem.leftFullyRetracted() || m_hangingSubsystem.rightFullyRetracted()) {
-      m_complete = true;
-    }
+    m_hangingSubsystem.setBothSpeed(-0.8);
   }
 
   // Called once the command ends or is interrupted.
@@ -65,6 +41,6 @@ public class LowerBothArms extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return m_complete;
+    return m_hangingSubsystem.leftFullyRetracted() && m_hangingSubsystem.rightFullyRetracted();
   }
 }
