@@ -2,18 +2,14 @@ package frc.robot.commands.hanging;
 
 import frc.robot.subsystems.HangingSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants.HangingConstants;
-import frc.robot.subsystems.DriveSubsystem;
-import edu.wpi.first.math.controller.PIDController;
 
 //skeleton made by nico
 public class LowerBothArms extends Command {
   private final HangingSubsystem m_hangingSubsystem;
 
   /**
-   * Creates a new ExampleCommand.
-   *
-   * @param subsystem The subsystem used by this command.
+   * Lowers both of the hanging arms until they are both fully retracted.
+   * @param hangingSubsystem The hanging subsystem.
    */
   public LowerBothArms(HangingSubsystem hangingSubsystem) {
     m_hangingSubsystem = hangingSubsystem;
