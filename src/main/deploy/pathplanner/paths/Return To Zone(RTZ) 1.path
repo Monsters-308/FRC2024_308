@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.0099713915217308,
-        "y": 6.840688207692205
+        "x": 1.831789277613643,
+        "y": 6.997424345725884
       },
       "isLocked": false,
       "linkedName": null
@@ -43,7 +43,7 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Amp Side Position",
   "previewStartingState": {
     "rotation": -178.08239794480482,
     "velocity": 0

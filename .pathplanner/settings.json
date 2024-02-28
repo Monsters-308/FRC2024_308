@@ -3,6 +3,9 @@
   "robotLength": 0.7874,
   "holonomicMode": true,
   "pathFolders": [
+    "Amp Side Position",
+    "Center Position",
+    "Source SIde",
     "Noah's shit"
   ],
   "autoFolders": [],
