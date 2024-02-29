@@ -50,6 +50,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -115,11 +116,44 @@ public class RobotContainer {
       new CompleteIntake(m_intakeSubsystem, m_shooterPivotSubsystem, m_shooterIndexSubsystem, m_indexSubsystem, m_intakePivotSubsystem, m_LEDSubsystem)
     );
 
+    NamedCommands.registerCommand("Launch Note",
+      new SequentialCommandGroup(
+        new InstantCommand(() -> m_shooterSubsystem.setBothSpeeds(20.5), m_shooterSubsystem),
+        new WaitCommand(1.5),
+        new LaunchNote(m_shooterIndexSubsystem),
+        new InstantCommand(() -> m_shooterSubsystem.stopRollers(), m_shooterSubsystem)
+      )
+    );
+
+    NamedCommands.registerCommand("ShooterPivotSpeaker",
+      new SequentialCommandGroup(
+        new PivotGoToPose(
+          m_shooterPivotSubsystem,
+          ShooterPivotConstants.kShooterPivotSpeakerPosition
+          ))
+      );
+
+      NamedCommands.registerCommand("ShooterDeckSpeaker",
+      new SequentialCommandGroup(
+        new PivotGoToPose(
+          m_shooterPivotSubsystem,
+          ShooterPivotConstants.kshooterPivotDeckPosition
+          ))
+      ); 
+
+      NamedCommands.registerCommand("IntakeNote",
+      new SequentialCommandGroup(
+        
+        new CompleteIntake(m_intakeSubsystem, m_shooterPivotSubsystem, m_shooterIndexSubsystem, m_indexSubsystem, m_intakePivotSubsystem, m_LEDSubsystem))
+          
+      );
+
     // Adding options to the sendable chooser
     m_autonChooser.setDefaultOption("Template Auton", new TemplateAuton(m_driveSubsystem));
     m_autonChooser.addOption("One Meter", new PathPlannerAuto("Move One Meter"));
     m_autonChooser.addOption("Middle Test", new PathPlannerAuto("Simple Middle Test"));
     m_autonChooser.addOption("4 Note Auto", new PathPlannerAuto("Simple 4 note auton"));
+    m_autonChooser.addOption("Testing", new PathPlannerAuto("New Auto"));
 
     // Put chooser on the dashboard
     Shuffleboard.getTab("Autonomous").add("Select Auton", m_autonChooser).withSize(2, 1);
@@ -276,8 +310,14 @@ public class RobotContainer {
 
     // // Button for testing shooter:
     new JoystickButton(m_coDriverController, Button.kX.value)
-        .onTrue(new InstantCommand(
-            () -> m_shooterSubsystem.setBothSpeeds(20), m_shooterSubsystem))
+        .onTrue(
+          // new SequentialCommandGroup(
+          //   new InstantCommand(
+          //   () -> m_shooterSubsystem.setBottomShooterSpeed(7), m_shooterSubsystem),
+          // new InstantCommand(
+          //   () -> m_shooterSubsystem.setTopShooterSpeed(10), m_shooterSubsystem)
+          // ))
+          new InstantCommand(() -> m_shooterSubsystem.setBothSpeeds(20), m_shooterSubsystem))
         .onFalse(
             new InstantCommand(
                 m_shooterSubsystem::stopRollers, m_shooterSubsystem));

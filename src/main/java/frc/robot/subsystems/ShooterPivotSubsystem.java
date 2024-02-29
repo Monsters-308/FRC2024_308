@@ -16,7 +16,7 @@ public class ShooterPivotSubsystem extends SubsystemBase {
 
   private final CANSparkMax m_shooterPivotMotor = new CANSparkMax(ShooterPivotConstants.kShooterPivotMotorCanID, MotorType.kBrushed);
   private final DutyCycleEncoder m_shooterPivotMotorEncoder = new DutyCycleEncoder(ShooterPivotConstants.kEncoderPort);
-  private Rotation2d m_desiredAngle = new Rotation2d();
+  private Rotation2d m_desiredAngle = Rotation2d.fromDegrees(ShooterPivotConstants.kShooterPivotSpeakerPosition);
 
 
   private final ShuffleboardTab pivotTab = Shuffleboard.getTab("Shooter");

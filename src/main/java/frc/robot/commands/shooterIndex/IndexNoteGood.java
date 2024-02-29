@@ -19,7 +19,7 @@ public class IndexNoteGood extends SequentialCommandGroup {
                 .until(() -> shooterIndexSubsystem.gamePieceDetected()),
 
             // Reverse indexer until game piece not detected
-            new RunShooterIndexer(shooterIndexSubsystem, -0.3)
+            new RunShooterIndexer(shooterIndexSubsystem, -0.2)
                 .until(() -> !shooterIndexSubsystem.gamePieceDetected())
         );
     }

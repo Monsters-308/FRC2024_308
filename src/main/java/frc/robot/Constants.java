@@ -260,7 +260,7 @@ public final class Constants {
     public static final double kPivotI = 0;
     public static final double kPivotD = 0.001;
 
-    public static final double kPivotSpeed = 0.8;
+    public static final double kPivotSpeed = 1;
 
     /*           Constants for pivot positions:            */
 
@@ -380,7 +380,7 @@ public final class Constants {
     public static final double kPivotMinAngle = Math.toRadians(30.5);
     public static final double kPivotMaxAngle = Math.toRadians(60); 
 
-    public static final double kAngleTolerance = 1;
+    public static final double kAngleTolerance = 0.5;
     
     public static final IdleMode kTurningMotorIdleMode = IdleMode.kBrake;
     public static final int kTurningMotorCurrentLimit = 20; // amps
@@ -393,7 +393,7 @@ public final class Constants {
 
     public static final double kShooterPivotAmpPosition = 58;
     public static final double kShooterPivotTrapPosition = 60;
-    public static final double kShooterPivotSpeakerPosition = 59;
+    public static final double kShooterPivotSpeakerPosition = 55;
 
     public static final double kshooterPivotDeckPosition = 34;
   }
@@ -408,6 +408,6 @@ public final class Constants {
     public static final boolean kInvertMotor = true;
     public static final boolean kSensorInverted = true;
     
-    public static final double kIndexIntakeSpeed = .75;
+    public static final double kIndexIntakeSpeed = .6;
   }
 }
