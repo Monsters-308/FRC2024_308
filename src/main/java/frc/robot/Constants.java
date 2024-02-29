@@ -391,9 +391,9 @@ public final class Constants {
     // The horizontal distance between the center of the robot and the pivot
     public static final double kPivotCenterOffsetInches = 0; // Change
 
-    public static final double kShooterPivotAmpPosition = 58;
+    public static final double kShooterPivotAmpPosition = 50;
     public static final double kShooterPivotTrapPosition = 60;
-    public static final double kShooterPivotSpeakerPosition = 55;
+    public static final double kShooterPivotSpeakerPosition = 57;
 
     public static final double kshooterPivotDeckPosition = 34;
   }

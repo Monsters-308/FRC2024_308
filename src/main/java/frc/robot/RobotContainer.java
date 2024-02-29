@@ -77,7 +77,6 @@ public class RobotContainer {
   private final IndexSubsystem m_indexSubsystem = new IndexSubsystem();
   private final HangingSubsystem m_hangingSubsystem = new HangingSubsystem();
 
-
   // Controllers
   final XboxController m_driverController = new XboxController(OIConstants.kDriverControllerPort);
   final XboxController m_coDriverController = new XboxController(OIConstants.kCoDriverControllerPort);
@@ -133,7 +132,7 @@ public class RobotContainer {
           ))
       );
 
-      NamedCommands.registerCommand("ShooterDeckSpeaker",
+    NamedCommands.registerCommand("ShooterDeckSpeaker",
       new SequentialCommandGroup(
         new PivotGoToPose(
           m_shooterPivotSubsystem,
@@ -141,11 +140,9 @@ public class RobotContainer {
           ))
       ); 
 
-      NamedCommands.registerCommand("IntakeNote",
+    NamedCommands.registerCommand("IntakeNote",
       new SequentialCommandGroup(
-        
         new CompleteIntake(m_intakeSubsystem, m_shooterPivotSubsystem, m_shooterIndexSubsystem, m_indexSubsystem, m_intakePivotSubsystem, m_LEDSubsystem))
-          
       );
 
     // Adding options to the sendable chooser
@@ -153,7 +150,9 @@ public class RobotContainer {
     m_autonChooser.addOption("One Meter", new PathPlannerAuto("Move One Meter"));
     m_autonChooser.addOption("Middle Test", new PathPlannerAuto("Simple Middle Test"));
     m_autonChooser.addOption("4 Note Auto", new PathPlannerAuto("Simple 4 note auton"));
-    m_autonChooser.addOption("Testing", new PathPlannerAuto("New Auto"));
+    m_autonChooser.addOption("Middle", new PathPlannerAuto("Center"));
+    m_autonChooser.addOption("Amp", new PathPlannerAuto("Auto(AMP SIDE)"));
+    m_autonChooser.addOption("Source", new PathPlannerAuto("Auto(SOURCE SIDE)"));
 
     // Put chooser on the dashboard
     Shuffleboard.getTab("Autonomous").add("Select Auton", m_autonChooser).withSize(2, 1);
@@ -310,18 +309,14 @@ public class RobotContainer {
 
     // // Button for testing shooter:
     new JoystickButton(m_coDriverController, Button.kX.value)
-        .onTrue(
-          // new SequentialCommandGroup(
-          //   new InstantCommand(
-          //   () -> m_shooterSubsystem.setBottomShooterSpeed(7), m_shooterSubsystem),
-          // new InstantCommand(
-          //   () -> m_shooterSubsystem.setTopShooterSpeed(10), m_shooterSubsystem)
-          // ))
-          new InstantCommand(() -> m_shooterSubsystem.setBothSpeeds(20), m_shooterSubsystem))
-        .onFalse(
-            new InstantCommand(
-                m_shooterSubsystem::stopRollers, m_shooterSubsystem));
-  
+    .whileTrue(
+      new ParallelCommandGroup(
+        new InstantCommand(() -> m_intakePivotSubsystem.setPosition(IntakePivotConstants.kIntakeDownPosition), m_intakePivotSubsystem),
+        new IndexNoteGood(m_shooterIndexSubsystem),
+        new RunIndex(m_indexSubsystem, IndexConstants.kIndexIntakeSpeed),
+        new RunIntake(m_intakeSubsystem, 1)
+      )
+    );
     // new POVButton(m_coDriverController, 270)
     //    .toggleOnTrue(
     //     new SequentialCommandGroup(
@@ -422,7 +417,6 @@ public class RobotContainer {
     new POVButton(m_coDriverController, 90)
         .whileTrue(
           new ParallelCommandGroup(
-            new InstantCommand(() -> m_shooterPivotSubsystem.setPosition(ShooterPivotConstants.kshooterPivotDeckPosition), m_shooterPivotSubsystem),
             new InstantCommand(() -> m_intakePivotSubsystem.setPosition(IntakePivotConstants.kIntakeDownPosition), m_intakePivotSubsystem),
             new IndexNoteGood(m_shooterIndexSubsystem),
             new RunIndex(m_indexSubsystem, IndexConstants.kIndexIntakeSpeed),
@@ -437,6 +431,20 @@ public class RobotContainer {
           new InstantCommand(() -> m_shooterIndexSubsystem.setSpeed(0), m_shooterIndexSubsystem)
         )
       );
+
+    // Left trigger: charge up wheels 
+    new Trigger(() -> m_coDriverController.getLeftTriggerAxis() > OIConstants.kTriggerDeadband)
+    .onTrue(
+      // new SequentialCommandGroup(
+      //   new InstantCommand(
+      //   () -> m_shooterSubsystem.setBottomShooterSpeed(7), m_shooterSubsystem),
+      // new InstantCommand(
+      //   () -> m_shooterSubsystem.setTopShooterSpeed(10), m_shooterSubsystem)
+      // ))
+      new InstantCommand(() -> m_shooterSubsystem.setBothSpeeds(20), m_shooterSubsystem))
+    .onFalse(
+        new InstantCommand(
+            m_shooterSubsystem::stopRollers, m_shooterSubsystem));
   }
 
   /**

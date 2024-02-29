@@ -84,7 +84,7 @@ public class AutoAimDynamic extends Command {
         Translation2d pos1 = m_driveSubsystem.getPose().getTranslation(); // Position of robot on field
         Translation2d pos2 = FieldUtils.flipRed(FieldConstants.kSpeakerPosition); //speaker position 
         Rotation2d angleToTarget = OdometryUtils.anglePoseToPose(pos1, pos2); // Angle to make robot face speacker
-        double distanceToTarget = OdometryUtils.getDistacnePosToPos(pos1, pos2); //distance in inches from limelight to speaker
+        double distanceToTarget = OdometryUtils.getDistancePosToPos(pos1, pos2); //distance in inches from limelight to speaker
 
        // Shuffleboard.getTab("Vision").add("Angle to Goal", angleToTarget.getDegrees());
        // Shuffleboard.getTab("Vision").add("Distance to Goal", distanceToTarget);
@@ -115,7 +115,7 @@ public class AutoAimDynamic extends Command {
         m_driveSubsystem.drive(
             -MathUtil.applyDeadband(m_xSpeed.getAsDouble(), OIConstants.kJoystickDeadband),
             -MathUtil.applyDeadband(m_ySpeed.getAsDouble(), OIConstants.kJoystickDeadband),
-            -rotation,
+            rotation,
             true, true
         );
             

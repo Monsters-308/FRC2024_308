@@ -47,7 +47,7 @@ public class OdometryUtils {
      * @param pointB The ending point
      * @return The distance from point A to point B.
      */
-    public static double getDistacnePosToPos(Translation2d pointA, Translation2d pointB){
+    public static double getDistancePosToPos(Translation2d pointA, Translation2d pointB){
         double x1 = pointA.getX();
         double y1 = pointA.getY();
 
