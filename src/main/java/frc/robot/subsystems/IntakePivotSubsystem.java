@@ -63,7 +63,7 @@ public class IntakePivotSubsystem extends SubsystemBase {
     
     m_Tab.addDouble("Pivot Angle", () -> getPosition().getDegrees());
 
-    m_Tab.addBoolean("ShooterPivot Connected", () -> m_intakePivotMotorEncoder.isConnected());
+    m_Tab.addBoolean("Encoder Connected", () -> m_intakePivotMotorEncoder.isConnected());
   }
 
   /**

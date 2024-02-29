@@ -45,7 +45,7 @@ public class ShooterPivotSubsystem extends SubsystemBase {
 
     pivotTab.addDouble("Pivot Angle", () -> getPosition().getDegrees());
 
-    pivotTab.addBoolean("ShooterPivot Connected", () -> m_shooterPivotMotorEncoder.isConnected());
+    pivotTab.addBoolean("Encoder Connected", () -> m_shooterPivotMotorEncoder.isConnected());
   }
 
   /**

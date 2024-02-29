@@ -110,7 +110,6 @@ public class RobotContainer {
             m_driveSubsystem));
 
     // "registerCommand" lets pathplanner identify our commands
-    // Here's the autoalign as an example:
     NamedCommands.registerCommand("Intake Note",
       new CompleteIntake(m_intakeSubsystem, m_shooterPivotSubsystem, m_shooterIndexSubsystem, m_indexSubsystem, m_intakePivotSubsystem, m_LEDSubsystem)
     );
@@ -139,11 +138,6 @@ public class RobotContainer {
           ShooterPivotConstants.kshooterPivotDeckPosition
           ))
       ); 
-
-    NamedCommands.registerCommand("IntakeNote",
-      new SequentialCommandGroup(
-        new CompleteIntake(m_intakeSubsystem, m_shooterPivotSubsystem, m_shooterIndexSubsystem, m_indexSubsystem, m_intakePivotSubsystem, m_LEDSubsystem))
-      );
 
     // Adding options to the sendable chooser
     m_autonChooser.setDefaultOption("Template Auton", new TemplateAuton(m_driveSubsystem));
@@ -311,7 +305,6 @@ public class RobotContainer {
     new JoystickButton(m_coDriverController, Button.kX.value)
     .whileTrue(
       new ParallelCommandGroup(
-        new InstantCommand(() -> m_intakePivotSubsystem.setPosition(IntakePivotConstants.kIntakeDownPosition), m_intakePivotSubsystem),
         new IndexNoteGood(m_shooterIndexSubsystem),
         new RunIndex(m_indexSubsystem, IndexConstants.kIndexIntakeSpeed),
         new RunIntake(m_intakeSubsystem, 1)

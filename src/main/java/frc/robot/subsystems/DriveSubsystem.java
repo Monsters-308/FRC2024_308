@@ -80,8 +80,7 @@ public class DriveSubsystem extends SubsystemBase {
   // Add alliance widget (it's just a boolean widget but I manually change the color)
   private final SimpleWidget m_allianceWidget = swerveTab.add("Alliance", true); 
   // Widget for when the limelight breaks
-  private final SimpleWidget m_useLimelightData = swerveTab.add("Limelight Data", true)
-    .withWidget(BuiltInWidgets.kToggleSwitch); 
+  private final SimpleWidget m_useLimelightData;
 
   // Suppliers for pose estimation with vision data
   private final Supplier<Pose2d> m_visionPose;
@@ -119,14 +118,14 @@ public class DriveSubsystem extends SubsystemBase {
     m_gyro.enableLogging(true);
    
     // Widgets for swerve module angles 
-    swerveTab.addDouble("frontLeft angle", () -> SwerveUtils.angleConstrain(m_frontLeft.getPosition().angle.getDegrees()))
-      .withPosition(0, 0);
-    swerveTab.addDouble("frontRight angle", () -> SwerveUtils.angleConstrain(m_frontRight.getPosition().angle.getDegrees()))
-      .withPosition(1, 0);
-    swerveTab.addDouble("rearLeft angle", () -> SwerveUtils.angleConstrain(m_rearLeft.getPosition().angle.getDegrees()))
-      .withPosition(0, 1);
-    swerveTab.addDouble("rearRight angle", () -> SwerveUtils.angleConstrain(m_rearRight.getPosition().angle.getDegrees()))
-      .withPosition(1, 1);
+    swerveTab.addDouble("frontLeft angle", () -> SwerveUtils.angleConstrain(m_frontLeft.getPosition().angle.getDegrees()));
+      //.withPosition(0, 0);
+    swerveTab.addDouble("frontRight angle", () -> SwerveUtils.angleConstrain(m_frontRight.getPosition().angle.getDegrees()));
+      //.withPosition(1, 0);
+    swerveTab.addDouble("rearLeft angle", () -> SwerveUtils.angleConstrain(m_rearLeft.getPosition().angle.getDegrees()));
+      //.withPosition(0, 1);
+    swerveTab.addDouble("rearRight angle", () -> SwerveUtils.angleConstrain(m_rearRight.getPosition().angle.getDegrees()));
+      //.withPosition(1, 1);
 
     // Gyro widget
     swerveTab.addDouble("Robot Heading", () -> getHeading())
@@ -164,7 +163,8 @@ public class DriveSubsystem extends SubsystemBase {
         () -> FieldUtils.getAlliance() == Alliance.Red, 
         this // Reference to this subsystem to set requirements
     );
-   
+    m_useLimelightData = swerveTab.add("Limelight Data", true)
+    .withWidget(BuiltInWidgets.kToggleSwitch); 
   }
 
   @Override
