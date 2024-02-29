@@ -81,7 +81,14 @@ public class RobotContainer {
   final XboxController m_driverController = new XboxController(OIConstants.kDriverControllerPort);
   final XboxController m_coDriverController = new XboxController(OIConstants.kCoDriverControllerPort);
 
-  SendableChooser<Command> m_autonChooser = new SendableChooser<>();
+  // Sendable chooser for launching the initial note
+  SendableChooser<Command> m_autonStartup = new SendableChooser<>();
+
+  // The second note to pick up and score
+  SendableChooser<Command> m_autonFirstAction = new SendableChooser<>();
+
+  // The third note to attempt to pick up and score
+  SendableChooser<Command> m_autonSecondAction = new SendableChooser<>();
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -134,17 +141,28 @@ public class RobotContainer {
           ))
       ); 
 
+    // Startup option
+    m_autonStartup.setDefaultOption("On", new AutonShootNote(m_shooterSubsystem, m_shooterIndexSubsystem));
+    m_autonStartup.addOption("Off", new WaitCommand(0.1));
+
     // Adding options to the sendable chooser
-    m_autonChooser.setDefaultOption("Do Nothing", new WaitCommand(15));
-    m_autonChooser.addOption("Middle", new PathPlannerAuto("Close Note(CENTER)"));
-    m_autonChooser.addOption("Amp", new PathPlannerAuto("Close Note(AMP SIDE)"));
-    m_autonChooser.addOption("Source", new PathPlannerAuto("Close Note(SOURCE SIDE)"));
-    m_autonChooser.addOption("(Test) One Meter", new PathPlannerAuto("Move One Meter"));
-    m_autonChooser.addOption("(Test) Middle Test", new PathPlannerAuto("Simple Middle Test"));
-    m_autonChooser.addOption("(Test) 4 Note Auto", new PathPlannerAuto("Simple 4 note auton"));
+    m_autonFirstAction.setDefaultOption("Do Nothing", new WaitCommand(15));
+    m_autonFirstAction.addOption("Middle", new PathPlannerAuto("Close Note(CENTER)"));
+    m_autonFirstAction.addOption("Amp", new PathPlannerAuto("Close Note(AMP SIDE)"));
+    m_autonFirstAction.addOption("Source", new PathPlannerAuto("Close Note(SOURCE SIDE)"));
+    m_autonFirstAction.addOption("(Test) One Meter", new PathPlannerAuto("Move One Meter"));
+    m_autonFirstAction.addOption("(Test) Middle Test", new PathPlannerAuto("Simple Middle Test"));
+    m_autonFirstAction.addOption("(Test) 4 Note Auto", new PathPlannerAuto("Simple 4 note auton"));
+
+    m_autonSecondAction.setDefaultOption("Do Nothing", new WaitCommand(15));
+    m_autonSecondAction.addOption("Middle", new PathPlannerAuto("Close Note(CENTER)"));
+    m_autonSecondAction.addOption("Amp", new PathPlannerAuto("Close Note(AMP SIDE)"));
+    m_autonSecondAction.addOption("Source", new PathPlannerAuto("Close Note(SOURCE SIDE)"));
 
     // Put chooser on the dashboard
-    Shuffleboard.getTab("Autonomous").add("Select Auton", m_autonChooser).withSize(2, 1);
+    Shuffleboard.getTab("Autonomous").add("Launch First Note?", m_autonStartup).withSize(2, 1);
+    Shuffleboard.getTab("Autonomous").add("First Action", m_autonFirstAction).withSize(2, 1);
+    Shuffleboard.getTab("Autonomous").add("Second Action", m_autonSecondAction).withSize(2, 1);
 
     // DEBUG: shuffleboard widget for resetting pose. For now I'm using a default
     // pose of 0, 0 and a rotation of 0
@@ -441,7 +459,10 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return m_autonChooser.getSelected();
+    return new SequentialCommandGroup(
+      m_autonStartup.getSelected(),
+      m_autonFirstAction.getSelected(), 
+      m_autonSecondAction.getSelected());
   }
 }
 

@@ -6,12 +6,6 @@
     "data": {
       "commands": [
         {
-          "type": "named",
-          "data": {
-            "name": "Launch Note"
-          }
-        },
-        {
           "type": "parallel",
           "data": {
             "commands": [
