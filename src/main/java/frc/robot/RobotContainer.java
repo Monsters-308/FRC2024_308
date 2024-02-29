@@ -19,7 +19,7 @@ import frc.robot.Constants.IndexConstants;
 import frc.robot.Constants.IntakePivotConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.ShooterPivotConstants;
-import frc.robot.commands.auton.TemplateAuton;
+import frc.robot.commands.auton.AutonShootNote;
 import frc.robot.commands.commandGroups.drive.autoAmp;
 import frc.robot.commands.commandGroups.drive.autoSpeaker;
 import frc.robot.commands.commandGroups.drive.autoTrapShoot;
@@ -115,12 +115,7 @@ public class RobotContainer {
     );
 
     NamedCommands.registerCommand("Launch Note",
-      new SequentialCommandGroup(
-        new InstantCommand(() -> m_shooterSubsystem.setBothSpeeds(20.5), m_shooterSubsystem),
-        new WaitCommand(1.5),
-        new LaunchNote(m_shooterIndexSubsystem),
-        new InstantCommand(() -> m_shooterSubsystem.stopRollers(), m_shooterSubsystem)
-      )
+      new AutonShootNote(m_shooterSubsystem, m_shooterIndexSubsystem)
     );
 
     NamedCommands.registerCommand("ShooterPivotSpeaker",
@@ -140,13 +135,13 @@ public class RobotContainer {
       ); 
 
     // Adding options to the sendable chooser
-    m_autonChooser.setDefaultOption("Template Auton", new TemplateAuton(m_driveSubsystem));
-    m_autonChooser.addOption("One Meter", new PathPlannerAuto("Move One Meter"));
-    m_autonChooser.addOption("Middle Test", new PathPlannerAuto("Simple Middle Test"));
-    m_autonChooser.addOption("4 Note Auto", new PathPlannerAuto("Simple 4 note auton"));
-    m_autonChooser.addOption("Middle", new PathPlannerAuto("Center"));
-    m_autonChooser.addOption("Amp", new PathPlannerAuto("Auto(AMP SIDE)"));
-    m_autonChooser.addOption("Source", new PathPlannerAuto("Auto(SOURCE SIDE)"));
+    m_autonChooser.setDefaultOption("Do Nothing", new WaitCommand(15));
+    m_autonChooser.addOption("Middle", new PathPlannerAuto("Close Note(CENTER)"));
+    m_autonChooser.addOption("Amp", new PathPlannerAuto("Close Note(AMP SIDE)"));
+    m_autonChooser.addOption("Source", new PathPlannerAuto("Close Note(SOURCE SIDE)"));
+    m_autonChooser.addOption("(Test) One Meter", new PathPlannerAuto("Move One Meter"));
+    m_autonChooser.addOption("(Test) Middle Test", new PathPlannerAuto("Simple Middle Test"));
+    m_autonChooser.addOption("(Test) 4 Note Auto", new PathPlannerAuto("Simple 4 note auton"));
 
     // Put chooser on the dashboard
     Shuffleboard.getTab("Autonomous").add("Select Auton", m_autonChooser).withSize(2, 1);

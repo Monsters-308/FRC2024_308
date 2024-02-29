@@ -163,8 +163,9 @@ public class DriveSubsystem extends SubsystemBase {
         () -> FieldUtils.getAlliance() == Alliance.Red, 
         this // Reference to this subsystem to set requirements
     );
+
     m_useLimelightData = swerveTab.add("Limelight Data", true)
-    .withWidget(BuiltInWidgets.kToggleSwitch); 
+      .withWidget(BuiltInWidgets.kToggleSwitch); 
   }
 
   @Override

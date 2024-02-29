@@ -5,10 +5,12 @@
   "pathFolders": [
     "Amp Side Position",
     "Center Position",
-    "Source SIde",
-    "Noah's shit"
+    "Noah's shit",
+    "Source Side"
   ],
-  "autoFolders": [],
+  "autoFolders": [
+    "Tests"
+  ],
   "defaultMaxVel": 3.0,
   "defaultMaxAccel": 3.0,
   "defaultMaxAngVel": 360.0,
