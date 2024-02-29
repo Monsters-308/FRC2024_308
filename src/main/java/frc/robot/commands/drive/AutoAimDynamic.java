@@ -55,6 +55,8 @@ public class AutoAimDynamic extends Command {
         m_ySpeed = ySpeed;
         m_shooterPivotSubsystem = shooterPivotSubsystem;
 
+        angleController.enableContinuousInput(-180, 180);
+        angleController.setTolerance(HeadingConstants.kHeadingTolerance);
 
         //If your command interacts with any subsystem(s), you should pass them into "addRequirements()"
         //This function makes it so your command will only run once these subsystem(s) are free from other commands.
@@ -79,19 +81,14 @@ public class AutoAimDynamic extends Command {
      */
     @Override
     public void execute(){
-        double angle = m_driveSubsystem.getHeading(); //navx
         
         Translation2d pos1 = m_driveSubsystem.getPose().getTranslation(); // Position of robot on field
         Translation2d pos2 = FieldUtils.flipRed(FieldConstants.kSpeakerPosition); //speaker position 
         Rotation2d angleToTarget = OdometryUtils.anglePoseToPose(pos1, pos2); // Angle to make robot face speacker
         double distanceToTarget = OdometryUtils.getDistancePosToPos(pos1, pos2); //distance in inches from limelight to speaker
 
-       // Shuffleboard.getTab("Vision").add("Angle to Goal", angleToTarget.getDegrees());
-       // Shuffleboard.getTab("Vision").add("Distance to Goal", distanceToTarget);
-
         SmartDashboard.putNumber("Distance to goal", distanceToTarget);
         SmartDashboard.putNumber("Angle to goal", angleToTarget.getDegrees());
-        //SmartDashboard.putNumber("limelightX", m_visionSubsystem.getX());
 
         // Set pid controller to angle to make robot face speaker
         angleController.setSetpoint(angleToTarget.getDegrees());
@@ -106,8 +103,10 @@ public class AutoAimDynamic extends Command {
         // double offset = 1; 
         // double speedAngleChange = 0;
         // double maxDistanceShot = 20;
+        
+        double robotHeading = m_driveSubsystem.getHeading(); //navx
 
-        double rotation = angleController.calculate(angle); //speed needed to rotate robot to set point
+        double rotation = angleController.calculate(robotHeading); //speed needed to rotate robot to set point
 
         rotation = MathUtil.clamp(rotation, -HeadingConstants.kHeadingMaxOutput, HeadingConstants.kHeadingMaxOutput); // clamp value (speed limiter)
 
