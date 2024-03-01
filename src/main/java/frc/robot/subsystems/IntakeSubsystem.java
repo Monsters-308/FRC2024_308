@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.IntakeConstants;
+import frc.robot.commands.intake.RunIntake;
 
 public class IntakeSubsystem extends SubsystemBase {
 
@@ -32,6 +33,9 @@ public class IntakeSubsystem extends SubsystemBase {
     m_intakeMotor.burnFlash();
 
     Shuffleboard.getTab("Intake").addBoolean("Game Piece", () -> !m_noteSensor.get());
+
+    
+    Shuffleboard.getTab("Intake").add("Run Intake", new RunIntake(this, 1));
   }
 
   /**

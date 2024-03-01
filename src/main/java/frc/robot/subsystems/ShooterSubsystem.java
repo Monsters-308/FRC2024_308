@@ -76,13 +76,14 @@ public class ShooterSubsystem extends SubsystemBase {
     m_topShooterMotor.burnFlash(); 
     m_bottomShooterMotor.burnFlash();
 
+    setPercent(0.3);
 
     // Add Values to shuffleboard
     shooterTab.addDouble("Top Roller Speed", () -> getTopSpeed());
     shooterTab.addDouble("Bottom Roller Speed", () -> getBottomSpeed());
 
-    shooterTab.addDouble("Top Roller percent", () -> m_topShooterMotor.get());
-    shooterTab.addDouble("Bottom Roller percent", () -> m_bottomShooterMotor.get());
+    shooterTab.addDouble("Top Roller percent", () -> m_topShooterMotor.getAppliedOutput());
+    shooterTab.addDouble("Bottom Roller percent", () -> m_bottomShooterMotor.getAppliedOutput());
   }
 
   /**
@@ -115,8 +116,8 @@ public class ShooterSubsystem extends SubsystemBase {
    * NOTE: unlike setBothSpeeds(0), this lets the wheels naturally wind down.
    */
   public void stopRollers(){
-    m_topShooterMotor.set(0);
-    m_bottomShooterMotor.set(0);
+    m_topShooterMotor.set(0.3);
+    m_bottomShooterMotor.set(0.3);
   }
 
   //NOTE: this function is for testing purposes

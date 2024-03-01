@@ -18,7 +18,7 @@ public class OdometryUtils {
     public static Pose2d restrictPose(Pose2d pose){
         return new Pose2d(
             MathUtil.clamp(pose.getX(), 0, FieldConstants.kFieldWidthMeters),
-            MathUtil.clamp(pose.getY(), 0, FieldConstants.KFieldHeightMeters),
+            MathUtil.clamp(pose.getY(), 0, FieldConstants.kFieldHeightMeters),
             pose.getRotation()
         );
     }

@@ -198,6 +198,32 @@
               "Colors/Color when true": "#7CFC00FF",
               "Colors/Color when false": "#8B0000FF"
             }
+          },
+          "3,2": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///Shuffleboard/Shooter/Bottom Roller Speed",
+              "_title": "Shuffleboard/Shooter/Bottom Roller Speed",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "3,3": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///Shuffleboard/Shooter/Top Roller Speed",
+              "_title": "Shuffleboard/Shooter/Top Roller Speed",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
           }
         }
       }

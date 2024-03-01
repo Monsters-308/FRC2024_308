@@ -15,14 +15,11 @@ public class LEDSubsystem extends SubsystemBase {
   private int m_rainbowFirstPixelHue = 0;
   private int m_policeLights = 0;
   private final DoubleSupplier controllerX;
-  private final int newControllerX;
-  private int m_TurboFirstPixelHue = 0;
+    private int m_TurboFirstPixelHue = 0;
   private int rainbowSunshine = 0;
 
   public LEDSubsystem(DoubleSupplier X){
     controllerX = X;
-
-    newControllerX = Math.abs((int)controllerX.getAsDouble());
     // Must be a PWM header, not MXP or DIO
     m_led = new AddressableLED(9);
 
@@ -34,22 +31,21 @@ public class LEDSubsystem extends SubsystemBase {
     m_led.setLength(m_ledBuffer.getLength());
 
     // Set the data
-    m_led.setData(m_ledBuffer);
-    m_led.start();
+    //m_led.setData(m_ledBuffer);
+    //m_led.start();
     
-    activeFunction = this::rainbow;    
+    //activeFunction = this::rainbow;    
   }
 
   @Override
   public void periodic() {    
-    activeFunction.run();
+    //activeFunction.run();
 
     
-    m_rainbowFirstPixelHue = newControllerX *10 + m_rainbowFirstPixelHue;
+    m_rainbowFirstPixelHue = (int)Math.abs(controllerX.getAsDouble()) *10 + m_rainbowFirstPixelHue;
 
-    if (newControllerX > .9){
-        activeFunction = this::police;    
-    }
+
+
   }
     
 
@@ -112,7 +108,9 @@ public class LEDSubsystem extends SubsystemBase {
   }
 
   public void rainbow() {
-
+    if (Math.abs(controllerX.getAsDouble()) > .9){
+      activeFunction = this::police;    
+  }
     // For every pixel
     for (var i = 0; i < m_ledBuffer.getLength(); i++) {
       // Calculate the hue - hue is easier for rainbows because the color
@@ -130,6 +128,9 @@ public class LEDSubsystem extends SubsystemBase {
 
   public void police() {
     // Calculate the hue based on the overall policeLights value
+    if (Math.abs(controllerX.getAsDouble()) < .9){
+      activeFunction = this::rainbow;    
+  }
     for (int i = 0; i < m_ledBuffer.getLength(); i++) {
         if (m_policeLights > 90) {
             m_ledBuffer.setRGB(i, 0, 0, 255); // Set to blue

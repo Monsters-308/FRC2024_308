@@ -147,8 +147,8 @@ public class DriveSubsystem extends SubsystemBase {
     
     // Configure the AutoBuilder
     AutoBuilder.configureHolonomic(
-        this::getPose, // Robot pose supplier
-        this::resetOdometry, // Method to reset odometry (will be called if your auto has a starting pose)
+        () -> FieldUtils.flipGlobalBlue(getPose()), // Robot pose supplier
+        (Pose2d thing) -> resetOdometry(FieldUtils.flipGlobalBlue(thing)), // Method to reset odometry (will be called if your auto has a starting pose)
         this::getRobotRelativeSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
         this::driveRobotRelative, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
         new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
@@ -160,7 +160,7 @@ public class DriveSubsystem extends SubsystemBase {
             new ReplanningConfig() // Default path replanning config. See the API for the options here
         ),
         // Parameter for whether to invert the paths for red alliance (returns false if alliance is invalid)
-        () -> FieldUtils.getAlliance() == Alliance.Red, 
+        () -> FieldUtils.isRedAlliance(), 
         this // Reference to this subsystem to set requirements
     );
 

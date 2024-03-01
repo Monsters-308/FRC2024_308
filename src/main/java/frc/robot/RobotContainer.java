@@ -38,6 +38,7 @@ import frc.robot.commands.shooterIndex.IndexNoteGood;
 import frc.robot.commands.shooterPivot.PivotGoToPose;
 import frc.robot.commands.vision.DefaultLimelightPipeline;
 import frc.robot.commands.vision.UpdateOdometry;
+import frc.robot.subsystems.AmpFlapSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.HangingSubsystem;
 import frc.robot.subsystems.IndexSubsystem;
@@ -77,6 +78,7 @@ public class RobotContainer {
   private final IntakePivotSubsystem m_intakePivotSubsystem = new IntakePivotSubsystem();
   private final IndexSubsystem m_indexSubsystem = new IndexSubsystem();
   private final HangingSubsystem m_hangingSubsystem = new HangingSubsystem();
+  private final AmpFlapSubsystem m_ampFlapSubsystem = new AmpFlapSubsystem();
 
   // Controllers
   final XboxController m_driverController = new XboxController(OIConstants.kDriverControllerPort);
@@ -400,16 +402,21 @@ public class RobotContainer {
 
     // B button: aim at amp
     new JoystickButton(m_coDriverController, Button.kB.value)
-      .toggleOnTrue(
-          new PivotGoToPose(
-            m_shooterPivotSubsystem,
-            ShooterPivotConstants.kShooterPivotAmpPosition
-              ));
+    .onTrue(
+      new SequentialCommandGroup(
+        new InstantCommand(
+        () -> m_shooterSubsystem.setBottomShooterSpeed(7), m_shooterSubsystem),
+      new InstantCommand(
+        () -> m_shooterSubsystem.setTopShooterSpeed(10), m_shooterSubsystem)
+      ))
+    .onFalse(
+        new InstantCommand(
+            m_shooterSubsystem::stopRollers, m_shooterSubsystem));
     
     // Y button: aim at trap
     new JoystickButton(m_coDriverController, Button.kY.value)
       .toggleOnTrue(
-        new CompleteIntake(m_intakeSubsystem, m_shooterPivotSubsystem, m_shooterIndexSubsystem, m_indexSubsystem, m_intakePivotSubsystem, m_LEDSubsystem).andThen(new setLED(m_LEDSubsystem, m_LEDSubsystem::rainbow))
+        new CompleteIntake(m_intakeSubsystem, m_shooterPivotSubsystem, m_shooterIndexSubsystem, m_indexSubsystem, m_intakePivotSubsystem, m_LEDSubsystem)
       );
 
     // // Dpad up: shooter pivot up
@@ -429,16 +436,16 @@ public class RobotContainer {
     // Dpad up: Hanging arm up
     new POVButton(m_coDriverController, 0)
         .onTrue(
-          new InstantCommand(() -> m_hangingSubsystem.setBothSpeed(1), m_shooterPivotSubsystem))
+          new InstantCommand(() -> m_ampFlapSubsystem.setSpeed(0.5), m_ampFlapSubsystem))
         .onFalse(
-          new InstantCommand(() -> m_hangingSubsystem.setBothSpeed(0), m_shooterPivotSubsystem));
+          new InstantCommand(() -> m_ampFlapSubsystem.setSpeed(0), m_ampFlapSubsystem));
 
     // Dpad down: Hanging arm down
     new POVButton(m_coDriverController, 180)
       .onTrue(
-        new InstantCommand(() -> m_hangingSubsystem.setBothSpeed(-1), m_shooterPivotSubsystem))
+        new InstantCommand(() -> m_ampFlapSubsystem.setSpeed(-0.2), m_ampFlapSubsystem))
       .onFalse(
-        new InstantCommand(() -> m_hangingSubsystem.setBothSpeed(0), m_shooterPivotSubsystem));
+          new InstantCommand(() -> m_ampFlapSubsystem.setSpeed(0), m_ampFlapSubsystem));
 
     // Dpad Right: intaking test
     new POVButton(m_coDriverController, 90)
@@ -463,7 +470,7 @@ public class RobotContainer {
       // new InstantCommand(
       //   () -> m_shooterSubsystem.setTopShooterSpeed(10), m_shooterSubsystem)
       // ))
-      new InstantCommand(() -> m_shooterSubsystem.setBothSpeeds(23), m_shooterSubsystem))
+      new InstantCommand(() -> m_shooterSubsystem.setPercent(1), m_shooterSubsystem))
     .onFalse(
         new InstantCommand(
             m_shooterSubsystem::stopRollers, m_shooterSubsystem));

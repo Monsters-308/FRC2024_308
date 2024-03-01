@@ -155,7 +155,7 @@ public final class Constants {
     /** X axis: long side */
     public static final double kFieldWidthMeters = 16.54175;
     /** Y axis: short side */
-    public static final double KFieldHeightMeters = 8.2;
+    public static final double kFieldHeightMeters = 8.2;
     
     // Position of the speaker on the field (in meters)
     public static final Translation2d kSpeakerPosition = new Translation2d(
@@ -270,15 +270,15 @@ public final class Constants {
   }
 
   public static final class HangingConstants {
-    public static final int kRightArmCanID = 18; // Change
+    public static final int kRightArmCanID = 18; 
     public static final int kRightArmUpperLimit = 4; 
     public static final int kRightArmLowerLimit = 5; 
-    public static final boolean kRightArmInverted = false; // Change
+    public static final boolean kRightArmInverted = false; 
 
-    public static final int kLeftArmCanID = 19; // Change
+    public static final int kLeftArmCanID = 19; 
     public static final int kLeftArmUpperLimit = 2; 
     public static final int kLeftArmLowerLimit = 3; 
-    public static final boolean kLeftArmInverted = false; // Change
+    public static final boolean kLeftArmInverted = false; 
 
     public static final double kPitchP = 0.05;
     public static final double kPitchI = 0;
@@ -380,7 +380,7 @@ public final class Constants {
     public static final double kPivotMinAngle = Math.toRadians(30.5);
     public static final double kPivotMaxAngle = Math.toRadians(60); 
 
-    public static final double kAngleTolerance = 0.5;
+    public static final double kAngleTolerance = 0.4;
     
     public static final IdleMode kTurningMotorIdleMode = IdleMode.kBrake;
     public static final int kTurningMotorCurrentLimit = 20; // amps
@@ -393,7 +393,7 @@ public final class Constants {
 
     public static final double kShooterPivotAmpPosition = 50;
     public static final double kShooterPivotTrapPosition = 60;
-    public static final double kShooterPivotSpeakerPosition = 58;
+    public static final double kShooterPivotSpeakerPosition = 61;
 
     public static final double kshooterPivotDeckPosition = 32;
   }
@@ -409,5 +409,22 @@ public final class Constants {
     public static final boolean kSensorInverted = true;
     
     public static final double kIndexIntakeSpeed = .6;
+  }
+
+  public static final class AmpFlapConstants {
+    public static final int kMotorCanID = 20; // set
+
+    // Positive should bring the game piece to the shooter
+    public static final boolean kMotorInverted = false; 
+    public static final int kMotorCurrentLimit = 35; // Change
+    public static final double kMotorSpeed = .5;
+
+    public static final double kP = 0.15;
+    public static final double kI = 0;
+    public static final double kD = 0.01;
+
+
+    public static final double kDownPosition = -1;
+    public static final double kAmpPosition = 0.5;
   }
 }

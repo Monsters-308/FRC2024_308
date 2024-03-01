@@ -59,7 +59,7 @@ public class FieldUtils {
         if (isRedAlliance()){
             return new Pose2d(
                 FieldConstants.kFieldWidthMeters-pose.getX(),
-                FieldConstants.KFieldHeightMeters-pose.getY(),
+                FieldConstants.kFieldHeightMeters-pose.getY(),
                 new Rotation2d(pose.getRotation().getRadians()-Math.PI)
             );
         }
@@ -75,7 +75,7 @@ public class FieldUtils {
         if (isRedAlliance()){
             return new Translation2d(
                 position.getX(),
-                FieldConstants.KFieldHeightMeters-position.getY()
+                FieldConstants.kFieldHeightMeters-position.getY()
             );  
         }
         return position;
@@ -103,7 +103,7 @@ public class FieldUtils {
      */
     public static double flipRedY(double yPosition){
         if (isRedAlliance()){
-            return FieldConstants.KFieldHeightMeters - yPosition;
+            return FieldConstants.kFieldHeightMeters - yPosition;
         }
         return yPosition;
     }
@@ -132,5 +132,19 @@ public class FieldUtils {
             return -angle;
         }
         return angle;
+    }
+
+    /**
+     * Fuck pathplanner
+     * @return
+     */
+    public static Pose2d flipGlobalBlue(Pose2d robotPose){
+        if(isRedAlliance()){
+            return new Pose2d(
+                FieldConstants.kFieldWidthMeters - robotPose.getX(), 
+                FieldConstants.kFieldHeightMeters - robotPose.getY(), 
+                Rotation2d.fromDegrees(robotPose.getRotation().getDegrees() + 180));
+        }
+        return robotPose;
     }
 }

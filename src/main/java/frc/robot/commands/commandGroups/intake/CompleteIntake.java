@@ -11,6 +11,7 @@ import frc.robot.subsystems.IndexSubsystem;
 import frc.robot.subsystems.IntakePivotSubsystem;
 import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.commands.intake.IntakeNote;
+import frc.robot.commands.intake.RunIntake;
 import frc.robot.commands.intakePivot.SetIntakeAngle;
 import frc.robot.commands.shooterIndex.IndexNoteGood;
 import frc.robot.Constants.IntakePivotConstants;
@@ -23,28 +24,29 @@ public class CompleteIntake extends SequentialCommandGroup  {
     /** Intakes a note from the ground and then puts it into the shooter index */
     public CompleteIntake(IntakeSubsystem intakeSubsystem, ShooterPivotSubsystem shooterPivotSubsystem, ShooterIndexSubsystem shooterIndexSubsystem, IndexSubsystem indexSubsystem, IntakePivotSubsystem intakePivotSubsystem, LEDSubsystem LEDsubsystem){
         addCommands(
-            new setLED(LEDsubsystem, LEDsubsystem::red),
+            // new setLED(LEDsubsystem, LEDsubsystem::red),
 
             // Get the shooter pivot started early
             new InstantCommand(() -> shooterPivotSubsystem.setPosition(ShooterPivotConstants.kshooterPivotDeckPosition)),
 
             new SetIntakeAngle(intakePivotSubsystem, IntakePivotConstants.kIntakeDownPosition),
-            new IntakeNote(intakeSubsystem),
+            new RunIntake(intakeSubsystem, 1)
+                .until(() -> intakeSubsystem.gamePieceDetected()),
 
             new SetIntakeAngle(intakePivotSubsystem, IntakePivotConstants.kIntakeDeckPosition),
 
             new WaitUntilCommand(() -> shooterPivotSubsystem.inPosition()),
-            new setLED(LEDsubsystem, LEDsubsystem::yellow),
+            // new setLED(LEDsubsystem, LEDsubsystem::yellow),
 
             new ParallelDeadlineGroup(
                 new IndexNoteGood(shooterIndexSubsystem), 
                 new IntakeDeck(intakeSubsystem, indexSubsystem) 
             ),
-            new setLED(LEDsubsystem, LEDsubsystem::teal),
-            new InstantCommand(() -> shooterPivotSubsystem.setPosition(ShooterPivotConstants.kShooterPivotSpeakerPosition), shooterPivotSubsystem),
+            // new setLED(LEDsubsystem, LEDsubsystem::teal),
+            new InstantCommand(() -> shooterPivotSubsystem.setPosition(ShooterPivotConstants.kShooterPivotSpeakerPosition), shooterPivotSubsystem)
 
             // Add an InstantCommand to reset the LED state after the command group finishes
-            new InstantCommand(() -> LEDsubsystem.setLEDFunction(LEDsubsystem::rainbow))
+            // new InstantCommand(() -> LEDsubsystem.setLEDFunction(LEDsubsystem::rainbow))
         );
     }
 
