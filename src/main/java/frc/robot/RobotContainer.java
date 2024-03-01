@@ -19,6 +19,7 @@ import frc.robot.Constants.IndexConstants;
 import frc.robot.Constants.IntakePivotConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.ShooterPivotConstants;
+import frc.robot.commands.LED.setLED;
 import frc.robot.commands.auton.AutonShootNote;
 import frc.robot.commands.commandGroups.drive.autoAmp;
 import frc.robot.commands.commandGroups.drive.autoSpeaker;
@@ -69,7 +70,6 @@ public class RobotContainer {
   private final VisionSubsystem m_visionSubsystem = new VisionSubsystem();
   private final DriveSubsystem m_driveSubsystem = new DriveSubsystem(() -> m_visionSubsystem.getRobotPosition(),
       () -> m_visionSubsystem.getTimeStampEstimator());
-  private final LEDSubsystem m_LEDSubsystem = new LEDSubsystem(() -> m_driveSubsystem.getRobotPitch());
   private final ShooterSubsystem m_shooterSubsystem = new ShooterSubsystem();
   private final ShooterPivotSubsystem m_shooterPivotSubsystem = new ShooterPivotSubsystem();
   private final ShooterIndexSubsystem m_shooterIndexSubsystem = new ShooterIndexSubsystem();
@@ -81,6 +81,8 @@ public class RobotContainer {
   // Controllers
   final XboxController m_driverController = new XboxController(OIConstants.kDriverControllerPort);
   final XboxController m_coDriverController = new XboxController(OIConstants.kCoDriverControllerPort);
+
+  private final LEDSubsystem m_LEDSubsystem = new LEDSubsystem(() -> m_driverController.getLeftY());
 
   // Sendable chooser for launching the initial note
   SendableChooser<Command> m_autonStartup = new SendableChooser<>();
@@ -123,7 +125,7 @@ public class RobotContainer {
     );
 
     NamedCommands.registerCommand("Launch Note",
-      new AutonShootNote(m_shooterSubsystem, m_shooterIndexSubsystem)
+      new AutonShootNote(m_shooterSubsystem, m_shooterIndexSubsystem, m_LEDSubsystem)
     );
 
     NamedCommands.registerCommand("ShooterPivotSpeaker",
@@ -143,7 +145,7 @@ public class RobotContainer {
       ); 
 
     // Startup option
-    m_autonStartup.setDefaultOption("On", new AutonShootNote(m_shooterSubsystem, m_shooterIndexSubsystem));
+    m_autonStartup.setDefaultOption("On", new AutonShootNote(m_shooterSubsystem, m_shooterIndexSubsystem, m_LEDSubsystem));
     m_autonStartup.addOption("Off", new WaitCommand(0.1));
 
     // Adding options to the sendable chooser
@@ -407,7 +409,7 @@ public class RobotContainer {
     // Y button: aim at trap
     new JoystickButton(m_coDriverController, Button.kY.value)
       .toggleOnTrue(
-        new CompleteIntake(m_intakeSubsystem, m_shooterPivotSubsystem, m_shooterIndexSubsystem, m_indexSubsystem, m_intakePivotSubsystem, m_LEDSubsystem)
+        new CompleteIntake(m_intakeSubsystem, m_shooterPivotSubsystem, m_shooterIndexSubsystem, m_indexSubsystem, m_intakePivotSubsystem, m_LEDSubsystem).andThen(new setLED(m_LEDSubsystem, m_LEDSubsystem::rainbow))
       );
 
     // // Dpad up: shooter pivot up
@@ -447,7 +449,7 @@ public class RobotContainer {
     // Right trigger: shoot note 
     new Trigger(() -> m_coDriverController.getRightTriggerAxis() > OIConstants.kTriggerDeadband)
       .toggleOnTrue(
-        new LaunchNote(m_shooterIndexSubsystem).andThen(
+        new LaunchNote(m_shooterIndexSubsystem, m_LEDSubsystem).andThen(
           new InstantCommand(() -> m_shooterIndexSubsystem.setSpeed(0), m_shooterIndexSubsystem)
         )
       );

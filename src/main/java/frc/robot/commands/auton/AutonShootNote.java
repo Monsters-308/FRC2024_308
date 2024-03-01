@@ -6,14 +6,16 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.commandGroups.shooter.LaunchNote;
 import frc.robot.subsystems.ShooterIndexSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
+import frc.robot.subsystems.LEDSubsystem;
+
 
 public class AutonShootNote extends SequentialCommandGroup{
     
-    public AutonShootNote(ShooterSubsystem shooterSubsystem, ShooterIndexSubsystem shooterIndexSubsystem){
+    public AutonShootNote(ShooterSubsystem shooterSubsystem, ShooterIndexSubsystem shooterIndexSubsystem, LEDSubsystem ledSubsystem){
         addCommands(
             new InstantCommand(() -> shooterSubsystem.setBothSpeeds(30), shooterSubsystem),
             new WaitCommand(1.7),
-            new LaunchNote(shooterIndexSubsystem),
+            new LaunchNote(shooterIndexSubsystem, ledSubsystem),
             new InstantCommand(() -> shooterSubsystem.stopRollers(), shooterSubsystem)
         );
     }

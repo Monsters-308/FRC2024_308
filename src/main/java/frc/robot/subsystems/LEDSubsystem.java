@@ -14,19 +14,22 @@ public class LEDSubsystem extends SubsystemBase {
   private int[] LEDColor = {255, 0, 0}; //RGB
   private int m_rainbowFirstPixelHue = 0;
   private int m_policeLights = 0;
-  private final DoubleSupplier robotPitch;
+  private final DoubleSupplier controllerX;
+  private final int newControllerX;
   private int m_TurboFirstPixelHue = 0;
   private int rainbowSunshine = 0;
 
-  public LEDSubsystem(DoubleSupplier Pitch){
-    robotPitch = Pitch;
+  public LEDSubsystem(DoubleSupplier X){
+    controllerX = X;
+
+    newControllerX = Math.abs((int)controllerX.getAsDouble());
     // Must be a PWM header, not MXP or DIO
     m_led = new AddressableLED(9);
 
     // Reuse buffer
     // Default to a length of 60, start empty output
     // Length is expensive to set, so only set it once, then just update data
-    m_ledBuffer = new AddressableLEDBuffer(125);
+    m_ledBuffer = new AddressableLEDBuffer(90);
     
     m_led.setLength(m_ledBuffer.getLength());
 
@@ -41,8 +44,12 @@ public class LEDSubsystem extends SubsystemBase {
   public void periodic() {    
     activeFunction.run();
 
-    m_rainbowFirstPixelHue = Math.abs((int)robotPitch.getAsDouble()
-    ) + m_rainbowFirstPixelHue;
+    
+    m_rainbowFirstPixelHue = newControllerX *10 + m_rainbowFirstPixelHue;
+
+    if (newControllerX > .9){
+        activeFunction = this::police;    
+    }
   }
     
 
@@ -53,6 +60,8 @@ public class LEDSubsystem extends SubsystemBase {
 
     m_led.setData(m_ledBuffer);
   }
+
+
 
   public void solid(int[] RGB) {
     for (var i = 0; i < m_ledBuffer.getLength(); i++) {
@@ -110,10 +119,10 @@ public class LEDSubsystem extends SubsystemBase {
       // shape is a circle so only one value needs to precess
       final var hue = (m_rainbowFirstPixelHue + (i * 180 / m_ledBuffer.getLength())+ (rainbowSunshine + (i * 180 / m_ledBuffer.getLength()))) % 360;
       // Set the value
-      m_ledBuffer.setRGB(i, hue*3, hue*1, rainbowSunshine*5);
+      m_ledBuffer.setRGB(i, hue, hue*2, hue*3);
     }
     // Increase by to make the rainbow "move"
-    m_rainbowFirstPixelHue += 2;
+    m_rainbowFirstPixelHue += 1;
     // Check bounds
     m_rainbowFirstPixelHue %= 180;
     m_led.setData(m_ledBuffer);
