@@ -32,6 +32,7 @@ import frc.robot.commands.hanging.LowerBothArms;
 import frc.robot.commands.hanging.RaiseBothArms;
 import frc.robot.commands.index.RunIndex;
 import frc.robot.commands.intake.RunIntake;
+import frc.robot.commands.intakePivot.SetIntakeAngle;
 import frc.robot.commands.shooterIndex.IndexNoteGood;
 import frc.robot.commands.shooterPivot.PivotGoToPose;
 import frc.robot.commands.vision.DefaultLimelightPipeline;
@@ -213,6 +214,18 @@ public class RobotContainer {
       )))
       .ignoringDisable(true)
     );
+
+    
+    Shuffleboard.getTab("Intake").add("IntakeDown", 
+      new SetIntakeAngle(m_intakePivotSubsystem, IntakePivotConstants.kIntakeDownPosition));
+
+      
+    Shuffleboard.getTab("Intake").add("IntakeDeck", 
+      new SetIntakeAngle(m_intakePivotSubsystem, IntakePivotConstants.kIntakeDeckPosition));
+
+    
+    Shuffleboard.getTab("Intake").add("IntakeUp", 
+      new SetIntakeAngle(m_intakePivotSubsystem, IntakePivotConstants.kIntakeInPosition));
   }
 
   /**
@@ -421,13 +434,8 @@ public class RobotContainer {
 
     // Dpad Right: intaking test
     new POVButton(m_coDriverController, 90)
-        .whileTrue(
-          new ParallelCommandGroup(
-            new InstantCommand(() -> m_intakePivotSubsystem.setPosition(IntakePivotConstants.kIntakeDownPosition), m_intakePivotSubsystem),
-            new IndexNoteGood(m_shooterIndexSubsystem),
-            new RunIndex(m_indexSubsystem, IndexConstants.kIndexIntakeSpeed),
-            new RunIntake(m_intakeSubsystem, 1)
-          )
+        .onTrue(
+          new SetIntakeAngle(m_intakePivotSubsystem, IntakePivotConstants.kIntakeInPosition)
         );
 
     // Right trigger: shoot note 
@@ -447,7 +455,7 @@ public class RobotContainer {
       // new InstantCommand(
       //   () -> m_shooterSubsystem.setTopShooterSpeed(10), m_shooterSubsystem)
       // ))
-      new InstantCommand(() -> m_shooterSubsystem.setBothSpeeds(20), m_shooterSubsystem))
+      new InstantCommand(() -> m_shooterSubsystem.setBothSpeeds(23), m_shooterSubsystem))
     .onFalse(
         new InstantCommand(
             m_shooterSubsystem::stopRollers, m_shooterSubsystem));

@@ -265,7 +265,7 @@ public final class Constants {
     /*           Constants for pivot positions:            */
 
     public static final double kIntakeDownPosition = -126.7;
-    public static final double kIntakeDeckPostion = -37.2;
+    public static final double kIntakeDeckPosition = -32.2;
     public static final double kIntakeInPosition = 14.7;
   }
 
@@ -393,9 +393,9 @@ public final class Constants {
 
     public static final double kShooterPivotAmpPosition = 50;
     public static final double kShooterPivotTrapPosition = 60;
-    public static final double kShooterPivotSpeakerPosition = 57;
+    public static final double kShooterPivotSpeakerPosition = 58;
 
-    public static final double kshooterPivotDeckPosition = 34;
+    public static final double kshooterPivotDeckPosition = 32;
   }
 
   public static final class ShooterIndexConstants {

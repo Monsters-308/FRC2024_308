@@ -20,7 +20,7 @@ public class IntakePivotSubsystem extends SubsystemBase {
 
   private final DutyCycleEncoder m_intakePivotMotorEncoder = new DutyCycleEncoder(IntakePivotConstants.kEncoderPort);
 
-  private Rotation2d m_desiredAngle = Rotation2d.fromDegrees(IntakePivotConstants.kIntakeDeckPostion);
+  private Rotation2d m_desiredAngle = Rotation2d.fromDegrees(IntakePivotConstants.kIntakeDeckPosition);
 
   private final PIDController pidController = new PIDController(IntakePivotConstants.kPivotP, 
                                                                 IntakePivotConstants.kPivotI, 
