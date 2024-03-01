@@ -148,17 +148,23 @@ public class RobotContainer {
 
     // Adding options to the sendable chooser
     m_autonFirstAction.setDefaultOption("Do Nothing", new WaitCommand(15));
-    m_autonFirstAction.addOption("Middle", new PathPlannerAuto("Close Note(CENTER)"));
-    m_autonFirstAction.addOption("Amp", new PathPlannerAuto("Close Note(AMP SIDE)"));
-    m_autonFirstAction.addOption("Source", new PathPlannerAuto("Close Note(SOURCE SIDE)"));
-    m_autonFirstAction.addOption("(Test) One Meter", new PathPlannerAuto("Move One Meter"));
-    m_autonFirstAction.addOption("(Test) Middle Test", new PathPlannerAuto("Simple Middle Test"));
-    m_autonFirstAction.addOption("(Test) 4 Note Auto", new PathPlannerAuto("Simple 4 note auton"));
+    m_autonFirstAction.addOption("Close Note Middle", new PathPlannerAuto("Close Note(CENTER)"));
+    m_autonFirstAction.addOption("Close Note Amp", new PathPlannerAuto("Close Note(AMP SIDE)"));
+    m_autonFirstAction.addOption("Close Note Source", new PathPlannerAuto("Close Note(SOURCE SIDE)"));
+    m_autonFirstAction.addOption("Far Note Middle", new PathPlannerAuto("Far Note(CENTER)"));
+    m_autonFirstAction.addOption("Far Note Amp", new PathPlannerAuto("Far Note(AMP SIDE)"));
+    m_autonFirstAction.addOption("Far Note Source", new PathPlannerAuto("Far Note(SOURCE SIDE)"));
+    // m_autonFirstAction.addOption("(Test) One Meter", new PathPlannerAuto("Move One Meter"));
+    // m_autonFirstAction.addOption("(Test) Middle Test", new PathPlannerAuto("Simple Middle Test"));
+    // m_autonFirstAction.addOption("(Test) 4 Note Auto", new PathPlannerAuto("Simple 4 note auton"));
 
     m_autonSecondAction.setDefaultOption("Do Nothing", new WaitCommand(15));
-    m_autonSecondAction.addOption("Middle", new PathPlannerAuto("Close Note(CENTER)"));
-    m_autonSecondAction.addOption("Amp", new PathPlannerAuto("Close Note(AMP SIDE)"));
-    m_autonSecondAction.addOption("Source", new PathPlannerAuto("Close Note(SOURCE SIDE)"));
+    m_autonSecondAction.addOption("Close Note Middle", new PathPlannerAuto("Close Note(CENTER)"));
+    m_autonSecondAction.addOption("Close Note Amp", new PathPlannerAuto("Close Note(AMP SIDE)"));
+    m_autonSecondAction.addOption("Close Note Source", new PathPlannerAuto("Close Note(SOURCE SIDE)"));
+    m_autonSecondAction.addOption("Far Note Middle", new PathPlannerAuto("Far Note(CENTER)"));
+    m_autonSecondAction.addOption("Far Note Amp", new PathPlannerAuto("Far Note(AMP SIDE)"));
+    m_autonSecondAction.addOption("Far Note Source", new PathPlannerAuto("Far Note(SOURCE SIDE)"));
 
     // Put chooser on the dashboard
     Shuffleboard.getTab("Autonomous").add("Launch First Note?", m_autonStartup).withSize(2, 1);
@@ -188,9 +194,9 @@ public class RobotContainer {
     Shuffleboard.getTab("Autonomous").add("Set Amp Side",
       new InstantCommand(() -> m_driveSubsystem.resetOdometry(FieldUtils.flipRed(
         new Pose2d(
-          1.5, 
-          7, 
-          Rotation2d.fromDegrees(180))
+          0.73, 
+          6.73, 
+          Rotation2d.fromDegrees(-120))
       )))
       .ignoringDisable(true)
     );
@@ -208,9 +214,9 @@ public class RobotContainer {
     Shuffleboard.getTab("Autonomous").add("Set Source Side",
       new InstantCommand(() -> m_driveSubsystem.resetOdometry(FieldUtils.flipRed(
         new Pose2d(
-          1.5, 
-          4.1, 
-          Rotation2d.fromDegrees(180))
+          0.73, 
+          4.39, 
+          Rotation2d.fromDegrees(120))
       )))
       .ignoringDisable(true)
     );
