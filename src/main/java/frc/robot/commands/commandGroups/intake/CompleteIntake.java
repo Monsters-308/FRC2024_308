@@ -1,6 +1,7 @@
 package frc.robot.commands.commandGroups.intake;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
@@ -28,11 +29,12 @@ public class CompleteIntake extends SequentialCommandGroup  {
 
             // Get the shooter pivot started early
             new InstantCommand(() -> shooterPivotSubsystem.setPosition(ShooterPivotConstants.kshooterPivotDeckPosition)),
-
-            new SetIntakeAngle(intakePivotSubsystem, IntakePivotConstants.kIntakeDownPosition),
-            new RunIntake(intakeSubsystem, 1)
-                .until(() -> intakeSubsystem.gamePieceDetected()),
-
+            new ParallelCommandGroup(
+                new SetIntakeAngle(intakePivotSubsystem, IntakePivotConstants.kIntakeDownPosition),
+                new RunIntake(intakeSubsystem, 1)
+                    .until(() -> intakeSubsystem.gamePieceDetected())
+            ),
+            
             new SetIntakeAngle(intakePivotSubsystem, IntakePivotConstants.kIntakeDeckPosition),
 
             new WaitUntilCommand(() -> shooterPivotSubsystem.inPosition()),

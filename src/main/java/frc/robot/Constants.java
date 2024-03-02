@@ -103,9 +103,9 @@ public final class Constants {
     // Inversion of drive motors
     // This will vary depending on how your wheels are oriented when you zero them.
     public static final boolean kLeftFrontInverted = false;
-    public static final boolean kLeftRearInverted = true;
+    public static final boolean kLeftRearInverted = false;
     public static final boolean kRightFrontInverted = false;
-    public static final boolean kRightRearInverted = false;
+    public static final boolean kRightRearInverted = true;
 
     // Inversion of turning motors
     // Unless oriented differently, all of your turning motors should spin in the same direction.
@@ -247,7 +247,7 @@ public final class Constants {
     public static final boolean kTurningMotorEncoderInverted = false;
     public static final int kEncoderPort = 1;
     public static final double kAngleTolerance = 5;
-    public static final double kAngleOffset = -56.8;
+    public static final double kAngleOffset = -8.8;
 
     public static final double kShooterEncoderPositionFactor = 360; 
 
@@ -265,7 +265,7 @@ public final class Constants {
     /*           Constants for pivot positions:            */
 
     public static final double kIntakeDownPosition = -126.7;
-    public static final double kIntakeDeckPosition = -32.2;
+    public static final double kIntakeDeckPosition = -30;
     public static final double kIntakeInPosition = 14.7;
   }
 
