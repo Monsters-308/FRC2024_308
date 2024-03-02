@@ -82,16 +82,16 @@ public class AutoAimDynamic extends Command {
     @Override
     public void execute(){
         
-        Translation2d pos1 = m_driveSubsystem.getPose().getTranslation(); // Position of robot on field
-        Translation2d pos2 = FieldUtils.flipRed(FieldConstants.kSpeakerPosition); //speaker position 
-        Rotation2d angleToTarget = OdometryUtils.anglePoseToPose(pos1, pos2); // Angle to make robot face speacker
-        double distanceToTarget = OdometryUtils.getDistancePosToPos(pos1, pos2); //distance in inches from limelight to speaker
+        // Translation2d pos1 = m_driveSubsystem.getPose().getTranslation(); // Position of robot on field
+        // Translation2d pos2 = FieldUtils.flipRed(FieldConstants.kSpeakerPosition); //speaker position 
+        // Rotation2d angleToTarget = OdometryUtils.anglePoseToPose(pos1, pos2); // Angle to make robot face speacker
+        // double distanceToTarget = OdometryUtils.getDistancePosToPos(pos1, pos2); //distance in inches from limelight to speaker
 
-        SmartDashboard.putNumber("Distance to goal", distanceToTarget);
-        SmartDashboard.putNumber("Angle to goal", angleToTarget.getDegrees());
+        // SmartDashboard.putNumber("Distance to goal", distanceToTarget);
+        // SmartDashboard.putNumber("Angle to goal", angleToTarget.getDegrees());
 
         // Set pid controller to angle to make robot face speaker
-        angleController.setSetpoint(angleToTarget.getDegrees());
+
 
         /* 
             get shooter to be at the same angle
@@ -104,13 +104,29 @@ public class AutoAimDynamic extends Command {
         // double speedAngleChange = 0;
         // double maxDistanceShot = 20;
         
-        double robotHeading = m_driveSubsystem.getHeading(); //navx
+          //  double robotHeading = m_driveSubsystem.getHeading(); //navx
 
-        double rotation = angleController.calculate(robotHeading); //speed needed to rotate robot to set point
+        //double rotation = angleController.calculate(robotHeading); //speed needed to rotate robot to set point
 
-        rotation = MathUtil.clamp(rotation, -HeadingConstants.kHeadingMaxOutput, HeadingConstants.kHeadingMaxOutput); // clamp value (speed limiter)
+        //rotation = MathUtil.clamp(rotation, -HeadingConstants.kHeadingMaxOutput, HeadingConstants.kHeadingMaxOutput); // clamp value (speed limiter)
 
-        
+            double xCrosshairDistance = m_visionSubsystem.getX();
+            double yCrosshairDistance = m_visionSubsystem.getY();
+            //Translation2d pos1 = m_driveSubsystem.getPose().getTranslation(); // Position of robot on field
+             angleController.setSetpoint(0);
+            double rotation = angleController.calculate(xCrosshairDistance); //speed needed to rotate robot to set point
+            double badRotation = 0;
+            //here we need to calculate the angle required to make a shot
+            //------- IF THE STUPID PID NO WORK
+            if (xCrosshairDistance > 2){
+                badRotation = .3;
+            }
+            if (xCrosshairDistance < 2){
+                badRotation = -.3;
+            }
+
+            //pivotController.setSetpoint(0);
+            //double rotation = angleController.calculate(yCrosshairDistance);        
         m_driveSubsystem.drive(
             -MathUtil.applyDeadband(m_xSpeed.getAsDouble(), OIConstants.kJoystickDeadband),
             -MathUtil.applyDeadband(m_ySpeed.getAsDouble(), OIConstants.kJoystickDeadband),

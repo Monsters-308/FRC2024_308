@@ -5,20 +5,18 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
-import frc.robot.subsystems.ShooterPivotSubsystem;
-import frc.robot.subsystems.IntakeSubsystem;
-import frc.robot.subsystems.ShooterIndexSubsystem;
-import frc.robot.subsystems.IndexSubsystem;
-import frc.robot.subsystems.IntakePivotSubsystem;
-import frc.robot.subsystems.LEDSubsystem;
-import frc.robot.commands.intake.IntakeNote;
-import frc.robot.commands.intake.RunIntake;
-import frc.robot.commands.intakePivot.SetIntakeAngle;
-import frc.robot.commands.shooterIndex.IndexNoteGood;
 import frc.robot.Constants.IntakePivotConstants;
 import frc.robot.Constants.ShooterPivotConstants;
 import frc.robot.commands.intake.IntakeDeck;
-import frc.robot.commands.LED.setLED;
+import frc.robot.commands.intake.RunIntake;
+import frc.robot.commands.intakePivot.SetIntakeAngle;
+import frc.robot.commands.shooterIndex.IndexNoteGood;
+import frc.robot.subsystems.IndexSubsystem;
+import frc.robot.subsystems.IntakePivotSubsystem;
+import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.LEDSubsystem;
+import frc.robot.subsystems.ShooterIndexSubsystem;
+import frc.robot.subsystems.ShooterPivotSubsystem;
 
 public class CompleteIntake extends SequentialCommandGroup  {
 
@@ -45,7 +43,7 @@ public class CompleteIntake extends SequentialCommandGroup  {
                 new IntakeDeck(intakeSubsystem, indexSubsystem) 
             ),
             // new setLED(LEDsubsystem, LEDsubsystem::teal),
-            new InstantCommand(() -> shooterPivotSubsystem.setPosition(ShooterPivotConstants.kShooterPivotSpeakerPosition), shooterPivotSubsystem)
+            new InstantCommand(() -> shooterPivotSubsystem.setPosition(ShooterPivotConstants.kShooterPivotPoduim), shooterPivotSubsystem)
 
             // Add an InstantCommand to reset the LED state after the command group finishes
             // new InstantCommand(() -> LEDsubsystem.setLEDFunction(LEDsubsystem::rainbow))

@@ -396,6 +396,7 @@ public final class Constants {
     public static final double kShooterPivotSpeakerPosition = 61;
 
     public static final double kshooterPivotDeckPosition = 32;
+    public static final double kShooterPivotPoduim = 40;
   }
 
   public static final class ShooterIndexConstants {
