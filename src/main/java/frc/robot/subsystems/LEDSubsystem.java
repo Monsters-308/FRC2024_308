@@ -30,19 +30,20 @@ public class LEDSubsystem extends SubsystemBase {
     
     m_led.setLength(m_ledBuffer.getLength());
 
-    // Set the data
-    //m_led.setData(m_ledBuffer);
-    //m_led.start();
+    // // Set the data
+    // m_led.setData(m_ledBuffer);
+    // m_led.start();
     
-    //activeFunction = this::rainbow;    
+    
+    // activeFunction = this::rainbow;    
   }
 
   @Override
   public void periodic() {    
-    //activeFunction.run();
+    // activeFunction.run();
 
     
-    m_rainbowFirstPixelHue = (int)Math.abs(controllerX.getAsDouble()) *10 + m_rainbowFirstPixelHue;
+    // m_rainbowFirstPixelHue = (int)Math.abs(controllerX.getAsDouble()) *10 + m_rainbowFirstPixelHue;
 
 
 

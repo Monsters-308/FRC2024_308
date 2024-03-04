@@ -399,7 +399,13 @@ public class RobotContainer {
               m_shooterPivotSubsystem,
               ShooterPivotConstants.kShooterPivotSpeakerPosition
               ));
-
+    // A button: aim at speaker
+    new POVButton(m_coDriverController, 270)
+      .toggleOnTrue(
+          new PivotGoToPose(
+              m_shooterPivotSubsystem,
+              ShooterPivotConstants.kShooterPivotPoduim
+              ));
     // B button: aim at amp
     new JoystickButton(m_coDriverController, Button.kB.value)
     .onTrue(
@@ -436,14 +442,14 @@ public class RobotContainer {
     // Dpad up: Hanging arm up
     new POVButton(m_coDriverController, 0)
         .onTrue(
-          new InstantCommand(() -> m_ampFlapSubsystem.setSpeed(0.5), m_ampFlapSubsystem))
+          new InstantCommand(() -> m_ampFlapSubsystem.setSpeed(0.1), m_ampFlapSubsystem))
         .onFalse(
           new InstantCommand(() -> m_ampFlapSubsystem.setSpeed(0), m_ampFlapSubsystem));
 
     // Dpad down: Hanging arm down
     new POVButton(m_coDriverController, 180)
       .onTrue(
-        new InstantCommand(() -> m_ampFlapSubsystem.setSpeed(-0.2), m_ampFlapSubsystem))
+        new InstantCommand(() -> m_ampFlapSubsystem.setSpeed(-0.1), m_ampFlapSubsystem))
       .onFalse(
           new InstantCommand(() -> m_ampFlapSubsystem.setSpeed(0), m_ampFlapSubsystem));
 

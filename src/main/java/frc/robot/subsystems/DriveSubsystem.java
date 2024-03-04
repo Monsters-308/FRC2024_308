@@ -25,7 +25,6 @@ import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
 
 import edu.wpi.first.wpilibj.SPI;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.HeadingConstants;
 import frc.robot.Constants.ModuleConstants;
@@ -106,7 +105,7 @@ public class DriveSubsystem extends SubsystemBase {
        * Standard deviations of the vision measurements. Increase these numbers to trust global measurements from vision
        * less. This matrix is in the form [x, y, theta]ᵀ, with units in meters and radians.
       */
-      VecBuilder.fill(1.5, 1.5, 2)
+      VecBuilder.fill(1.8, 1.8, 2)
   );
 
   /** Creates a new DriveSubsystem. */

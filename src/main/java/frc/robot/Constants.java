@@ -247,7 +247,7 @@ public final class Constants {
     public static final boolean kTurningMotorEncoderInverted = false;
     public static final int kEncoderPort = 1;
     public static final double kAngleTolerance = 5;
-    public static final double kAngleOffset = -8.8;
+    public static final double kAngleOffset = -3.8;
 
     public static final double kShooterEncoderPositionFactor = 360; 
 
@@ -265,7 +265,7 @@ public final class Constants {
     /*           Constants for pivot positions:            */
 
     public static final double kIntakeDownPosition = -126.7;
-    public static final double kIntakeDeckPosition = -30;
+    public static final double kIntakeDeckPosition = -41;
     public static final double kIntakeInPosition = 14.7;
   }
 
@@ -313,6 +313,7 @@ public final class Constants {
 
   public static final class ShooterConstants {
         
+    public static final double kWheelRevSpeed = 30;
     public static final int kTopShooterMotorCanID = 16;
     public static final int kBottomShooterMotorCanID = 17;
     
@@ -394,6 +395,8 @@ public final class Constants {
     public static final double kShooterPivotAmpPosition = 50;
     public static final double kShooterPivotTrapPosition = 60;
     public static final double kShooterPivotSpeakerPosition = 61;
+    public static final double kShooterPivotPoduim = 37;
+
 
     public static final double kshooterPivotDeckPosition = 32;
     public static final double kShooterPivotPoduim = 40;

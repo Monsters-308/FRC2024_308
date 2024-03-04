@@ -76,7 +76,7 @@ public class ShooterSubsystem extends SubsystemBase {
     m_topShooterMotor.burnFlash(); 
     m_bottomShooterMotor.burnFlash();
 
-    setPercent(0.3);
+    setPercent(.3);
 
     // Add Values to shuffleboard
     shooterTab.addDouble("Top Roller Speed", () -> getTopSpeed());

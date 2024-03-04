@@ -135,8 +135,10 @@ public class FieldUtils {
     }
 
     /**
-     * Fuck pathplanner
-     * @return
+     * Similar to redWidgetFlip, this flips both the x, y, and rotation in order to 
+     * keep a global blue alliance origin. This can be used for converting into and 
+     * out of a global blue alliance origin.
+     * @return The pose flipped if on red alliance.
      */
     public static Pose2d flipGlobalBlue(Pose2d robotPose){
         if(isRedAlliance()){

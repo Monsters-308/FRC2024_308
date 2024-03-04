@@ -1,24 +1,15 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.RelativeEncoder;
-import com.revrobotics.SparkPIDController;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.AmpFlapConstants;
 
 public class AmpFlapSubsystem extends SubsystemBase {
 
   private final CANSparkMax m_indexMotor = new CANSparkMax(AmpFlapConstants.kMotorCanID, MotorType.kBrushed);
-  private final SparkPIDController m_PidController = m_indexMotor.getPIDController();
-  private final PIDController m_PidController2 = new PIDController(AmpFlapConstants.kP, 
-                                                                    AmpFlapConstants.kI, 
-                                                                    AmpFlapConstants.kD);
     
   /** Creates a new IndexSubsystem. */
   public AmpFlapSubsystem() {
@@ -36,12 +27,6 @@ public class AmpFlapSubsystem extends SubsystemBase {
 
     // Save the motor controller's configuration
     m_indexMotor.burnFlash();
-
-    m_PidController2.setSetpoint(AmpFlapConstants.kDownPosition);
-
-    Shuffleboard.getTab("Flap Thingy").addDouble("Flap position", () -> getPosition());
-
-    //Shuffleboard.getTab("Flap Thingy").add("Reset Encoder", new InstantCommand(() -> m_motorEncoder.setPosition(0)).ignoringDisable(true));
   }
 
   /**
@@ -52,26 +37,9 @@ public class AmpFlapSubsystem extends SubsystemBase {
     m_indexMotor.set(speed);
   }
 
-  /**
-   * Get the position of the relative encoder
-   * @return
-   */
-  public double getPosition(){
-    return 0;//m_motorEncoder.getPosition();
-  }
-
-  /**
-   * Set the PID controller to a certain position
-   * @param position
-   */
-  public void setPosition(double position){
-    m_PidController2.setSetpoint(position);
-  }
-
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    //setSpeed(m_PidController2.calculate(getPosition()));
   }
 
 }

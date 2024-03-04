@@ -90,6 +90,19 @@
               "_glyph": 148,
               "_showGlyph": false
             }
+          },
+          "0,1": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Pivot Angle",
+              "_title": "Pivot Angle",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
           }
         }
       }
