@@ -222,17 +222,8 @@ public class RobotContainer {
       .ignoringDisable(true)
     );
 
-    
-    Shuffleboard.getTab("Intake").add("IntakeDown", 
-      new SetIntakeAngle(m_intakePivotSubsystem, IntakePivotConstants.kIntakeDownPosition));
-
-      
-    Shuffleboard.getTab("Intake").add("IntakeDeck", 
-      new SetIntakeAngle(m_intakePivotSubsystem, IntakePivotConstants.kIntakeDeckPosition));
-
-    
-    Shuffleboard.getTab("Intake").add("IntakeUp", 
-      new SetIntakeAngle(m_intakePivotSubsystem, IntakePivotConstants.kIntakeInPosition));
+    // I ain't creating a separate tab for this
+    Shuffleboard.getTab("Intake").add("Run Index", new RunIndex(m_indexSubsystem, 0.5));
   }
 
   /**

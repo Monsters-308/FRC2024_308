@@ -4,6 +4,8 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.HangingConstants;
+import frc.robot.commands.hanging.LowerBothArms;
+import frc.robot.commands.hanging.RaiseBothArms;
 
 public class HangingSubsystem extends SubsystemBase {
 
@@ -27,6 +29,10 @@ public class HangingSubsystem extends SubsystemBase {
     
     hangingTab.addBoolean("RightUpperLimit", () -> m_rightArm.isFullyExtended());
     hangingTab.addBoolean("RightLowerLimit", () -> m_rightArm.isFullyRetracted());
+
+    // Shuffleboard widgets for testing arm motors
+    hangingTab.add("Raise arms", new RaiseBothArms(this));
+    hangingTab.add("Lower arms", new LowerBothArms(this));
     
   }
 

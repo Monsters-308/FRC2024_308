@@ -5,8 +5,10 @@ import com.revrobotics.CANSparkBase.IdleMode;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ShooterIndexConstants;
+import frc.robot.commands.shooterIndex.RunShooterIndexer;
 
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
@@ -15,6 +17,8 @@ public class ShooterIndexSubsystem extends SubsystemBase {
     private final CANSparkMax m_conveyorMotor = new CANSparkMax(ShooterIndexConstants.kMotorCanID, MotorType.kBrushed);
     
     private final DigitalInput m_noteSensor = new DigitalInput(ShooterIndexConstants.kDigitalSensorPin);
+
+    private final ShuffleboardTab shooterTab = Shuffleboard.getTab("Shooter");
 
     /** 
      * Controls the conveyor belt that brings the note to the shooter flywheels, along with the 
@@ -31,7 +35,9 @@ public class ShooterIndexSubsystem extends SubsystemBase {
 
         m_conveyorMotor.burnFlash();
 
-        Shuffleboard.getTab("Shooter").addBoolean("Game Piece", () -> gamePieceDetected());
+        shooterTab.addBoolean("Game Piece", () -> gamePieceDetected());
+        
+        shooterTab.add("Run Indexer", new RunShooterIndexer(this, 0.5));
     }
 
     /**

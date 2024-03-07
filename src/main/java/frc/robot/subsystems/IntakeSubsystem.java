@@ -37,7 +37,7 @@ public class IntakeSubsystem extends SubsystemBase {
 
     Shuffleboard.getTab("Intake").addBoolean("Game Piece", () -> !m_noteSensor.get());
 
-    
+    // Widget for testing intake motor
     Shuffleboard.getTab("Intake").add("Run Intake", new RunIntake(this, 1));
   }
 

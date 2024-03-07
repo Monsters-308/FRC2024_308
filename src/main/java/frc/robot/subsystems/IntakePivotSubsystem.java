@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.IntakePivotConstants;
+import frc.robot.commands.intakePivot.SetIntakeAngle;
 import frc.utils.SwerveUtils;
 
 public class IntakePivotSubsystem extends SubsystemBase {
@@ -62,11 +63,20 @@ public class IntakePivotSubsystem extends SubsystemBase {
     m_masterMotor.burnFlash();
     m_followerMotor.burnFlash();
 
-    //Shuffleboard values
-    
+    // Shuffleboard values
     m_Tab.addDouble("Pivot Angle", () -> getPosition().getDegrees());
 
     m_Tab.addBoolean("Encoder Connected", () -> m_intakePivotMotorEncoder.isConnected());
+
+    // Shuffleboard widgets for manually controlling intake pivot
+    m_Tab.add("IntakeDown", 
+      new SetIntakeAngle(this, IntakePivotConstants.kIntakeDownPosition));
+      
+    m_Tab.add("IntakeDeck", 
+      new SetIntakeAngle(this, IntakePivotConstants.kIntakeDeckPosition));
+    
+    m_Tab.add("IntakeUp", 
+      new SetIntakeAngle(this, IntakePivotConstants.kIntakeInPosition));
   }
 
   /**
