@@ -11,7 +11,7 @@ public class IndexSubsystem extends SubsystemBase {
 
   private final CANSparkMax m_indexMotor = new CANSparkMax(IndexConstants.kIndexMotorCanID, MotorType.kBrushless);
     
-  /** Creates a new IndexSubsystem. */
+  /** Controls the conveyor belt that brings the note from the intake to the shooter (hot dog roller). */
   public IndexSubsystem() {
     // Restore the motor controller to a known state (in case it's swapped out)
     m_indexMotor.restoreFactoryDefaults();

@@ -420,6 +420,7 @@ public class RobotContainer {
     new JoystickButton(m_coDriverController, Button.kY.value)
       .toggleOnTrue(
         new CompleteIntake(m_intakeSubsystem, m_shooterPivotSubsystem, m_shooterIndexSubsystem, m_indexSubsystem, m_intakePivotSubsystem, m_LEDSubsystem)
+          .andThen(new SetIntakeAngle(m_intakePivotSubsystem, IntakePivotConstants.kIntakeInPosition))
       );
 
     // // Dpad up: shooter pivot up
@@ -466,17 +467,10 @@ public class RobotContainer {
 
     // Left trigger: charge up wheels 
     new Trigger(() -> m_coDriverController.getLeftTriggerAxis() > OIConstants.kTriggerDeadband)
-    .onTrue(
-      // new SequentialCommandGroup(
-      //   new InstantCommand(
-      //   () -> m_shooterSubsystem.setBottomShooterSpeed(7), m_shooterSubsystem),
-      // new InstantCommand(
-      //   () -> m_shooterSubsystem.setTopShooterSpeed(10), m_shooterSubsystem)
-      // ))
-      new InstantCommand(() -> m_shooterSubsystem.setPercent(1), m_shooterSubsystem))
-    .onFalse(
-        new InstantCommand(
-            m_shooterSubsystem::stopRollers, m_shooterSubsystem));
+      .onTrue(
+        new InstantCommand(() -> m_shooterSubsystem.setPercent(1), m_shooterSubsystem))
+      .onFalse(
+        new InstantCommand(m_shooterSubsystem::stopRollers, m_shooterSubsystem));
   }
 
   /**

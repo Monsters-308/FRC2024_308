@@ -22,6 +22,11 @@ public class VisionSubsystem extends SubsystemBase {
     private final Field2d m_field = new Field2d();
     private final ShuffleboardTab visionTab = Shuffleboard.getTab("Vision");
 
+    /**
+     * Manages receiving and sending out data to the limelight using networktables.
+     * We have code for switching pipelines and getting reflective tape data,
+     * but it's kind of useless since we're only using the april tag pipeline.
+     */
     public VisionSubsystem(){
         ty = limelightTable.getEntry("ty");
         tx = limelightTable.getEntry("tx");

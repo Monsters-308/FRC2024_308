@@ -11,7 +11,7 @@ public class AmpFlapSubsystem extends SubsystemBase {
 
   private final CANSparkMax m_indexMotor = new CANSparkMax(AmpFlapConstants.kMotorCanID, MotorType.kBrushed);
     
-  /** Creates a new IndexSubsystem. */
+  /** This controls the motor on top of our robot that rotates the amp flap. */
   public AmpFlapSubsystem() {
     // Restore the motor controller to a known state (in case it's swapped out)
     m_indexMotor.restoreFactoryDefaults();

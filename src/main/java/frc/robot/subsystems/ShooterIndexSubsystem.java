@@ -12,12 +12,14 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 
 public class ShooterIndexSubsystem extends SubsystemBase {
 
-
     private final CANSparkMax m_conveyorMotor = new CANSparkMax(ShooterIndexConstants.kMotorCanID, MotorType.kBrushed);
     
     private final DigitalInput m_noteSensor = new DigitalInput(ShooterIndexConstants.kDigitalSensorPin);
 
-    /** Creates a new ShooterIndexSubsystem. */
+    /** 
+     * Controls the conveyor belt that brings the note to the shooter flywheels, along with the 
+     * light sensor for detecting if a note is in the shooter.  
+    */
     public ShooterIndexSubsystem() {
         m_conveyorMotor.restoreFactoryDefaults();
 

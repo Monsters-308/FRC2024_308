@@ -25,7 +25,10 @@ public class ShooterSubsystem extends SubsystemBase {
   private final SparkPIDController shooterMotorTopPIDController;
   private final SparkPIDController shooterMotorBottomPIDController;
 
-  /** Creates a new ShooterSubsystem. */
+  /** 
+   * Controls the two shooter flywheels and uses the relative encoders built 
+   * into the neos for velocity control. 
+   */
   public ShooterSubsystem() {
     m_topShooterMotor.restoreFactoryDefaults(); 
     m_bottomShooterMotor.restoreFactoryDefaults(); 
@@ -76,7 +79,7 @@ public class ShooterSubsystem extends SubsystemBase {
     m_topShooterMotor.burnFlash(); 
     m_bottomShooterMotor.burnFlash();
 
-    setPercent(.3);
+    setPercent(ShooterConstants.kIdleRevSpeed);
 
     // Add Values to shuffleboard
     shooterTab.addDouble("Top Roller Speed", () -> getTopSpeed());
@@ -116,8 +119,8 @@ public class ShooterSubsystem extends SubsystemBase {
    * NOTE: unlike setBothSpeeds(0), this lets the wheels naturally wind down.
    */
   public void stopRollers(){
-    m_topShooterMotor.set(0.3);
-    m_bottomShooterMotor.set(0.3);
+    m_topShooterMotor.set(ShooterConstants.kIdleRevSpeed);
+    m_bottomShooterMotor.set(ShooterConstants.kIdleRevSpeed);
   }
 
   //NOTE: this function is for testing purposes

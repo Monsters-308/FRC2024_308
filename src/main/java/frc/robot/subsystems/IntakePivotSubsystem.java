@@ -29,7 +29,10 @@ public class IntakePivotSubsystem extends SubsystemBase {
 
   private final ShuffleboardTab m_Tab = Shuffleboard.getTab("Intake");
 
-  /** Creates a new IntakePivotSubsystem. */
+  /** 
+   * Controls the motors that rotate the intake down and up, along with the absolute
+   * encoder to detect the rotation of the intake.
+   */
   public IntakePivotSubsystem() {
     m_intakePivotMotorEncoder.setDistancePerRotation(IntakePivotConstants.kShooterEncoderPositionFactor);
 

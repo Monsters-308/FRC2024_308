@@ -18,10 +18,12 @@ public class ShooterPivotSubsystem extends SubsystemBase {
   private final DutyCycleEncoder m_shooterPivotMotorEncoder = new DutyCycleEncoder(ShooterPivotConstants.kEncoderPort);
   private Rotation2d m_desiredAngle = Rotation2d.fromDegrees(ShooterPivotConstants.kShooterPivotSpeakerPosition);
 
-
   private final ShuffleboardTab pivotTab = Shuffleboard.getTab("Shooter");
 
-  /** Creates a new ShooterPivotSubsystem. */
+  /** 
+   * Manages the angle of the shooter using a linear actuator to rotate the shooter up and 
+   * down and using an absolute encoder to track the angle of the shooter.
+   */
   public ShooterPivotSubsystem() {
     // Factory reset, so we get the SPARKS MAX to a known state before configuring
     // them. This is useful in case a SPARK MAX is swapped out.

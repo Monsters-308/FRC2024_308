@@ -19,7 +19,7 @@ public class HangingSubsystem extends SubsystemBase {
   
   private final ShuffleboardTab hangingTab = Shuffleboard.getTab("Hanging");
     
-  /** Creates a new HangingSubsystem. */
+  /** Controls both hanging arms, as well as the sensors to detect if they're fully extended/retracted. */
   public HangingSubsystem() {
     // Shuffleboard values
     hangingTab.addBoolean("LeftUpperLimit", () -> m_leftArm.isFullyExtended());

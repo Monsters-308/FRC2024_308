@@ -32,7 +32,7 @@ public class SwerveModule {
 
   /**
    * Constructs a Swerve Module and configures the driving and turning motor,
-   * encoder, and PID controller. This configuration is specific to the MK4 and 
+   * encoder, and PID controllers. This configuration is specific to the MK4 and 
    * MK4i swerve modules with 2 NEOs, 2 Spark Maxes and an SRX Mag Encoder.
    */
   public SwerveModule(int drivingCANId, int turningCANId, double chassisAngularOffset, boolean invertDrive) {

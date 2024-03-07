@@ -15,7 +15,10 @@ public class IntakeSubsystem extends SubsystemBase {
   private final CANSparkMax m_intakeMotor = new CANSparkMax(IntakeConstants.kIntakeMotorCanID, MotorType.kBrushed);
   private final DigitalInput m_noteSensor = new DigitalInput(IntakeConstants.kDigitalSensorPin);
     
-  /** Creates a new IntakeSubsystem. */
+  /**
+   * Controls just the motor that spins the intake rollers, as well as the light sensor 
+   * to detect if a note is in the intake. 
+   */
   public IntakeSubsystem() {
     // Restore the motor controller to a known state (in case it's swapped out)
     m_intakeMotor.restoreFactoryDefaults();

@@ -313,7 +313,6 @@ public final class Constants {
 
   public static final class ShooterConstants {
         
-    public static final double kWheelRevSpeed = 30;
     public static final int kTopShooterMotorCanID = 16;
     public static final int kBottomShooterMotorCanID = 17;
     
@@ -346,6 +345,12 @@ public final class Constants {
     public static final double kShooterFF = 1 / kDriveWheelFreeSpeedRps; 
     public static final double kShooterMinOutput = -1;
     public static final double kShooterMaxOutput = 1;
+
+    // Speed to rev the shooter to when shooting
+    public static final double kWheelRevSpeed = 30; //Meters per second
+    // Idle speed that shooter defaults to
+    public static final double kIdleRevSpeed = 0.3; //Precent
+
     
     //                ************* Super important constants for math **************
 

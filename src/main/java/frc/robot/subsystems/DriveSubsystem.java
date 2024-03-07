@@ -68,17 +68,18 @@ public class DriveSubsystem extends SubsystemBase {
   
   // Note: the NavX takes a second to configure before it can be used. I have seen some teams create the gyro in a separate thread, which might be worth considering.
 
+  // These values are for tracking slew rate, which lets the robot accelerate and slow down gradually
   private double m_prevTime = WPIUtilJNI.now() * 1e-6;
   private ChassisSpeeds m_prevTarget = new ChassisSpeeds();
 
-  // Field for odometry
+  // Field widget for displaying odometry
   private final Field2d m_field = new Field2d();
 
   // Shuffleboard objects
   private final ShuffleboardTab swerveTab = Shuffleboard.getTab("Swerve");
   // Add alliance widget (it's just a boolean widget but I manually change the color)
   private final SimpleWidget m_allianceWidget = swerveTab.add("Alliance", true); 
-  // Widget for when the limelight breaks
+  // Widget for toggling limelight data
   private final SimpleWidget m_useLimelightData;
 
   // Suppliers for pose estimation with vision data
@@ -108,7 +109,10 @@ public class DriveSubsystem extends SubsystemBase {
       VecBuilder.fill(1.8, 1.8, 2)
   );
 
-  /** Creates a new DriveSubsystem. */
+  /** 
+   * This controls all of the swerve modules, along with the pathplanner setup, the gyro,
+   * the odometry, and the use of odometry and vision data to estimate the robot's pose.
+   */
   public DriveSubsystem(Supplier<Pose2d> visionPosition, DoubleSupplier visionTimestamp) {
     m_visionPose = visionPosition;
     m_visionTimestamp = visionTimestamp;
