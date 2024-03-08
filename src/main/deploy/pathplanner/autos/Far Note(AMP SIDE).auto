@@ -12,7 +12,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Fetch Ring(FR) 1-1"
+                  "pathName": "Fetch RIng(FR) 1-1"
                 }
               },
               {
@@ -52,6 +52,6 @@
       ]
     }
   },
-  "folder": null,
+  "folder": "AMP SIDE",
   "choreoAuto": false
 }

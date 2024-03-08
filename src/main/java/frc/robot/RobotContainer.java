@@ -141,7 +141,14 @@ public class RobotContainer {
           m_shooterPivotSubsystem,
           ShooterPivotConstants.kshooterPivotDeckPosition
           ))
-      ); 
+      );  
+
+      NamedCommands.registerCommand("adjustToSpeaker",
+      new SequentialCommandGroup(
+        //new PivotGoToPose(m_shooterPivotSubsystem,
+          //ShooterPivotConstants.kshooterPivotDeckPosition)
+          ));  
+
 
     // Startup option
     m_autonStartup.setDefaultOption("On", new AutonShootNote(m_shooterSubsystem, m_shooterIndexSubsystem, m_LEDSubsystem));
