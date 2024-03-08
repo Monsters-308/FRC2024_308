@@ -51,6 +51,18 @@
                 "data": {
                   "waitTime": 0.5
                 }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "ShooterPivotSpeaker"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Launch Note"
+                }
               }
             ]
           }
@@ -60,15 +72,15 @@
           "data": {
             "commands": [
               {
-                "type": "path",
+                "type": "named",
                 "data": {
-                  "pathName": "Return To Zone(RTZ) 1"
+                  "name": "Intake Note"
                 }
               },
               {
-                "type": "named",
+                "type": "path",
                 "data": {
-                  "name": "Launch Note"
+                  "pathName": "Fetch RIng(FR) 1-1"
                 }
               }
             ]
