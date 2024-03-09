@@ -4,7 +4,6 @@ import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -21,13 +20,6 @@ public class IntakePivotSubsystem extends SubsystemBase {
 
   private final DutyCycleEncoder m_intakePivotMotorEncoder = new DutyCycleEncoder(IntakePivotConstants.kEncoderPort);
 
-  private Rotation2d m_desiredAngle = Rotation2d.fromDegrees(IntakePivotConstants.kIntakeDeckPosition);
-
-  private final PIDController pidController = new PIDController(IntakePivotConstants.kPivotP, 
-                                                                IntakePivotConstants.kPivotI, 
-                                                                IntakePivotConstants.kPivotD);
-
-
   private final ShuffleboardTab m_Tab = Shuffleboard.getTab("Intake");
 
   /** 
@@ -36,10 +28,6 @@ public class IntakePivotSubsystem extends SubsystemBase {
    */
   public IntakePivotSubsystem() {
     m_intakePivotMotorEncoder.setDistancePerRotation(IntakePivotConstants.kShooterEncoderPositionFactor);
-
-    pidController.reset();
-    pidController.setSetpoint(m_desiredAngle.getDegrees());
-    pidController.setTolerance(IntakePivotConstants.kAngleTolerance);
 
     m_masterMotor.restoreFactoryDefaults();
     m_followerMotor.restoreFactoryDefaults();
@@ -95,47 +83,14 @@ public class IntakePivotSubsystem extends SubsystemBase {
   
   }
 
-
-  /**
-   * Set the shooter to a specific angle (in degrees)
-   * @param angle The angle to set the shooter to (in degrees)
-   */
-  public void setPosition(double angle) {
-    m_desiredAngle = Rotation2d.fromDegrees(angle);
-  }
-
-  /**
-   * Set the shooter to a specific angle 
-   * @param angle The angle to set the shooter to 
-   */
-  public void setPosition(Rotation2d angle) {
-    m_desiredAngle = angle;
-  }
-
   /** This function is for testing purposes */
   public void setSpeed(double speed){
     m_masterMotor.set(speed);
   }
 
-  /**
-   * Returns whether the shooter pivot is at its desired position within an amount of tolerance.
-   * @return true if in its desired position.
-   */
-  public boolean inPosition(){
-    return pidController.atSetpoint();
-  }
-
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
-    //manageState();    
-  }
-
-  /** Putting this in a separate function so we can comment it out easier */
-  private void manageState(){
-    double currentPositionDegrees = getPosition().getDegrees();
-
-    m_masterMotor.set(-pidController.calculate(currentPositionDegrees));
+    // This method will be called once per scheduler run 
   }
 
 }

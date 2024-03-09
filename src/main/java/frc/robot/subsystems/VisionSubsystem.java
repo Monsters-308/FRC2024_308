@@ -143,7 +143,7 @@ public class VisionSubsystem extends SubsystemBase {
         // Display april tag data on a field widget for testing
         Pose2d limelightPose = getRobotPosition();
         if(limelightPose != null){
-            m_field.setRobotPose(FieldUtils.redWidgetFlip(limelightPose));
+            m_field.setRobotPose(FieldUtils.fieldWidgetScale(limelightPose));
         }        
     }
 

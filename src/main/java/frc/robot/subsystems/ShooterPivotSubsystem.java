@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -16,8 +17,14 @@ import frc.utils.SwerveUtils;
 public class ShooterPivotSubsystem extends SubsystemBase {
 
   private final CANSparkMax m_shooterPivotMotor = new CANSparkMax(ShooterPivotConstants.kShooterPivotMotorCanID, MotorType.kBrushed);
+
   private final DutyCycleEncoder m_shooterPivotMotorEncoder = new DutyCycleEncoder(ShooterPivotConstants.kEncoderPort);
+
   private Rotation2d m_desiredAngle = Rotation2d.fromDegrees(ShooterPivotConstants.kShooterPivotSpeakerPosition);
+
+  private final PIDController m_angleController = new PIDController(ShooterPivotConstants.kPivotP, 
+                                                                    ShooterPivotConstants.kPivotI, 
+                                                                    ShooterPivotConstants.kPivotD);
 
   private final ShuffleboardTab pivotTab = Shuffleboard.getTab("Shooter");
 
@@ -114,17 +121,23 @@ public class ShooterPivotSubsystem extends SubsystemBase {
     double currentAngleDegrees = getPosition().getDegrees();
     double desiredAngleDegrees = m_desiredAngle.getDegrees();
 
-    if(Math.abs(currentAngleDegrees - desiredAngleDegrees) > ShooterPivotConstants.kAngleTolerance){
-      if(currentAngleDegrees > desiredAngleDegrees){
-        m_shooterPivotMotor.set(-1);
-      }
-      else if (currentAngleDegrees < desiredAngleDegrees){
-        m_shooterPivotMotor.set(1);
-      }
-    }
-    else {
-      m_shooterPivotMotor.set(0);
-    }
+    m_angleController.setSetpoint(desiredAngleDegrees);
+
+    m_shooterPivotMotor.set(m_angleController.calculate(currentAngleDegrees));
+
+    // if(Math.abs(currentAngleDegrees - desiredAngleDegrees) > ShooterPivotConstants.kAngleTolerance){
+    //   if(currentAngleDegrees > desiredAngleDegrees){
+    //     m_shooterPivotMotor.set(-1);
+    //   }
+    //   else if (currentAngleDegrees < desiredAngleDegrees){
+    //     m_shooterPivotMotor.set(1);
+    //   }
+    // }
+    // else {
+    //   m_shooterPivotMotor.set(0);
+    // }
+
+
   }
 
 }

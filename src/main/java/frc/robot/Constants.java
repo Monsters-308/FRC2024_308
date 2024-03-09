@@ -254,11 +254,6 @@ public final class Constants {
     // Safety: prevent pivot from going beyond its minimum and maximum
     public static final Rotation2d kPivotMinAngle = Rotation2d.fromDegrees(-126.7);
     public static final Rotation2d kPivotMaxAngle = Rotation2d.fromDegrees(14.7);
-    
-    // Unused PID constants
-    public static final double kPivotP = 0.025;
-    public static final double kPivotI = 0;
-    public static final double kPivotD = 0.001;
 
     public static final double kPivotSpeed = 1;
 
@@ -390,6 +385,10 @@ public final class Constants {
     
     public static final IdleMode kTurningMotorIdleMode = IdleMode.kBrake;
     public static final int kTurningMotorCurrentLimit = 20; // amps
+
+    public static final double kPivotP = 0.025;
+    public static final double kPivotI = 0;
+    public static final double kPivotD = 0;
 
     //                ************* Super important constants for math **************
 

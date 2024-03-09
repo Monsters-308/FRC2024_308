@@ -251,20 +251,15 @@ public class RobotContainer {
         .onTrue(new InstantCommand(
             () -> m_driveSubsystem.zeroHeading()));
 
-  // Auto Aim speaker
-  new JoystickButton(m_driverController, Button.kA.value)
-      .toggleOnTrue(
-          // new autoSpeaker(
-          //     m_driveSubsystem,
-          //     m_shooterPivotSubsystem,
-          //     m_shooterSubsystem
-          //     ));
-          new AutoAimDynamic(
-            m_visionSubsystem, 
-            m_driveSubsystem, 
-            m_shooterPivotSubsystem,
-            () -> m_driverController.getLeftY(),
-            () -> m_driverController.getLeftX()));
+    // Auto Aim speaker
+    new JoystickButton(m_driverController, Button.kA.value)
+        .toggleOnTrue(
+            new AutoAimDynamic(
+              m_visionSubsystem, 
+              m_driveSubsystem, 
+              m_shooterPivotSubsystem,
+              () -> m_driverController.getLeftY(),
+              () -> m_driverController.getLeftX()));
 
     // // Auto Aim Amp
     // new JoystickButton(m_driverController, Button.kB.value)
@@ -295,7 +290,7 @@ public class RobotContainer {
                 () -> m_driverController.getLeftX(),
                 () -> m_driverController.getRightX()));
 
-    //Dpad right: makes robot face 90 degrees to the right
+    // Dpad right: makes robot face 90 degrees to the right
     new POVButton(m_driverController, 90)
         .toggleOnTrue(
             new RobotGotoAngle(
@@ -332,15 +327,16 @@ public class RobotContainer {
     //------------------------------------------- coDriver buttons -------------------------------------------
 
 
-    // // Button for testing shooter:
+    // X button: manual intake
     new JoystickButton(m_coDriverController, Button.kX.value)
-    .whileTrue(
-      new ParallelCommandGroup(
-        new IndexNoteGood(m_shooterIndexSubsystem),
-        new RunIndex(m_indexSubsystem, IndexConstants.kIndexIntakeSpeed),
-        new RunIntake(m_intakeSubsystem, 1)
-      )
-    );
+        .whileTrue(
+          new ParallelCommandGroup(
+            new IndexNoteGood(m_shooterIndexSubsystem),
+            new RunIndex(m_indexSubsystem, IndexConstants.kIndexIntakeSpeed),
+            new RunIntake(m_intakeSubsystem, 1)
+          )
+        );
+
     // new POVButton(m_coDriverController, 270)
     //    .toggleOnTrue(
     //     new SequentialCommandGroup(
@@ -350,31 +346,17 @@ public class RobotContainer {
     //     )
     //   );
 
-    // // Use bumpers for intake pivot
-    new JoystickButton(m_coDriverController, Button.kRightBumper.value)
-        .onTrue(
-            new InstantCommand(() -> m_hangingSubsystem.setRightSpeed(0.8), m_hangingSubsystem))
-        .onFalse(
-            new InstantCommand(() -> m_hangingSubsystem.setRightSpeed(0), m_hangingSubsystem));
-
+    // Left bumper: Raise hanging arms
     new JoystickButton(m_coDriverController, Button.kLeftBumper.value)
-        .onTrue(
-            new InstantCommand(() -> m_hangingSubsystem.setRightSpeed(-0.8), m_hangingSubsystem))
-        .onFalse(
-            new InstantCommand(() -> m_hangingSubsystem.setRightSpeed(0), m_hangingSubsystem));
-
-    //Left bumper: Raise hanging arms
-    new JoystickButton(m_coDriverController, Button.kLeftBumper.value)
-        .toggleOnTrue(
+        .whileTrue(
             new RaiseBothArms(
-                m_hangingSubsystem
-                ));
+                m_hangingSubsystem));
 
     // Right bumper: lower hanging arms
     new JoystickButton(m_coDriverController, Button.kRightBumper.value)
-      .toggleOnTrue(
-          new LowerBothArms(
-              m_hangingSubsystem));
+        .whileTrue(
+            new LowerBothArms(
+                m_hangingSubsystem));
     
     // // Dpad up: intake note
     // new POVButton(m_coDriverController, 0)
@@ -394,6 +376,7 @@ public class RobotContainer {
               m_shooterPivotSubsystem,
               ShooterPivotConstants.kShooterPivotSpeakerPosition
               ));
+
     // A button: aim at speaker
     new POVButton(m_coDriverController, 270)
       .toggleOnTrue(
@@ -401,16 +384,17 @@ public class RobotContainer {
               m_shooterPivotSubsystem,
               ShooterPivotConstants.kShooterPivotPoduim
               ));
+
     // B button: aim at amp
     new JoystickButton(m_coDriverController, Button.kB.value)
-    .onTrue(
-      new SequentialCommandGroup(
-        new InstantCommand(
-        () -> m_shooterSubsystem.setBottomShooterSpeed(7), m_shooterSubsystem),
-      new InstantCommand(
-        () -> m_shooterSubsystem.setTopShooterSpeed(10), m_shooterSubsystem)
-      ))
-    .onFalse(
+      .onTrue(
+        new SequentialCommandGroup(
+          new InstantCommand(
+            () -> m_shooterSubsystem.setBottomShooterSpeed(7), m_shooterSubsystem),
+          new InstantCommand(
+            () -> m_shooterSubsystem.setTopShooterSpeed(10), m_shooterSubsystem)
+        ))
+      .onFalse(
         new InstantCommand(
             m_shooterSubsystem::stopRollers, m_shooterSubsystem));
     
