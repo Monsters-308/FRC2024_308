@@ -81,7 +81,7 @@ public class RobotContainer {
   final XboxController m_driverController = new XboxController(OIConstants.kDriverControllerPort);
   final XboxController m_coDriverController = new XboxController(OIConstants.kCoDriverControllerPort);
 
-  private final LEDSubsystem m_LEDSubsystem = new LEDSubsystem(() -> m_driverController.getLeftY());
+  private final LEDSubsystem m_LEDSubsystem = new LEDSubsystem(() -> m_driverController.getLeftY(), () -> m_shooterIndexSubsystem.gamePieceDetected(), () -> m_visionSubsystem.getTargets());
 
   // Sendable chooser for launching the initial note
   SendableChooser<Command> m_autonStartup = new SendableChooser<>();
@@ -402,7 +402,12 @@ public class RobotContainer {
     new JoystickButton(m_coDriverController, Button.kY.value)
       .toggleOnTrue(
         new CompleteIntake(m_intakeSubsystem, m_shooterPivotSubsystem, m_shooterIndexSubsystem, m_indexSubsystem, m_intakePivotSubsystem, m_LEDSubsystem)
-          .andThen(new SetIntakeAngle(m_intakePivotSubsystem, IntakePivotConstants.kIntakeInPosition))
+          .andThen(
+            new ParallelCommandGroup(
+              new SetIntakeAngle(m_intakePivotSubsystem, IntakePivotConstants.kIntakeInPosition),
+              new InstantCommand(() -> m_LEDSubsystem.setLEDFunction(m_LEDSubsystem::rainbow))
+            )
+          )
       );
 
     // // Dpad up: shooter pivot up

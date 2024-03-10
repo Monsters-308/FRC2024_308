@@ -12,7 +12,6 @@ public class setLED extends Command {
     m_LEDSubsystem = LEDsubsystem;
     m_LEDFunction = newLEDFunction;
 
-    addRequirements(LEDsubsystem);
   }
 
   // Called when the command is initially scheduled.
