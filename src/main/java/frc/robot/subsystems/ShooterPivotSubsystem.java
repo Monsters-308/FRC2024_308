@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
@@ -20,7 +21,7 @@ public class ShooterPivotSubsystem extends SubsystemBase {
 
   private final DutyCycleEncoder m_shooterPivotMotorEncoder = new DutyCycleEncoder(ShooterPivotConstants.kEncoderPort);
 
-  private Rotation2d m_desiredAngle = Rotation2d.fromDegrees(ShooterPivotConstants.kShooterPivotSpeakerPosition);
+  private double m_desiredAngleDegrees = ShooterPivotConstants.kShooterPivotSpeakerPosition;
 
   private final PIDController m_angleController = new PIDController(ShooterPivotConstants.kPivotP, 
                                                                     ShooterPivotConstants.kPivotI, 
@@ -87,7 +88,7 @@ public class ShooterPivotSubsystem extends SubsystemBase {
    * @param angle The angle to set the shooter to (in degrees)
    */
   public void setPosition(double angle) {
-    m_desiredAngle = Rotation2d.fromDegrees(angle);
+    m_desiredAngleDegrees = MathUtil.clamp(angle, ShooterPivotConstants.kPivotMinAngle, ShooterPivotConstants.kPivotMaxAngle); 
   }
 
   /**
@@ -95,7 +96,7 @@ public class ShooterPivotSubsystem extends SubsystemBase {
    * @param angle The angle to set the shooter to 
    */
   public void setPosition(Rotation2d angle) {
-    m_desiredAngle = angle;
+    m_desiredAngleDegrees = MathUtil.clamp(angle.getDegrees(), ShooterPivotConstants.kPivotMinAngle, ShooterPivotConstants.kPivotMaxAngle);
   }
 
   /**
@@ -104,14 +105,13 @@ public class ShooterPivotSubsystem extends SubsystemBase {
    */
   public boolean inPosition(){
     double currentAngleDegrees = getPosition().getDegrees();
-    double desiredAngleDegrees = m_desiredAngle.getDegrees();
-
-    return Math.abs(currentAngleDegrees - desiredAngleDegrees) < ShooterPivotConstants.kAngleTolerance;
+    
+    return Math.abs(currentAngleDegrees - m_desiredAngleDegrees) < ShooterPivotConstants.kAngleTolerance;
   }
 
   /** Stops pivot movement by setting the desired angle to the current angle. */
   public void stopMovement(){
-    m_desiredAngle = getPosition();
+    m_desiredAngleDegrees = getPosition().getDegrees();
   }
 
   @Override
@@ -122,11 +122,10 @@ public class ShooterPivotSubsystem extends SubsystemBase {
 
   /** Putting this in a separate function so we can comment it out easier */
   private void manageState(){
+    
+    m_angleController.setSetpoint(m_desiredAngleDegrees);
 
     double currentAngleDegrees = getPosition().getDegrees();
-    double desiredAngleDegrees = m_desiredAngle.getDegrees();
-
-    m_angleController.setSetpoint(desiredAngleDegrees);
 
     m_shooterPivotMotor.set(m_angleController.calculate(currentAngleDegrees));
 

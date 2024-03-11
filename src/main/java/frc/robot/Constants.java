@@ -378,8 +378,8 @@ public final class Constants {
     public static final double kAngleOffset = 178.2; // Change
 
     // Safety: let's set max and min angles for the shooter pivot so we don't accidentally rotate too far in one direction
-    public static final double kPivotMinAngle = Math.toRadians(30.5);
-    public static final double kPivotMaxAngle = Math.toRadians(60); 
+    public static final double kPivotMinAngle = 0; // Degrees
+    public static final double kPivotMaxAngle = 60; // Degrees
 
     public static final double kAngleTolerance = 0.4;
     
