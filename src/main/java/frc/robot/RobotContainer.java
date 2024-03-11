@@ -19,7 +19,6 @@ import frc.robot.Constants.IndexConstants;
 import frc.robot.Constants.IntakePivotConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.ShooterPivotConstants;
-import frc.robot.commands.LED.setLED;
 import frc.robot.commands.auton.AutonShootNote;
 import frc.robot.commands.commandGroups.intake.CompleteIntake;
 import frc.robot.commands.commandGroups.shooter.LaunchNote;
@@ -32,6 +31,7 @@ import frc.robot.commands.index.RunIndex;
 import frc.robot.commands.intake.RunIntake;
 import frc.robot.commands.intakePivot.SetIntakeAngle;
 import frc.robot.commands.shooterIndex.IndexNoteGood;
+import frc.robot.commands.shooterPivot.DynamicPivotToSpeaker;
 import frc.robot.commands.shooterPivot.PivotGoToPose;
 import frc.robot.commands.vision.DefaultLimelightPipeline;
 import frc.robot.commands.vision.UpdateOdometry;
@@ -254,12 +254,18 @@ public class RobotContainer {
     // Auto Aim speaker
     new JoystickButton(m_driverController, Button.kA.value)
         .toggleOnTrue(
-            new AutoAimDynamic(
-              m_visionSubsystem, 
-              m_driveSubsystem, 
-              m_shooterPivotSubsystem,
-              () -> m_driverController.getLeftY(),
-              () -> m_driverController.getLeftX()));
+            new ParallelCommandGroup(
+              new AutoAimDynamic(
+                m_visionSubsystem, 
+                m_driveSubsystem, 
+                () -> m_driverController.getLeftY(),
+                () -> m_driverController.getLeftX()),
+
+              new DynamicPivotToSpeaker(
+                m_shooterPivotSubsystem, 
+                m_driveSubsystem)
+            )
+          );
 
     // // Auto Aim Amp
     // new JoystickButton(m_driverController, Button.kB.value)

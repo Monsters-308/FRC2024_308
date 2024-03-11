@@ -302,7 +302,7 @@ public final class Constants {
 
     // Positive should bring the game piece to the shooter
     public static final boolean kIndexMotorInverted = true; 
-    public static final int kIndexMotorCurrentLimit = 35; // Change
+    public static final int kIndexMotorCurrentLimit = 20;
     public static final double kIndexIntakeSpeed = .5;
   }
 

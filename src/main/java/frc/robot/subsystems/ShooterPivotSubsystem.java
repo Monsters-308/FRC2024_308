@@ -109,6 +109,11 @@ public class ShooterPivotSubsystem extends SubsystemBase {
     return Math.abs(currentAngleDegrees - desiredAngleDegrees) < ShooterPivotConstants.kAngleTolerance;
   }
 
+  /** Stops pivot movement by setting the desired angle to the current angle. */
+  public void stopMovement(){
+    m_desiredAngle = getPosition();
+  }
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
@@ -124,19 +129,6 @@ public class ShooterPivotSubsystem extends SubsystemBase {
     m_angleController.setSetpoint(desiredAngleDegrees);
 
     m_shooterPivotMotor.set(m_angleController.calculate(currentAngleDegrees));
-
-    // if(Math.abs(currentAngleDegrees - desiredAngleDegrees) > ShooterPivotConstants.kAngleTolerance){
-    //   if(currentAngleDegrees > desiredAngleDegrees){
-    //     m_shooterPivotMotor.set(-1);
-    //   }
-    //   else if (currentAngleDegrees < desiredAngleDegrees){
-    //     m_shooterPivotMotor.set(1);
-    //   }
-    // }
-    // else {
-    //   m_shooterPivotMotor.set(0);
-    // }
-
 
   }
 

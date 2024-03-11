@@ -2,6 +2,7 @@ package frc.utils;
 
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.Constants.ShooterPivotConstants;
 
@@ -77,11 +78,15 @@ public class ShooterUtils {
         // Calculates angle between pivot and goal (horizontal view)
         double pivotAngle = pivotAngleToFacePoint(goalRelativeToPivot);
 
+        SmartDashboard.putNumber("Pivot Angle", pivotAngle); // DEBUG
+
         // Calculate hypotenuse between pivot and goal (horizontal view)
         double pivotDistance = pivotDistanceToPoint(goalRelativeToPivot);
 
         // Epic math to adjust angle (horizontal view)
         double adjustmentAngle = Math.asin(pivotDistance / ShooterPivotConstants.kPivotHeightInches);
+
+        SmartDashboard.putNumber("Adjusted Pivot Angle", pivotAngle + adjustmentAngle); // DEBUG
 
         return pivotAngle + adjustmentAngle;
     }
