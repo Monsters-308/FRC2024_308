@@ -9,7 +9,7 @@ public class RaiseBothArms extends Command {
   private final HangingSubsystem m_hangingSubsystem;
 
   /**
-   * Creates a new ExampleCommand.
+   * Raises both hanging arms until they are both fully extended.
    *
    * @param subsystem The subsystem used by this command.
    */

@@ -6,7 +6,8 @@ import com.revrobotics.CANSparkMax;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;  
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc.robot.Constants.ShooterPivotConstants;
@@ -48,6 +49,10 @@ public class ShooterPivotSubsystem extends SubsystemBase {
     pivotTab.addDouble("Pivot Angle", () -> getPosition().getDegrees());
 
     pivotTab.addBoolean("Encoder Connected", () -> m_shooterPivotMotorEncoder.isConnected());
+
+    pivotTab.add("Speaker Position", new InstantCommand(() -> setPosition(ShooterPivotConstants.kShooterPivotSpeakerPosition)));
+    
+    pivotTab.add("Pivot Down", new InstantCommand(() -> setPosition(0)));
   }
 
   /**
