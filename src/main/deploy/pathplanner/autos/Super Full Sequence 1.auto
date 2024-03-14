@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.2876934525798875,
-      "y": 7.0
+      "x": 0.92,
+      "y": 6.7
     },
-    "rotation": 180.0
+    "rotation": -118.74378918434263
   },
   "command": {
     "type": "sequential",
@@ -18,7 +18,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "ShooterPivotSpeaker"
+                  "name": "adjustToSpeaker"
                 }
               },
               {
@@ -47,15 +47,9 @@
                 }
               },
               {
-                "type": "wait",
-                "data": {
-                  "waitTime": 0.5
-                }
-              },
-              {
                 "type": "named",
                 "data": {
-                  "name": "ShooterPivotSpeaker"
+                  "name": "adjustToSpeaker"
                 }
               },
               {
@@ -80,14 +74,32 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Fetch RIng(FR) 1-1"
+                  "pathName": "Transition to Fetch RIng"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "MID POSITION(AMP)"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "adjustToSpeaker"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Launch Note"
                 }
               }
             ]
           }
         },
         {
-          "type": "parallel",
+          "type": "sequential",
           "data": {
             "commands": [
               {
@@ -99,7 +111,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Fetch RIng(FR) 1-1"
+                  "pathName": "MID LEFT TO NOTE 2"
                 }
               },
               {
@@ -107,18 +119,17 @@
                 "data": {
                   "waitTime": 0.5
                 }
-              }
-            ]
-          }
-        },
-        {
-          "type": "parallel",
-          "data": {
-            "commands": [
+              },
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Return Fetch Ring(RFR) 1-1"
+                  "pathName": "NOTE 2 TO MID LEFT"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "adjustToSpeaker"
                 }
               },
               {

@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.7859976973515199,
-      "y": 6.689056341075646
+      "x": 0.92,
+      "y": 6.7
     },
     "rotation": -122.44999999999999
   },
@@ -16,15 +16,28 @@
           "data": {
             "commands": [
               {
+                "type": "named",
+                "data": {
+                  "name": "Intake Note"
+                }
+              },
+              {
                 "type": "path",
                 "data": {
                   "pathName": "Leave Zone (LZ) 1"
                 }
-              },
+              }
+            ]
+          }
+        },
+        {
+          "type": "deadline",
+          "data": {
+            "commands": [
               {
-                "type": "named",
+                "type": "wait",
                 "data": {
-                  "name": "Intake Note"
+                  "waitTime": 0.0
                 }
               }
             ]
@@ -35,24 +48,18 @@
           "data": {
             "commands": [
               {
-                "type": "path",
+                "type": "named",
                 "data": {
-                  "pathName": "Return To Zone(RTZ) 1"
+                  "name": "adjustToSpeaker"
                 }
               },
               {
                 "type": "named",
                 "data": {
-                  "name": "ShooterPivotSpeaker"
+                  "name": "Launch Note"
                 }
               }
             ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Launch Note"
           }
         }
       ]

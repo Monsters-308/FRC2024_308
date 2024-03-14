@@ -1,0 +1,43 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 4.19,
+      "y": 4.94
+    },
+    "rotation": 169.72888571716828
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "CENTER TO NOTE 4"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "NOTE 4 TO RIGHT CENTER"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "adjustToSpeaker"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Launch Note"
+          }
+        }
+      ]
+    }
+  },
+  "folder": "AMP SIDE",
+  "choreoAuto": false
+}
