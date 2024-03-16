@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 4.16,
-      "y": 6.68
+      "x": 4.19,
+      "y": 4.94
     },
-    "rotation": -153.58
+    "rotation": 175.89
   },
   "command": {
     "type": "sequential",
@@ -18,7 +18,7 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 3.0
+                  "waitTime": 4.0
                 }
               },
               {
@@ -30,7 +30,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Transition to Fetch RIng(AMP) 1"
+                  "pathName": "MID TO NOTE 3(SOURCE)"
                 }
               }
             ]
@@ -43,7 +43,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "MID POSITION(AMP)"
+                  "pathName": "NOTE 3 TO MID(SOURCE)"
                 }
               }
             ]
@@ -71,6 +71,6 @@
       ]
     }
   },
-  "folder": "AMP SIDE",
+  "folder": "SOURCE SIDE",
   "choreoAuto": false
 }
