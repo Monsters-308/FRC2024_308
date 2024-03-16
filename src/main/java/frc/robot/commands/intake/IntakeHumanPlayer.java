@@ -1,23 +1,18 @@
 package frc.robot.commands.intake;
 
-import frc.robot.subsystems.IndexSubsystem;
 import frc.robot.subsystems.ShooterPivotSubsystem;
 import frc.robot.subsystems.ShooterIndexSubsystem;
 import edu.wpi.first.wpilibj2.command.Command; 
-import frc.robot.Constants.IndexConstants;
 import frc.robot.Constants.ShooterIndexConstants;
     
 public class IntakeHumanPlayer extends Command {
   private final ShooterPivotSubsystem m_shooterPivotSubsystem; 
   private final ShooterIndexSubsystem m_shooterIndexSubsystem;
-  private final IndexSubsystem m_hotdogRoller;
 
-  public IntakeHumanPlayer(ShooterPivotSubsystem shooterPivotSubsystem, ShooterIndexSubsystem shooterIndexSubsystem, 
-                           IndexSubsystem indexSubsystem) {
+  public IntakeHumanPlayer(ShooterPivotSubsystem shooterPivotSubsystem, ShooterIndexSubsystem shooterIndexSubsystem) {
     m_shooterPivotSubsystem = shooterPivotSubsystem; 
-    m_hotdogRoller = indexSubsystem;
     m_shooterIndexSubsystem = shooterIndexSubsystem;
-    addRequirements(shooterPivotSubsystem, indexSubsystem, shooterIndexSubsystem);
+    addRequirements(shooterPivotSubsystem, shooterIndexSubsystem);
   }
 
   // Called when the command is initially scheduled.
@@ -30,12 +25,10 @@ public class IntakeHumanPlayer extends Command {
   public void execute() {
   
     if (m_shooterPivotSubsystem.inPosition()){
-      m_hotdogRoller.setSpeed(IndexConstants.kIndexIntakeSpeed);
       m_shooterIndexSubsystem.setSpeed(ShooterIndexConstants.kIndexIntakeSpeed);
     }
 
     else {
-      m_hotdogRoller.setSpeed(0);
       m_shooterIndexSubsystem.setSpeed(0);
     }
   }
@@ -43,7 +36,6 @@ public class IntakeHumanPlayer extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_hotdogRoller.setSpeed(0);
     m_shooterIndexSubsystem.setSpeed(0);
   }
 

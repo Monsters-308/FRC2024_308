@@ -5,14 +5,13 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
+import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.IntakePivotConstants;
 import frc.robot.Constants.ShooterPivotConstants;
 import frc.robot.commands.LED.setLED;
-import frc.robot.commands.intake.IntakeDeck;
 import frc.robot.commands.intake.RunIntake;
 import frc.robot.commands.intakePivot.SetIntakeAngle;
 import frc.robot.commands.shooterIndex.IndexNoteGood;
-import frc.robot.subsystems.IndexSubsystem;
 import frc.robot.subsystems.IntakePivotSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.LEDSubsystem;
@@ -22,7 +21,7 @@ import frc.robot.subsystems.ShooterPivotSubsystem;
 public class CompleteIntake extends SequentialCommandGroup  {
 
     /** Intakes a note from the ground and then puts it into the shooter index */
-    public CompleteIntake(IntakeSubsystem intakeSubsystem, ShooterPivotSubsystem shooterPivotSubsystem, ShooterIndexSubsystem shooterIndexSubsystem, IndexSubsystem indexSubsystem, IntakePivotSubsystem intakePivotSubsystem, LEDSubsystem LEDsubsystem){
+    public CompleteIntake(IntakeSubsystem intakeSubsystem, ShooterPivotSubsystem shooterPivotSubsystem, ShooterIndexSubsystem shooterIndexSubsystem, IntakePivotSubsystem intakePivotSubsystem, LEDSubsystem LEDsubsystem){
         addCommands(
             new setLED(LEDsubsystem, LEDsubsystem::red),
 
@@ -40,7 +39,7 @@ public class CompleteIntake extends SequentialCommandGroup  {
 
             new ParallelDeadlineGroup(
                 new IndexNoteGood(shooterIndexSubsystem), 
-                new IntakeDeck(intakeSubsystem, indexSubsystem) 
+                new RunIntake(intakeSubsystem, IntakeConstants.kIntakeSpeed) 
             ),
             new InstantCommand(() -> shooterPivotSubsystem.setPosition(ShooterPivotConstants.kShooterPivotPoduim), shooterPivotSubsystem),
 

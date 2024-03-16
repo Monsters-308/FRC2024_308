@@ -297,15 +297,6 @@ public final class Constants {
     public static final double kIntakeSpeed = 1; //Speed used for intaking notes
   }
 
-  public static final class IndexConstants {
-    public static final int kIndexMotorCanID = 12; // set
-
-    // Positive should bring the game piece to the shooter
-    public static final boolean kIndexMotorInverted = true; 
-    public static final int kIndexMotorCurrentLimit = 20;
-    public static final double kIndexIntakeSpeed = .5;
-  }
-
   public static final class ShooterConstants {
         
     public static final int kTopShooterMotorCanID = 16;

@@ -15,7 +15,6 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import frc.robot.Constants.IndexConstants;
 import frc.robot.Constants.IntakePivotConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.ShooterPivotConstants;
@@ -27,7 +26,6 @@ import frc.robot.commands.drive.RobotGotoAngle;
 import frc.robot.commands.drive.TurningMotorsTest;
 import frc.robot.commands.hanging.LowerBothArms;
 import frc.robot.commands.hanging.RaiseBothArms;
-import frc.robot.commands.index.RunIndex;
 import frc.robot.commands.intake.RunIntake;
 import frc.robot.commands.intakePivot.SetIntakeAngle;
 import frc.robot.commands.shooterIndex.IndexNoteGood;
@@ -38,7 +36,6 @@ import frc.robot.commands.vision.UpdateOdometry;
 import frc.robot.subsystems.AmpFlapSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.HangingSubsystem;
-import frc.robot.subsystems.IndexSubsystem;
 import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.subsystems.IntakePivotSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -73,7 +70,6 @@ public class RobotContainer {
   private final ShooterIndexSubsystem m_shooterIndexSubsystem = new ShooterIndexSubsystem();
   private final IntakeSubsystem m_intakeSubsystem = new IntakeSubsystem();
   private final IntakePivotSubsystem m_intakePivotSubsystem = new IntakePivotSubsystem();
-  private final IndexSubsystem m_indexSubsystem = new IndexSubsystem();
   private final HangingSubsystem m_hangingSubsystem = new HangingSubsystem();
   private final AmpFlapSubsystem m_ampFlapSubsystem = new AmpFlapSubsystem();
 
@@ -120,7 +116,7 @@ public class RobotContainer {
 
     // "registerCommand" lets pathplanner identify our commands
     NamedCommands.registerCommand("Intake Note",
-      new CompleteIntake(m_intakeSubsystem, m_shooterPivotSubsystem, m_shooterIndexSubsystem, m_indexSubsystem, m_intakePivotSubsystem, m_LEDSubsystem)
+      new CompleteIntake(m_intakeSubsystem, m_shooterPivotSubsystem, m_shooterIndexSubsystem, m_intakePivotSubsystem, m_LEDSubsystem)
     );
 
     NamedCommands.registerCommand("Launch Note",
@@ -217,8 +213,6 @@ public class RobotContainer {
       .ignoringDisable(true)
     );
 
-    // I ain't creating a separate tab for this
-    Shuffleboard.getTab("Intake").add("Run Index", new RunIndex(m_indexSubsystem, 0.5));
   }
 
   /**
@@ -326,7 +320,6 @@ public class RobotContainer {
         .whileTrue(
           new ParallelCommandGroup(
             new IndexNoteGood(m_shooterIndexSubsystem),
-            new RunIndex(m_indexSubsystem, IndexConstants.kIndexIntakeSpeed),
             new RunIntake(m_intakeSubsystem, 1)
           )
         );
@@ -395,7 +388,7 @@ public class RobotContainer {
     // Y button: aim at trap
     new JoystickButton(m_coDriverController, Button.kY.value)
       .toggleOnTrue(
-        new CompleteIntake(m_intakeSubsystem, m_shooterPivotSubsystem, m_shooterIndexSubsystem, m_indexSubsystem, m_intakePivotSubsystem, m_LEDSubsystem)
+        new CompleteIntake(m_intakeSubsystem, m_shooterPivotSubsystem, m_shooterIndexSubsystem, m_intakePivotSubsystem, m_LEDSubsystem)
           .andThen(
             new ParallelCommandGroup(
               new SetIntakeAngle(m_intakePivotSubsystem, IntakePivotConstants.kIntakeInPosition),
