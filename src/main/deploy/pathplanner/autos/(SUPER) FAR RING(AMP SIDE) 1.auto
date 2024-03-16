@@ -1,0 +1,43 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 2.88,
+      "y": 6.98
+    },
+    "rotation": 180.0
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Transition to Fetch RIng"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "MID POSITION(AMP)"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "adjustToSpeaker"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Launch Note"
+          }
+        }
+      ]
+    }
+  },
+  "folder": "AMP SIDE",
+  "choreoAuto": false
+}

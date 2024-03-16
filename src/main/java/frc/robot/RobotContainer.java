@@ -90,7 +90,10 @@ public class RobotContainer {
   SendableChooser<Command> m_autonFirstAction = new SendableChooser<>();
 
   // The third note to attempt to pick up and score
-  SendableChooser<Command> m_autonSecondAction = new SendableChooser<>();
+  SendableChooser<Command> m_autonSecondAction = new SendableChooser<>(); 
+
+
+
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -172,7 +175,9 @@ public class RobotContainer {
     m_autonSecondAction.addOption("Close Note Source", new PathPlannerAuto("Close Note(SOURCE SIDE)"));
     m_autonSecondAction.addOption("Far Note Middle", new PathPlannerAuto("Far Note(CENTER)"));
     m_autonSecondAction.addOption("Far Note Amp", new PathPlannerAuto("Far Note(AMP SIDE)"));
-    m_autonSecondAction.addOption("Far Note Source", new PathPlannerAuto("Far Note(SOURCE SIDE)"));
+    m_autonSecondAction.addOption("Far Note Source", new PathPlannerAuto("Far Note(SOURCE SIDE)")); 
+
+    
 
     // Put chooser on the dashboard
     Shuffleboard.getTab("Autonomous").add("Launch First Note?", m_autonStartup).withSize(2, 1);
@@ -475,7 +480,8 @@ public class RobotContainer {
     return new SequentialCommandGroup(
       m_autonStartup.getSelected(),
       m_autonFirstAction.getSelected(), 
-      m_autonSecondAction.getSelected());
+      m_autonSecondAction.getSelected());  
+      
   }
 }
 

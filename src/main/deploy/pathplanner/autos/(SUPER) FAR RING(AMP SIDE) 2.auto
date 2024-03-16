@@ -1,0 +1,49 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 4.16,
+      "y": 6.68
+    },
+    "rotation": -155.7
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "Intake Note"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "MID LEFT TO NOTE 2"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "NOTE 2 TO MID LEFT"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "adjustToSpeaker"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Launch Note"
+          }
+        }
+      ]
+    }
+  },
+  "folder": "AMP SIDE",
+  "choreoAuto": false
+}
