@@ -390,6 +390,10 @@ public final class Constants {
     public static final double kPivotI = 0;
     public static final double kPivotD = 0;
 
+    // TODO: change these if we need sinusoidal profiling for the shooter pivot
+    public static final double kGravityOffsetMultiplier = 0; // Max output needed for when shooter pivot is parallel to ground.
+    public static final double kShooterRestingPoint = Math.toRadians(0); // Horizontal shift for when the shooter is at its resting point.
+
     //                ************* Super important constants for math **************
 
     public static final double kPivotHeightInches = 0; // Change

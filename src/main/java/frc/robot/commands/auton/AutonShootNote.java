@@ -16,12 +16,9 @@ public class AutonShootNote extends SequentialCommandGroup{
         addCommands(
             new InstantCommand(() -> shooterSubsystem.setPercent(1), shooterSubsystem),
             new WaitCommand(1.7),
-            new LaunchNote(shooterIndexSubsystem, ledSubsystem),   
-
+            new LaunchNote(shooterIndexSubsystem, ledSubsystem)
 
             //new InstantCommand(() -> shooterSubsystem.stopRollers(), shooterSubsystem) 
-
-            
         );
     }
 }

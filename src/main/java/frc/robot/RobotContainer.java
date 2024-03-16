@@ -88,12 +88,9 @@ public class RobotContainer {
 
   // The second note to pick up and score
   SendableChooser<Command> m_autonFirstAction = new SendableChooser<>();
-
-  // The third note to attempt to pick up and score
-  SendableChooser<Command> m_autonSecondAction = new SendableChooser<>(); 
-
-
-
+  SendableChooser<Command> m_autonSecondAction = new SendableChooser<>();
+  SendableChooser<Command> m_autonThirdAction = new SendableChooser<>();
+  SendableChooser<Command> m_autonFourthAction = new SendableChooser<>();
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -158,31 +155,17 @@ public class RobotContainer {
     m_autonStartup.addOption("Off", new WaitCommand(0.1));
 
     // Adding options to the sendable chooser
-    m_autonFirstAction.setDefaultOption("Do Nothing", new WaitCommand(15));
-    m_autonFirstAction.addOption("Close Note Middle", new PathPlannerAuto("Close Note(CENTER)"));
-    m_autonFirstAction.addOption("Close Note Amp", new PathPlannerAuto("Close Note(AMP SIDE)"));
-    m_autonFirstAction.addOption("Close Note Source", new PathPlannerAuto("Close Note(SOURCE SIDE)"));
-    m_autonFirstAction.addOption("Far Note Middle", new PathPlannerAuto("Far Note(CENTER)"));
-    m_autonFirstAction.addOption("Far Note Amp", new PathPlannerAuto("Far Note(AMP SIDE)"));
-    m_autonFirstAction.addOption("Far Note Source", new PathPlannerAuto("Far Note(SOURCE SIDE)"));
-    // m_autonFirstAction.addOption("(Test) One Meter", new PathPlannerAuto("Move One Meter"));
-    // m_autonFirstAction.addOption("(Test) Middle Test", new PathPlannerAuto("Simple Middle Test"));
-    // m_autonFirstAction.addOption("(Test) 4 Note Auto", new PathPlannerAuto("Simple 4 note auton"));
+    applyCommands(m_autonFirstAction);
+    applyCommands(m_autonSecondAction);
+    applyCommands(m_autonThirdAction);
+    applyCommands(m_autonFourthAction);
 
-    m_autonSecondAction.setDefaultOption("Do Nothing", new WaitCommand(15));
-    m_autonSecondAction.addOption("Close Note Middle", new PathPlannerAuto("Close Note(CENTER)"));
-    m_autonSecondAction.addOption("Close Note Amp", new PathPlannerAuto("Close Note(AMP SIDE)"));
-    m_autonSecondAction.addOption("Close Note Source", new PathPlannerAuto("Close Note(SOURCE SIDE)"));
-    m_autonSecondAction.addOption("Far Note Middle", new PathPlannerAuto("Far Note(CENTER)"));
-    m_autonSecondAction.addOption("Far Note Amp", new PathPlannerAuto("Far Note(AMP SIDE)"));
-    m_autonSecondAction.addOption("Far Note Source", new PathPlannerAuto("Far Note(SOURCE SIDE)")); 
-
-    
-
-    // Put chooser on the dashboard
+    // Put choosers on the dashboard
     Shuffleboard.getTab("Autonomous").add("Launch First Note?", m_autonStartup).withSize(2, 1);
     Shuffleboard.getTab("Autonomous").add("First Action", m_autonFirstAction).withSize(2, 1);
     Shuffleboard.getTab("Autonomous").add("Second Action", m_autonSecondAction).withSize(2, 1);
+    Shuffleboard.getTab("Autonomous").add("Third Action", m_autonThirdAction).withSize(2, 1);
+    Shuffleboard.getTab("Autonomous").add("Fourth Action", m_autonFourthAction).withSize(2, 1);
 
     // DEBUG: shuffleboard widget for resetting pose. For now I'm using a default
     // pose of 0, 0 and a rotation of 0
@@ -472,6 +455,23 @@ public class RobotContainer {
   }
 
   /**
+   * Function for adding all of our auton paths to each of the choosers
+   * @param autonChooser The sendable chooser being used for auton.
+   */
+  private void applyCommands(SendableChooser<Command> autonChooser){
+    autonChooser.setDefaultOption("Do Nothing", new WaitCommand(15));
+    autonChooser.addOption("Close Note Middle", new PathPlannerAuto("Close Note(CENTER)"));
+    autonChooser.addOption("Close Note Amp", new PathPlannerAuto("Close Note(AMP SIDE)"));
+    autonChooser.addOption("Close Note Source", new PathPlannerAuto("Close Note(SOURCE SIDE)"));
+    autonChooser.addOption("Far Note Middle", new PathPlannerAuto("Far Note(CENTER)"));
+    autonChooser.addOption("Far Note Amp", new PathPlannerAuto("Far Note(AMP SIDE)"));
+    autonChooser.addOption("Far Note Source", new PathPlannerAuto("Far Note(SOURCE SIDE)"));
+    autonChooser.addOption("(Test) One Meter", new PathPlannerAuto("Move One Meter"));
+    autonChooser.addOption("(Test) Middle Test", new PathPlannerAuto("Simple Middle Test"));
+    autonChooser.addOption("(Test) 4 Note Auto", new PathPlannerAuto("Simple 4 note auton"));
+  }
+
+  /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
    * @return the command to run in autonomous
@@ -480,8 +480,10 @@ public class RobotContainer {
     return new SequentialCommandGroup(
       m_autonStartup.getSelected(),
       m_autonFirstAction.getSelected(), 
-      m_autonSecondAction.getSelected());  
-      
+      m_autonSecondAction.getSelected(),
+      m_autonThirdAction.getSelected(),
+      m_autonFourthAction.getSelected()
+    );
   }
 }
 

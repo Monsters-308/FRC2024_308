@@ -21,6 +21,7 @@ public class LEDSubsystem extends SubsystemBase {
 
   private int m_rainbowFirstPixelHue = 0;
   private int m_policeLights = 0;
+  private int m_warningLightsTimer = 0;
   private int m_greenLights = 0;
 
 
@@ -45,7 +46,7 @@ public class LEDSubsystem extends SubsystemBase {
     
     m_led.setLength(m_ledBuffer.getLength());
 
-    // // Set the data
+    // Set the data
     m_led.setData(m_ledBuffer);
     m_led.start();
      
@@ -159,10 +160,27 @@ public class LEDSubsystem extends SubsystemBase {
     m_led.setData(m_ledBuffer);
   }
 
+  // Alternating flash between red and off
+  public void warning() {
+    // Calculate the color based on the overall warning lights counter.
+    for (int i = 0; i < m_ledBuffer.getLength(); i++) {
+      if (m_warningLightsTimer > 90) {
+        m_ledBuffer.setRGB(i, 255, 0, 0); // Set to red
+      } else {
+        m_ledBuffer.setRGB(i, 0, 0, 0); // turn off lights
+      }
+    }
+
+    m_warningLightsTimer += 6;
+    m_warningLightsTimer %= 180;
+
+    m_led.setData(m_ledBuffer);
+  }
+
   public void greenTargetDetect() {
     // Calculate the hue based on the overall policeLights value
     for (int i = 0; i < m_ledBuffer.getLength(); i++) {
-       m_ledBuffer.setHSV(i, 120, m_greenLights, 255); // Set to blue
+      m_ledBuffer.setHSV(i, 120, m_greenLights, 255); // Set to blue
 
     }
 

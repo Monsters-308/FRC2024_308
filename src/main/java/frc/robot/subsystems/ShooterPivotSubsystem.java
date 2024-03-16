@@ -121,14 +121,19 @@ public class ShooterPivotSubsystem extends SubsystemBase {
   }
 
   /** Putting this in a separate function so we can comment it out easier */
-  private void manageState(){
-    
+  private void manageState() {
     m_angleController.setSetpoint(m_desiredAngleDegrees);
 
     double currentAngleDegrees = getPosition().getDegrees();
+    
+    double currentAngleRadians = getPosition().getRadians();
+    
+    // Sinusoidal profiling to adjust for gravity
+    double gravityOffset = Math.cos(currentAngleRadians + ShooterPivotConstants.kShooterRestingPoint) * ShooterPivotConstants.kGravityOffsetMultiplier;
 
-    m_shooterPivotMotor.set(m_angleController.calculate(currentAngleDegrees));
+    // Total motor output with PID and gravity adjustment
+    double totalMotorOutput = m_angleController.calculate(currentAngleDegrees) + gravityOffset;
 
+    m_shooterPivotMotor.set(totalMotorOutput);
   }
-
 }
