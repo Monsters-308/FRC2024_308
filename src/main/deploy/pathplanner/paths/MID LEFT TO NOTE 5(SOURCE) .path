@@ -8,36 +8,36 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.170190232144719,
-        "y": 6.946431396945404
+        "x": 5.341207349081365,
+        "y": 6.9158099719708215
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 7.183516048606338,
-        "y": 5.7567874706411315
+        "x": 6.7467882304185665,
+        "y": 7.441769269503451
       },
       "prevControl": {
-        "x": 6.751342413977151,
-        "y": 5.794367786695843
+        "x": 6.21091669428201,
+        "y": 7.441769269503451
       },
       "nextControl": {
-        "x": 7.521286742036812,
-        "y": 5.727416105995004
+        "x": 7.200201417946696,
+        "y": 7.441769269503451
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 8.284942222836145,
-        "y": 5.7567874706411315
+        "x": 8.279324804263645,
+        "y": 7.441769269503451
       },
       "prevControl": {
-        "x": 7.330372871836978,
-        "y": 5.712730423671939
+        "x": 7.680819396726513,
+        "y": 7.441769269503451
       },
       "nextControl": null,
       "isLocked": false,
@@ -65,9 +65,9 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "AMP SIDE",
+  "folder": "SOURCE SIDE",
   "previewStartingState": {
-    "rotation": -155.06173448359942,
+    "rotation": -179.55795025706558,
     "velocity": 0
   },
   "useDefaultConstraints": true

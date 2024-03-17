@@ -2,23 +2,23 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.7859976973515199,
-      "y": 6.689056341075646
+      "x": 0.88,
+      "y": 4.34
     },
-    "rotation": -122.44999999999999
+    "rotation": 113.7
   },
   "command": {
     "type": "sequential",
     "data": {
       "commands": [
         {
-          "type": "parallel",
+          "type": "deadline",
           "data": {
             "commands": [
               {
-                "type": "path",
+                "type": "wait",
                 "data": {
-                  "pathName": "Leave Zone (LZ) 1"
+                  "waitTime": 2.0
                 }
               },
               {
@@ -26,6 +26,12 @@
                 "data": {
                   "name": "Intake Note"
                 }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Leave Zone (SOURCE) 1"
+                }
               }
             ]
           }
@@ -35,29 +41,23 @@
           "data": {
             "commands": [
               {
-                "type": "path",
+                "type": "named",
                 "data": {
-                  "pathName": "Return To Zone(RTZ) 1"
+                  "name": "adjustToSpeaker"
                 }
               },
               {
                 "type": "named",
                 "data": {
-                  "name": "ShooterPivotSpeaker"
+                  "name": "Launch Note"
                 }
               }
             ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Launch Note"
           }
         }
       ]
     }
   },
-  "folder": "AMP SIDE",
+  "folder": "SOURCE SIDE",
   "choreoAuto": false
 }

@@ -2,23 +2,23 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.7509152340242001,
-      "y": 4.397002070357417
+      "x": 4.19,
+      "y": 4.94
     },
-    "rotation": 120.51023740611554
+    "rotation": 175.48
   },
   "command": {
     "type": "sequential",
     "data": {
       "commands": [
         {
-          "type": "parallel",
+          "type": "deadline",
           "data": {
             "commands": [
               {
-                "type": "path",
+                "type": "wait",
                 "data": {
-                  "pathName": "FR 3-1"
+                  "waitTime": 4.0
                 }
               },
               {
@@ -26,6 +26,12 @@
                 "data": {
                   "name": "Intake Note"
                 }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "MID TO NOTE 4(SOURCE)"
+                }
               }
             ]
           }
@@ -37,22 +43,29 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "RFR 3-1"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "ShooterPivotSpeaker"
+                  "pathName": "NOTE 4 TO MID LEFT(SOURCE)"
                 }
               }
             ]
           }
         },
         {
-          "type": "named",
+          "type": "parallel",
           "data": {
-            "name": "Launch Note"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "adjustToSpeaker"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Launch Note"
+                }
+              }
+            ]
           }
         }
       ]

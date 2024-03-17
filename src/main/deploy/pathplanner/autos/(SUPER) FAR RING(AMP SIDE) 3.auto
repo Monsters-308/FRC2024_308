@@ -12,39 +12,53 @@
     "data": {
       "commands": [
         {
-          "type": "named",
+          "type": "deadline",
           "data": {
-            "name": "Intake Note"
+            "commands": [
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 3.0
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Intake Note"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "MID LEFT TO NOTE 3"
+                }
+              }
+            ]
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "MID LEFT TO NOTE 3"
+            "pathName": "NOTE 3 TO MID"
           }
         },
         {
-          "type": "wait",
+          "type": "parallel",
           "data": {
-            "waitTime": 0.5
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "NOTE 3 TO CENTER"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "adjustToSpeaker"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Launch Note"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "adjustToSpeaker"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Launch Note"
+                }
+              }
+            ]
           }
         }
       ]

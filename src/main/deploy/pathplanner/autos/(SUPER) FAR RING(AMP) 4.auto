@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 4.16,
-      "y": 6.68
+      "x": 4.19,
+      "y": 4.94
     },
-    "rotation": -153.58
+    "rotation": 169.72888571716828
   },
   "command": {
     "type": "sequential",
@@ -30,7 +30,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Transition to Fetch RIng(AMP) 1"
+                  "pathName": "MID TO NOTE 4"
                 }
               }
             ]
@@ -43,7 +43,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "MID POSITION(AMP)"
+                  "pathName": "NOTE 4 TO MID RIGHT"
                 }
               }
             ]
