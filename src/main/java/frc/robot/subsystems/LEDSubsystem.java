@@ -114,6 +114,14 @@ public class LEDSubsystem extends SubsystemBase {
     m_led.setData(m_ledBuffer);
   }
 
+  public void purple() {
+    for (var i = 0; i < m_ledBuffer.getLength(); i++) {
+        m_ledBuffer.setRGB(i, 255, 0, 255);
+    }
+
+    m_led.setData(m_ledBuffer);
+  }
+
   public void yellow() {
     for (var i = 0; i < m_ledBuffer.getLength(); i++) {
         m_ledBuffer.setRGB(i, 255, 255, 0);
@@ -128,7 +136,7 @@ public class LEDSubsystem extends SubsystemBase {
       green();
     }
 
-    else if (Math.abs(controllerX.getAsDouble()) > .9){
+    else if (Math.abs(controllerX.getAsDouble()) > .8){
       police();    
     }
 

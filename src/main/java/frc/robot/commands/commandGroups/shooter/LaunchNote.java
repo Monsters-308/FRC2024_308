@@ -14,7 +14,7 @@ public class LaunchNote extends SequentialCommandGroup {
 
     public LaunchNote(ShooterIndexSubsystem shooterIndexSubsystem, LEDSubsystem ledSubsystem){
         addCommands(
-            new setLED(ledSubsystem, ledSubsystem::teal),
+            new setLED(ledSubsystem, ledSubsystem::purple),
             new ParallelDeadlineGroup(
                 new SequentialCommandGroup(
                     new WaitUntilCommand(() -> shooterIndexSubsystem.gamePieceDetected()).withTimeout(1), 
