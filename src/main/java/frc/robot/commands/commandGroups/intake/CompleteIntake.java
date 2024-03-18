@@ -26,7 +26,7 @@ public class CompleteIntake extends SequentialCommandGroup  {
             new setLED(LEDsubsystem, LEDsubsystem::red),
 
             // Get the shooter pivot started early
-            new InstantCommand(() -> shooterPivotSubsystem.setPosition(ShooterPivotConstants.kshooterPivotDeckPosition)),
+            new InstantCommand(() -> shooterPivotSubsystem.setPosition(ShooterPivotConstants.kShooterPivotDeckPosition)),
             new ParallelCommandGroup(
                 new SetIntakeAngle(intakePivotSubsystem, IntakePivotConstants.kIntakeDownPosition),
                 new RunIntake(intakeSubsystem, 1)

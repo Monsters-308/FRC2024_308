@@ -260,8 +260,8 @@ public final class Constants {
     /*           Constants for pivot positions:            */
 
     public static final double kIntakeDownPosition = -126.7;
-    public static final double kIntakeDeckPosition = -41;
-    public static final double kIntakeInPosition = 14.7;
+    public static final double kIntakeDeckPosition = -65;
+    public static final double kIntakeInPosition = -25;
   }
 
   public static final class HangingConstants {
@@ -273,7 +273,7 @@ public final class Constants {
     public static final int kLeftArmCanID = 19; 
     public static final int kLeftArmUpperLimit = 2; 
     public static final int kLeftArmLowerLimit = 3; 
-    public static final boolean kLeftArmInverted = false; 
+    public static final boolean kLeftArmInverted = true; 
 
     public static final double kPitchP = 0.05;
     public static final double kPitchI = 0;
@@ -290,7 +290,7 @@ public final class Constants {
     public static final boolean kSensorInverted = true;
 
     // Positive intakes the piece, negative retracts the piece
-    public static final boolean kIntakeMotorInverted = false; 
+    public static final boolean kIntakeMotorInverted = true; 
     public static final int kIntakeMotorCurrentLimit = 35; // Change
 
     public static final double kHumanPlayerIntakeSpeed = .8; //oh noes sp
@@ -325,9 +325,9 @@ public final class Constants {
     public static final double kDrivingEncoderVelocityFactor = ((kWheelDiameterMeters * Math.PI)
         / kDrivingMotorReduction) / 60.0; // meters per second
 
-    public static final double kShooterP = 0.035;
+    public static final double kShooterP = 0.015;
     public static final double kShooterI = 0;
-    public static final double kShooterD = 0.3;
+    public static final double kShooterD = 0.01;
     public static final double kShooterFF = 1 / kDriveWheelFreeSpeedRps; 
     public static final double kShooterMinOutput = -1;
     public static final double kShooterMaxOutput = 1;
@@ -361,54 +361,56 @@ public final class Constants {
 
     // Positive will be tilting the pivot upwards
     public static final boolean kTurningMotorInverted = false; 
-    public static final boolean kTurningMotorEncoderInverted = false; // Change
+    public static final boolean kTurningMotorEncoderInverted = true;
     
     public static final double kShooterEncoderPositionFactor = 360; // radians
 
     // Just like with the swerve wheels, this allows us to offset the encoder by a specific amount
-    public static final double kAngleOffset = 178.2; // Change
+    public static final double kAngleOffset = 71.5 + 5.9; // Adjust as necessary
 
     // Safety: let's set max and min angles for the shooter pivot so we don't accidentally rotate too far in one direction
     public static final double kPivotMinAngle = 0; // Degrees
-    public static final double kPivotMaxAngle = 60; // Degrees
+    public static final double kPivotMaxAngle = 70; // Degrees
 
-    public static final double kAngleTolerance = 0.4;
+    public static final double kAngleTolerance = 2;
     
     public static final IdleMode kTurningMotorIdleMode = IdleMode.kBrake;
-    public static final int kTurningMotorCurrentLimit = 20; // amps
+    public static final int kTurningMotorCurrentLimit = 30; // amps
 
-    public static final double kPivotP = 0.025;
+    public static final double kPivotP = 0.005;
     public static final double kPivotI = 0;
     public static final double kPivotD = 0;
 
-    // TODO: change these if we need sinusoidal profiling for the shooter pivot
-    public static final double kGravityOffsetMultiplier = 0; // Max output needed for when shooter pivot is parallel to ground.
-    public static final double kShooterRestingPoint = Math.toRadians(0); // Horizontal shift for when the shooter is at its resting point.
+    // Constants for sinusoidal profiling
+    public static final double kGravityOffsetMultiplier = 0.05; // Max output needed for when center of mass is parallel to ground.
+    public static final double kShooterRestingPoint = Math.toRadians(69.3); // Horizontal shift for when the shooter is at its resting point.
 
     //                ************* Super important constants for math **************
 
-    public static final double kPivotHeightInches = 0; // Change
-    // The horizontal distance between the center of the robot and the pivot
-    public static final double kPivotCenterOffsetInches = 0; // Change
+    // TODO: use CAD to get pivot measurements for auto aim
+    public static final double kPivotHeightInches = 0; // The distance between the pivot and the ground
+    public static final double kPivotCenterOffsetInches = 0; // The horizontal distance between the center of the robot and the pivot
 
+    // Static pivot positions
+    public static final double kShooterPivotSpeakerPosition = 61;
     public static final double kShooterPivotAmpPosition = 50;
     public static final double kShooterPivotTrapPosition = 60;
-    public static final double kShooterPivotSpeakerPosition = 61;
+  
     public static final double kShooterPivotPoduim = 37;
-    public static final double kshooterPivotDeckPosition = 32;
+    public static final double kShooterPivotDeckPosition = 12; // Position for intaking note
   }
 
   public static final class ShooterIndexConstants {
     public static final int kMotorCanID = 10;
-    public static final int kMotorCurrentLimit = 30; 
+    public static final int kMotorCurrentLimit = 20; 
 
     public static final int kDigitalSensorPin = 8; 
 
     // Positive is intaking
-    public static final boolean kInvertMotor = true;
+    public static final boolean kInvertMotor = false;
     public static final boolean kSensorInverted = true;
     
-    public static final double kIndexIntakeSpeed = .6;
+    public static final double kIndexIntakeSpeed = .5;
   }
 
   public static final class AmpFlapConstants {

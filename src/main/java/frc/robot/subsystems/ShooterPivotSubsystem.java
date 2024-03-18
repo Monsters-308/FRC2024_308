@@ -9,6 +9,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -17,7 +18,7 @@ import frc.utils.SwerveUtils;
 
 public class ShooterPivotSubsystem extends SubsystemBase {
 
-  private final CANSparkMax m_shooterPivotMotor = new CANSparkMax(ShooterPivotConstants.kShooterPivotMotorCanID, MotorType.kBrushed);
+  private final CANSparkMax m_shooterPivotMotor = new CANSparkMax(ShooterPivotConstants.kShooterPivotMotorCanID, MotorType.kBrushless);
 
   private final DutyCycleEncoder m_shooterPivotMotorEncoder = new DutyCycleEncoder(ShooterPivotConstants.kEncoderPort);
 
@@ -60,7 +61,11 @@ public class ShooterPivotSubsystem extends SubsystemBase {
 
     pivotTab.add("Speaker Position", new InstantCommand(() -> setPosition(ShooterPivotConstants.kShooterPivotSpeakerPosition)));
     
-    pivotTab.add("Pivot Down", new InstantCommand(() -> setPosition(0)));
+    pivotTab.add("Set flat", new InstantCommand(() -> setPosition(0)));
+
+    pivotTab.add("Set 20", new InstantCommand(() -> setPosition(20)));
+    
+    pivotTab.add("Set 40", new InstantCommand(() -> setPosition(40)));
   }
 
   /**
@@ -129,10 +134,13 @@ public class ShooterPivotSubsystem extends SubsystemBase {
     double currentAngleRadians = getPosition().getRadians();
     
     // Sinusoidal profiling to adjust for gravity
-    double gravityOffset = Math.cos(currentAngleRadians + ShooterPivotConstants.kShooterRestingPoint) * ShooterPivotConstants.kGravityOffsetMultiplier;
+    double gravityOffset = Math.sin(currentAngleRadians - ShooterPivotConstants.kShooterRestingPoint) * ShooterPivotConstants.kGravityOffsetMultiplier;
 
     // Total motor output with PID and gravity adjustment
     double totalMotorOutput = m_angleController.calculate(currentAngleDegrees) + gravityOffset;
+    
+    // DEBUG: display motor output to make sure we're not stalling it too much
+    SmartDashboard.putNumber("Gravity", totalMotorOutput);
 
     m_shooterPivotMotor.set(totalMotorOutput);
   }

@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.IntakePivotConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.ShooterPivotConstants;
@@ -26,6 +27,7 @@ import frc.robot.commands.drive.RobotGotoAngle;
 import frc.robot.commands.drive.TurningMotorsTest;
 import frc.robot.commands.hanging.LowerBothArms;
 import frc.robot.commands.hanging.RaiseBothArms;
+import frc.robot.commands.intake.IntakeNote;
 import frc.robot.commands.intake.RunIntake;
 import frc.robot.commands.intakePivot.SetIntakeAngle;
 import frc.robot.commands.shooterIndex.IndexNoteGood;
@@ -45,9 +47,11 @@ import frc.robot.subsystems.ShooterIndexSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -115,12 +119,39 @@ public class RobotContainer {
             m_driveSubsystem));
 
     // "registerCommand" lets pathplanner identify our commands
-    NamedCommands.registerCommand("Intake Note",
+
+    // Complete intaking sequence
+    NamedCommands.registerCommand("Complete Intake",
       new CompleteIntake(m_intakeSubsystem, m_shooterPivotSubsystem, m_shooterIndexSubsystem, m_intakePivotSubsystem, m_LEDSubsystem)
     );
 
+    // First part: getting note in intake
+    NamedCommands.registerCommand("Intake Note",
+      new ParallelCommandGroup(
+        new SetIntakeAngle(m_intakePivotSubsystem, IntakePivotConstants.kIntakeDownPosition),
+        new IntakeNote(m_intakeSubsystem)
+      )
+    );
+
+    // Second part: putting note in shooter (Only if there's a note in the intake)
+    NamedCommands.registerCommand("Index Note",
+      new SequentialCommandGroup(
+        new SetIntakeAngle(m_intakePivotSubsystem, IntakePivotConstants.kIntakeDeckPosition),
+
+        new WaitUntilCommand(() -> m_shooterPivotSubsystem.inPosition()),
+
+        new ParallelDeadlineGroup(
+            new IndexNoteGood(m_shooterIndexSubsystem), 
+            new RunIntake(m_intakeSubsystem, IntakeConstants.kIntakeSpeed) 
+        ),
+        new InstantCommand(() -> m_shooterPivotSubsystem.setPosition(ShooterPivotConstants.kShooterPivotPoduim), m_shooterPivotSubsystem)
+      ).onlyIf(() -> m_intakeSubsystem.gamePieceDetected())
+    );
+ 
+    // Launch note only if there's actually a note to shoot
     NamedCommands.registerCommand("Launch Note",
       new AutonShootNote(m_shooterSubsystem, m_shooterIndexSubsystem, m_LEDSubsystem)
+        .onlyIf(() -> m_shooterIndexSubsystem.gamePieceDetected())
     );
 
     NamedCommands.registerCommand("ShooterPivotSpeaker",
@@ -135,21 +166,24 @@ public class RobotContainer {
       new SequentialCommandGroup(
         new PivotGoToPose(
           m_shooterPivotSubsystem,
-          ShooterPivotConstants.kshooterPivotDeckPosition
+          ShooterPivotConstants.kShooterPivotDeckPosition
           ))
       );  
 
-      NamedCommands.registerCommand("adjustToSpeaker",
-      new SequentialCommandGroup(
-        //new PivotGoToPose(m_shooterPivotSubsystem,
-          //ShooterPivotConstants.kshooterPivotDeckPosition)
-          ));  
-
+    // Auto aim pivot to speaker
+    NamedCommands.registerCommand("adjustToSpeaker",
+        new DynamicPivotToSpeaker(m_shooterPivotSubsystem, m_driveSubsystem)
+      );
+      
+    // Auto aim robot to speaker (NOTE: this uses the drive train, do not run this command while running a path)
+    NamedCommands.registerCommand("faceSpeaker",
+        new AutoAimDynamic(m_visionSubsystem, m_driveSubsystem, () -> 0, () -> 0)
+    );
 
     // Startup option
     m_autonStartup.setDefaultOption("On", new AutonShootNote(m_shooterSubsystem, m_shooterIndexSubsystem, m_LEDSubsystem));
     m_autonStartup.addOption("Off", new WaitCommand(0.1));
-
+ 
     // Adding options to the sendable chooser
     applyCommands(m_autonFirstAction);
     applyCommands(m_autonSecondAction);
@@ -324,52 +358,12 @@ public class RobotContainer {
           )
         );
 
-    // new POVButton(m_coDriverController, 270)
-    //    .toggleOnTrue(
-    //     new SequentialCommandGroup(
-    //       new InstantCommand(() -> m_intakeSubsystem.setSpeed(1)),
-    //       new InstantCommand(() -> m_IndexSubsystem.setSpeed(1)),
-    //       new IntakeNote(m_shooterIndexSubsystem)
-    //     )
-    //   );
-
-    // Left bumper: Raise hanging arms
-    new JoystickButton(m_coDriverController, Button.kLeftBumper.value)
-        .whileTrue(
-            new RaiseBothArms(
-                m_hangingSubsystem));
-
-    // Right bumper: lower hanging arms
-    new JoystickButton(m_coDriverController, Button.kRightBumper.value)
-        .whileTrue(
-            new LowerBothArms(
-                m_hangingSubsystem));
-    
-    // // Dpad up: intake note
-    // new POVButton(m_coDriverController, 0)
-    //     .toggleOnTrue(
-    //         new CompleteIntake(
-    //           m_intakeSubsystem,
-    //           m_shooterPivotSubsystem,
-    //           m_shooterIndexSubsystem,
-    //           m_indexSubsystem, 
-    //           m_intakePivotSubsystem
-    //           ));
-
     // A button: aim at speaker
     new JoystickButton(m_coDriverController, Button.kA.value)
       .toggleOnTrue(
           new PivotGoToPose(
               m_shooterPivotSubsystem,
               ShooterPivotConstants.kShooterPivotSpeakerPosition
-              ));
-
-    // A button: aim at speaker
-    new POVButton(m_coDriverController, 270)
-      .toggleOnTrue(
-          new PivotGoToPose(
-              m_shooterPivotSubsystem,
-              ShooterPivotConstants.kShooterPivotPoduim
               ));
 
     // B button: aim at amp
@@ -385,7 +379,7 @@ public class RobotContainer {
         new InstantCommand(
             m_shooterSubsystem::stopRollers, m_shooterSubsystem));
     
-    // Y button: aim at trap
+    // Y button: Intake note
     new JoystickButton(m_coDriverController, Button.kY.value)
       .toggleOnTrue(
         new CompleteIntake(m_intakeSubsystem, m_shooterPivotSubsystem, m_shooterIndexSubsystem, m_intakePivotSubsystem, m_LEDSubsystem)
@@ -397,6 +391,7 @@ public class RobotContainer {
           )
       );
 
+    // DEBUG:
     // // Dpad up: shooter pivot up
     // new POVButton(m_coDriverController, 0)
     //     .onTrue(
@@ -411,25 +406,45 @@ public class RobotContainer {
     //     .onFalse(
     //         new InstantCommand(() -> m_shooterPivotSubsystem.setSpeed(0), m_shooterPivotSubsystem));
 
-    // Dpad up: Hanging arm up
+    // Dpad up: Amp flap forwards
     new POVButton(m_coDriverController, 0)
         .onTrue(
           new InstantCommand(() -> m_ampFlapSubsystem.setSpeed(0.1), m_ampFlapSubsystem))
         .onFalse(
           new InstantCommand(() -> m_ampFlapSubsystem.setSpeed(0), m_ampFlapSubsystem));
 
-    // Dpad down: Hanging arm down
+    // Dpad down: Amp flap backwards
     new POVButton(m_coDriverController, 180)
       .onTrue(
         new InstantCommand(() -> m_ampFlapSubsystem.setSpeed(-0.1), m_ampFlapSubsystem))
       .onFalse(
           new InstantCommand(() -> m_ampFlapSubsystem.setSpeed(0), m_ampFlapSubsystem));
 
-    // Dpad Right: intaking test
+    // POV left: podium static pivot angle
+    new POVButton(m_coDriverController, 270)
+      .toggleOnTrue(
+          new PivotGoToPose(
+              m_shooterPivotSubsystem,
+              ShooterPivotConstants.kShooterPivotPoduim
+              ));
+
+    // Dpad right: bring intake in
     new POVButton(m_coDriverController, 90)
         .onTrue(
           new SetIntakeAngle(m_intakePivotSubsystem, IntakePivotConstants.kIntakeInPosition)
         );
+
+    // Left bumper: Raise hanging arms
+    new JoystickButton(m_coDriverController, Button.kLeftBumper.value)
+        .whileTrue(
+            new RaiseBothArms(
+                m_hangingSubsystem));
+
+    // Right bumper: lower hanging arms
+    new JoystickButton(m_coDriverController, Button.kRightBumper.value)
+        .whileTrue(
+            new LowerBothArms(
+                m_hangingSubsystem));
 
     // Right trigger: shoot note 
     new Trigger(() -> m_coDriverController.getRightTriggerAxis() > OIConstants.kTriggerDeadband)
@@ -461,7 +476,11 @@ public class RobotContainer {
     autonChooser.addOption("Far Note Source", new PathPlannerAuto("Far Note(SOURCE SIDE)"));
     autonChooser.addOption("(Test) One Meter", new PathPlannerAuto("Move One Meter"));
     autonChooser.addOption("(Test) Middle Test", new PathPlannerAuto("Simple Middle Test"));
-    autonChooser.addOption("(Test) 4 Note Auto", new PathPlannerAuto("Simple 4 note auton"));
+    autonChooser.addOption("Close note Amp", new PathPlannerAuto("(Super) Close NOTE(AMP SIDE)"));
+    autonChooser.addOption("far ring 1", new PathPlannerAuto("(SUPER) FAR RING(AMP SIDE) 1"));
+    autonChooser.addOption("far ring 2", new PathPlannerAuto("(SUPER) FAR RING(AMP SIDE) 2"));
+    autonChooser.addOption("far ring 3", new PathPlannerAuto("(SUPER) FAR RING(AMP SIDE) 3"));
+    autonChooser.addOption("far ring 4", new PathPlannerAuto("(SUPER) FAR RING(CENTER) 4"));
   }
 
   /**
@@ -479,4 +498,3 @@ public class RobotContainer {
     );
   }
 }
-

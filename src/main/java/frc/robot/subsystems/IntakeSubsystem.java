@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.IntakeConstants;
+import frc.robot.commands.intake.IntakeNote;
 import frc.robot.commands.intake.RunIntake;
 
 public class IntakeSubsystem extends SubsystemBase {
@@ -37,8 +38,9 @@ public class IntakeSubsystem extends SubsystemBase {
 
     Shuffleboard.getTab("Intake").addBoolean("Game Piece", () -> !m_noteSensor.get());
 
-    // Widget for testing intake motor
+    // Widgets for testing intake motor
     Shuffleboard.getTab("Intake").add("Run Intake", new RunIntake(this, 1));
+    Shuffleboard.getTab("Intake").add("Note in Intake", new IntakeNote(this));
   }
 
   /**

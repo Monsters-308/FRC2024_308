@@ -10,7 +10,7 @@ import java.util.function.DoubleSupplier;
 public class LEDSubsystem extends SubsystemBase {
 
   public final class LEDConstants {
-    public static final int ledLength = 90;
+    public static final int ledLength = 110;
     public static final int ledPort = 9;
   }
  
@@ -24,9 +24,8 @@ public class LEDSubsystem extends SubsystemBase {
   private int m_warningLightsTimer = 0;
   private int m_greenLights = 0;
 
-
   private final DoubleSupplier controllerX;
-  private DoubleSupplier targetDetect;
+  private final DoubleSupplier visionTargets;
 
   private final BooleanSupplier noteInShooter;
 
@@ -35,6 +34,7 @@ public class LEDSubsystem extends SubsystemBase {
   public LEDSubsystem(DoubleSupplier X, BooleanSupplier noteDetect, DoubleSupplier targetDetect){
     controllerX = X;
     noteInShooter = noteDetect;
+    visionTargets = targetDetect;
 
     // Must be a PWM header, not MXP or DIO
     m_led = new AddressableLED(LEDConstants.ledPort);
@@ -56,7 +56,7 @@ public class LEDSubsystem extends SubsystemBase {
   public void periodic() {    
     activeFunction.run();
 
-    if (targetDetect.getAsDouble() == 1){
+    if (visionTargets.getAsDouble() == 1){
       greenTargetDetect();
     }
     else if (noteInShooter.getAsBoolean() == true){
@@ -147,7 +147,7 @@ public class LEDSubsystem extends SubsystemBase {
       }
 
       // Increase by to make the rainbow "move"
-      m_rainbowFirstPixelHue = (m_rainbowFirstPixelHue + 1) % LEDConstants.ledLength;
+      m_rainbowFirstPixelHue = (m_rainbowFirstPixelHue + 1);
     
       m_led.setData(m_ledBuffer);
     }

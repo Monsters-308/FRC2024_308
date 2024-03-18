@@ -8,13 +8,14 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ShooterIndexConstants;
+import frc.robot.commands.shooterIndex.IndexNoteGood;
 import frc.robot.commands.shooterIndex.RunShooterIndexer;
 
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
 public class ShooterIndexSubsystem extends SubsystemBase {
 
-    private final CANSparkMax m_conveyorMotor = new CANSparkMax(ShooterIndexConstants.kMotorCanID, MotorType.kBrushed);
+    private final CANSparkMax m_conveyorMotor = new CANSparkMax(ShooterIndexConstants.kMotorCanID, MotorType.kBrushless);
     
     private final DigitalInput m_noteSensor = new DigitalInput(ShooterIndexConstants.kDigitalSensorPin);
 
@@ -38,6 +39,8 @@ public class ShooterIndexSubsystem extends SubsystemBase {
         shooterTab.addBoolean("Game Piece", () -> gamePieceDetected());
         
         shooterTab.add("Run Indexer", new RunShooterIndexer(this, 0.5));
+
+        shooterTab.add("Index Note", new IndexNoteGood(this));
     }
 
     /**
