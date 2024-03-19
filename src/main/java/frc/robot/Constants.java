@@ -341,7 +341,7 @@ public final class Constants {
     //                ************* Super important constants for math **************
 
     // Offsets from pivot to end of shooter
-    public static final double kShooterVerticalOffset = 3; // Inches // Change
+    public static final double kShooterVerticalOffset = 1.5; // Inches
     public static final double kShooterHorizontalOffset = 5; // Inches // Change
 
     // Angle of depression
@@ -387,9 +387,8 @@ public final class Constants {
 
     //                ************* Super important constants for math **************
 
-    // TODO: use CAD to get pivot measurements for auto aim
-    public static final double kPivotHeightInches = 0; // The distance between the pivot and the ground
-    public static final double kPivotCenterOffsetInches = 0; // The horizontal distance between the center of the robot and the pivot
+    public static final double kPivotHeightInches = 16.313; // The distance between the pivot and the ground
+    public static final double kPivotCenterOffsetInches = 2.505; // The horizontal distance between the center of the robot and the pivot
 
     // Static pivot positions
     public static final double kShooterPivotSpeakerPosition = 61;

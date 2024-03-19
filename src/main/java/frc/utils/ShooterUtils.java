@@ -84,7 +84,7 @@ public class ShooterUtils {
         double pivotDistance = pivotDistanceToPoint(goalRelativeToPivot);
 
         // Epic math to adjust angle (horizontal view)
-        double adjustmentAngle = Math.asin(pivotDistance / ShooterPivotConstants.kPivotHeightInches);
+        double adjustmentAngle = Math.asin(ShooterConstants.kShooterVerticalOffset / pivotDistance);
 
         SmartDashboard.putNumber("Adjusted Pivot Angle", pivotAngle + adjustmentAngle); // DEBUG
 
