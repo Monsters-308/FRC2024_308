@@ -28,6 +28,12 @@
                 }
               },
               {
+                "type": "named",
+                "data": {
+                  "name": "Index Note"
+                }
+              },
+              {
                 "type": "path",
                 "data": {
                   "pathName": "Leave Zone (SOURCE) 1"

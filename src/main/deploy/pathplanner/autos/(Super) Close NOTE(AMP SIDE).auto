@@ -18,7 +18,7 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 2.0
+                  "waitTime": 4.0
                 }
               },
               {
@@ -37,13 +37,38 @@
           }
         },
         {
-          "type": "parallel",
+          "type": "sequential",
           "data": {
             "commands": [
               {
                 "type": "named",
                 "data": {
-                  "name": "adjustToSpeaker"
+                  "name": "Index Note"
+                }
+              },
+              {
+                "type": "parallel",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "faceSpeaker"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "adjustToSpeaker"
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 0.5
                 }
               },
               {
