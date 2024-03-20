@@ -78,7 +78,7 @@ public class ShooterUtils {
         // Calculates angle between pivot and goal (horizontal view)
         double pivotAngle = pivotAngleToFacePoint(goalRelativeToPivot);
 
-        SmartDashboard.putNumber("Pivot Angle", pivotAngle); // DEBUG
+        SmartDashboard.putNumber("Shooter Angle From Pivot", Math.toDegrees(pivotAngle)); // DEBUG
 
         // Calculate hypotenuse between pivot and goal (horizontal view)
         double pivotDistance = pivotDistanceToPoint(goalRelativeToPivot);
@@ -86,7 +86,7 @@ public class ShooterUtils {
         // Epic math to adjust angle (horizontal view)
         double adjustmentAngle = Math.asin(ShooterConstants.kShooterVerticalOffset / pivotDistance);
 
-        SmartDashboard.putNumber("Adjusted Pivot Angle", pivotAngle + adjustmentAngle); // DEBUG
+        SmartDashboard.putNumber("Adjusted Shooter Angle", Math.toDegrees(pivotAngle + adjustmentAngle)); // DEBUG
 
         return pivotAngle + adjustmentAngle;
     }

@@ -103,9 +103,9 @@ public final class Constants {
     // Inversion of drive motors
     // This will vary depending on how your wheels are oriented when you zero them.
     public static final boolean kLeftFrontInverted = false;
-    public static final boolean kLeftRearInverted = false;
+    public static final boolean kLeftRearInverted = true;
     public static final boolean kRightFrontInverted = false;
-    public static final boolean kRightRearInverted = true;
+    public static final boolean kRightRearInverted = false;
 
     // Inversion of turning motors
     // Unless oriented differently, all of your turning motors should spin in the same direction.
@@ -247,7 +247,7 @@ public final class Constants {
     public static final boolean kTurningMotorEncoderInverted = false;
     public static final int kEncoderPort = 1;
     public static final double kAngleTolerance = 5;
-    public static final double kAngleOffset = -3.8;
+    public static final double kAngleOffset = -247;
 
     public static final double kShooterEncoderPositionFactor = 360; 
 
@@ -349,7 +349,7 @@ public final class Constants {
     public static final double kDistanceFromPivotToShooter = Math.hypot(kShooterVerticalOffset, kShooterHorizontalOffset);
 
     // How far upwards to aim up into the speaker (in inches)
-    public static final double kSpeakerAimHeightInches = 3; // Adjust as needed
+    public static final double kSpeakerAimHeightInches = 10; // Adjust as needed
 
   }
 
@@ -382,7 +382,7 @@ public final class Constants {
     public static final double kPivotD = 0;
 
     // Constants for sinusoidal profiling
-    public static final double kGravityOffsetMultiplier = 0.05; // Max output needed for when center of mass is parallel to ground.
+    public static final double kGravityOffsetMultiplier = 0.045; // Max output needed for when center of mass is parallel to ground.
     public static final double kShooterRestingPoint = Math.toRadians(69.3); // Horizontal shift for when the shooter is at its resting point.
 
     //                ************* Super important constants for math **************

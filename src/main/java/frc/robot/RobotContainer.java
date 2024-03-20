@@ -31,6 +31,7 @@ import frc.robot.commands.intake.IntakeNote;
 import frc.robot.commands.intake.RunIntake;
 import frc.robot.commands.intakePivot.SetIntakeAngle;
 import frc.robot.commands.shooterIndex.IndexNoteGood;
+import frc.robot.commands.shooterIndex.RunShooterIndexer;
 import frc.robot.commands.shooterPivot.DynamicPivotToSpeaker;
 import frc.robot.commands.shooterPivot.PivotGoToPose;
 import frc.robot.commands.vision.DefaultLimelightPipeline;
@@ -409,9 +410,8 @@ public class RobotContainer {
     // Dpad up: Amp flap forwards
     new POVButton(m_coDriverController, 0)
         .onTrue(
-          new InstantCommand(() -> m_ampFlapSubsystem.setSpeed(0.1), m_ampFlapSubsystem))
-        .onFalse(
-          new InstantCommand(() -> m_ampFlapSubsystem.setSpeed(0), m_ampFlapSubsystem));
+          new RunShooterIndexer(m_shooterIndexSubsystem, 0.5).withTimeout(0.3)
+        );
 
     // Dpad down: Amp flap backwards
     new POVButton(m_coDriverController, 180)

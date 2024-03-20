@@ -116,6 +116,32 @@
               "_glyph": 148,
               "_showGlyph": false
             }
+          },
+          "2,1": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/DistanceToGoal",
+              "_title": "DistanceToGoal",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "3,1": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Adjusted Pivot Angle",
+              "_title": "Adjusted Pivot Angle",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
           }
         }
       }
