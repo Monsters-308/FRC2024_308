@@ -28,6 +28,12 @@
                 }
               },
               {
+                "type": "named",
+                "data": {
+                  "name": "Index Note"
+                }
+              },
+              {
                 "type": "path",
                 "data": {
                   "pathName": "MID RIGHT TO NOTE 2"

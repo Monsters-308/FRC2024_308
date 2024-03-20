@@ -12,13 +12,13 @@
     "data": {
       "commands": [
         {
-          "type": "parallel",
+          "type": "deadline",
           "data": {
             "commands": [
               {
-                "type": "path",
+                "type": "wait",
                 "data": {
-                  "pathName": "LZ 2"
+                  "waitTime": 2.0
                 }
               },
               {
@@ -26,33 +26,45 @@
                 "data": {
                   "name": "Intake Note"
                 }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "LZ 2"
+                }
               }
             ]
           }
         },
         {
-          "type": "parallel",
+          "type": "sequential",
           "data": {
             "commands": [
               {
-                "type": "path",
+                "type": "named",
                 "data": {
-                  "pathName": "RTZ 2"
+                  "name": "Index Note"
                 }
               },
               {
                 "type": "named",
                 "data": {
-                  "name": "ShooterPivotSpeaker"
+                  "name": "adjustToSpeaker"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 0.5
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Launch Note"
                 }
               }
             ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Launch Note"
           }
         }
       ]

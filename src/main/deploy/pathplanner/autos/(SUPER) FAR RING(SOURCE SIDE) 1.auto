@@ -28,6 +28,12 @@
                 }
               },
               {
+                "type": "named",
+                "data": {
+                  "name": "Index Note"
+                }
+              },
+              {
                 "type": "path",
                 "data": {
                   "pathName": "TRANSITION TO FETCH RING 1(SOURCE)"
