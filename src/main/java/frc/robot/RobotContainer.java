@@ -21,6 +21,7 @@ import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.ShooterPivotConstants;
 import frc.robot.commands.auton.AutonShootNote;
 import frc.robot.commands.commandGroups.intake.CompleteIntake;
+import frc.robot.commands.commandGroups.intake.CompleteIntakeReverse;
 import frc.robot.commands.commandGroups.shooter.LaunchNote;
 import frc.robot.commands.drive.AutoAimDynamic;
 import frc.robot.commands.drive.RobotGotoAngle;
@@ -30,6 +31,7 @@ import frc.robot.commands.hanging.RaiseBothArms;
 import frc.robot.commands.intake.IntakeNote;
 import frc.robot.commands.intake.RunIntake;
 import frc.robot.commands.intakePivot.SetIntakeAngle;
+import frc.robot.commands.shooter.RevWheels;
 import frc.robot.commands.shooterIndex.IndexNoteGood;
 import frc.robot.commands.shooterIndex.RunShooterIndexer;
 import frc.robot.commands.shooterPivot.DynamicPivotToSpeaker;
@@ -152,8 +154,8 @@ public class RobotContainer {
  
     // Launch note only if there's actually a note to shoot
     NamedCommands.registerCommand("Launch Note",
-      new AutonShootNote(m_shooterSubsystem, m_shooterIndexSubsystem, m_shooterPivotSubsystem, m_LEDSubsystem)
-        //.onlyIf(() -> m_shooterIndexSubsystem.gamePieceDetected())
+      new AutonShootNote(m_shooterIndexSubsystem, m_LEDSubsystem)
+        .onlyIf(() -> m_shooterIndexSubsystem.gamePieceDetected())
     );
 
     NamedCommands.registerCommand("ShooterPivotSpeaker",
@@ -183,7 +185,24 @@ public class RobotContainer {
     );
 
     // Startup option
-    m_autonStartup.setDefaultOption("On", new AutonShootNote(m_shooterSubsystem, m_shooterIndexSubsystem, m_shooterPivotSubsystem, m_LEDSubsystem));
+    m_autonStartup.setDefaultOption("Dynamic", 
+      new ParallelDeadlineGroup(
+        new SequentialCommandGroup(
+          new WaitCommand(1),
+          new AutonShootNote(m_shooterIndexSubsystem, m_LEDSubsystem)
+        ),
+        new DynamicPivotToSpeaker(m_shooterPivotSubsystem, m_driveSubsystem),
+        new AutoAimDynamic(m_visionSubsystem, m_driveSubsystem, () -> 0, () -> 0)
+      )
+    );
+    
+    m_autonStartup.setDefaultOption("Static", 
+      new SequentialCommandGroup(
+        new WaitCommand(1),
+        new AutonShootNote(m_shooterIndexSubsystem, m_LEDSubsystem)
+      )
+    );
+
     m_autonStartup.addOption("Off", new WaitCommand(0.1));
  
     // Adding options to the sendable chooser
@@ -428,9 +447,10 @@ public class RobotContainer {
     // POV left: podium static pivot angle
     new POVButton(m_coDriverController, 270)
       .toggleOnTrue(
-          new PivotGoToPose(
-              m_shooterPivotSubsystem,
-              ShooterPivotConstants.kShooterPivotPoduim
+          new CompleteIntakeReverse(
+              m_intakeSubsystem,
+              m_shooterIndexSubsystem,
+              m_LEDSubsystem
               ));
 
     // Dpad right: bring intake in
@@ -494,12 +514,15 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return new SequentialCommandGroup(
-      m_autonStartup.getSelected(),
-      m_autonFirstAction.getSelected(), 
-      m_autonSecondAction.getSelected(),
-      m_autonThirdAction.getSelected(),
-      m_autonFourthAction.getSelected()
+    return new ParallelCommandGroup(
+      new RevWheels(m_shooterSubsystem),
+      new SequentialCommandGroup(
+        m_autonStartup.getSelected(),
+        m_autonFirstAction.getSelected(), 
+        m_autonSecondAction.getSelected(),
+        m_autonThirdAction.getSelected(),
+        m_autonFourthAction.getSelected()
+      )
     );
   }
 }
