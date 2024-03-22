@@ -139,6 +139,7 @@ public class RobotContainer {
       new SequentialCommandGroup(
         new SetIntakeAngle(m_intakePivotSubsystem, IntakePivotConstants.kIntakeDeckPosition),
 
+        new InstantCommand(() -> m_shooterPivotSubsystem.setPosition(ShooterPivotConstants.kShooterPivotDeckPosition)),
         new WaitUntilCommand(() -> m_shooterPivotSubsystem.inPosition()),
 
         new ParallelDeadlineGroup(
@@ -151,8 +152,8 @@ public class RobotContainer {
  
     // Launch note only if there's actually a note to shoot
     NamedCommands.registerCommand("Launch Note",
-      new AutonShootNote(m_shooterSubsystem, m_shooterIndexSubsystem, m_LEDSubsystem)
-        .onlyIf(() -> m_shooterIndexSubsystem.gamePieceDetected())
+      new AutonShootNote(m_shooterSubsystem, m_shooterIndexSubsystem, m_shooterPivotSubsystem, m_LEDSubsystem)
+        //.onlyIf(() -> m_shooterIndexSubsystem.gamePieceDetected())
     );
 
     NamedCommands.registerCommand("ShooterPivotSpeaker",
@@ -182,7 +183,7 @@ public class RobotContainer {
     );
 
     // Startup option
-    m_autonStartup.setDefaultOption("On", new AutonShootNote(m_shooterSubsystem, m_shooterIndexSubsystem, m_LEDSubsystem));
+    m_autonStartup.setDefaultOption("On", new AutonShootNote(m_shooterSubsystem, m_shooterIndexSubsystem, m_shooterPivotSubsystem, m_LEDSubsystem));
     m_autonStartup.addOption("Off", new WaitCommand(0.1));
  
     // Adding options to the sendable chooser
@@ -372,9 +373,13 @@ public class RobotContainer {
       .onTrue(
         new SequentialCommandGroup(
           new InstantCommand(
-            () -> m_shooterSubsystem.setBottomShooterSpeed(7), m_shooterSubsystem),
+            () -> m_shooterSubsystem.setBottomShooterSpeed(10), m_shooterSubsystem),
           new InstantCommand(
-            () -> m_shooterSubsystem.setTopShooterSpeed(10), m_shooterSubsystem)
+            () -> m_shooterSubsystem.setTopShooterSpeed(7), m_shooterSubsystem),
+          new InstantCommand(
+            () -> m_shooterPivotSubsystem.setPosition(60)
+          )
+
         ))
       .onFalse(
         new InstantCommand(
@@ -435,13 +440,13 @@ public class RobotContainer {
         );
 
     // Left bumper: Raise hanging arms
-    new JoystickButton(m_coDriverController, Button.kLeftBumper.value)
+    new JoystickButton(m_coDriverController, Button.kRightBumper.value)
         .whileTrue(
             new RaiseBothArms(
                 m_hangingSubsystem));
 
     // Right bumper: lower hanging arms
-    new JoystickButton(m_coDriverController, Button.kRightBumper.value)
+    new JoystickButton(m_coDriverController, Button.kLeftBumper.value)
         .whileTrue(
             new LowerBothArms(
                 m_hangingSubsystem));
@@ -468,7 +473,7 @@ public class RobotContainer {
    */
   private void applyCommands(SendableChooser<Command> autonChooser){
     autonChooser.setDefaultOption("Do Nothing", new WaitCommand(15));
-    autonChooser.addOption("Close Note Middle", new PathPlannerAuto("Close Note(CENTER)"));
+    autonChooser.addOption("Close Note Middle", new PathPlannerAuto("(Super) Close NOTE(CENTER SIDE)"));
     autonChooser.addOption("Close Note Amp", new PathPlannerAuto("Close Note(AMP SIDE)"));
     autonChooser.addOption("Close Note Source", new PathPlannerAuto("Close Note(SOURCE SIDE)"));
     autonChooser.addOption("Far Note Middle", new PathPlannerAuto("Far Note(CENTER)"));

@@ -101,12 +101,12 @@ public class DriveSubsystem extends SubsystemBase {
        * VecBuilder -> Standard deviations of model states. Increase these numbers to trust your model's state estimates less. This
        * matrix is in the form [x, y, theta]ᵀ, with units in meters and radians.
       */
-      VecBuilder.fill(0.1, 0.1, .1),
+      VecBuilder.fill(0.1, 0.1, .05),
       /**
        * Standard deviations of the vision measurements. Increase these numbers to trust global measurements from vision
        * less. This matrix is in the form [x, y, theta]ᵀ, with units in meters and radians.
       */
-      VecBuilder.fill(1.8, 1.8, 2)
+      VecBuilder.fill(2, 2, 3)
   );
 
   /** 
@@ -157,7 +157,7 @@ public class DriveSubsystem extends SubsystemBase {
         new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
             new PIDConstants(HeadingConstants.kTranslationP, HeadingConstants.kTranslationI, HeadingConstants.kTranslationD), // Translation PID constants
             new PIDConstants(5.0, 0.0, 0.0), // Rotation PID constants
-            DriveConstants.kMaxSpeedMetersPerSecond, // Max module speed, in m/s
+            3, // Max module speed, in m/s
             // Using pythagoras's theorem to find distance from robot center to module
             Math.hypot(DriveConstants.kTrackWidth / 2, DriveConstants.kWheelBase / 2), // Drive base radius in meters. Distance from robot center to furthest module.
             new ReplanningConfig() // Default path replanning config. See the API for the options here

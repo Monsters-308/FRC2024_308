@@ -13,7 +13,7 @@ public class LaunchNote extends SequentialCommandGroup {
         addCommands(
             new setLED(ledSubsystem, ledSubsystem::purple),
             new RunShooterIndexer(shooterIndexSubsystem, 1)
-                .withTimeout(0.5),
+                .withTimeout(1),
             new InstantCommand(() -> ledSubsystem.setLEDFunction(ledSubsystem::rainbow))
         );
     }

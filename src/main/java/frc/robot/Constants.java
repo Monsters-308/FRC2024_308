@@ -105,7 +105,7 @@ public final class Constants {
     public static final boolean kLeftFrontInverted = false;
     public static final boolean kLeftRearInverted = true;
     public static final boolean kRightFrontInverted = false;
-    public static final boolean kRightRearInverted = false;
+    public static final boolean kRightRearInverted = true;
 
     // Inversion of turning motors
     // Unless oriented differently, all of your turning motors should spin in the same direction.
@@ -120,7 +120,7 @@ public final class Constants {
 
     //TODO: probably not super important, but we should look into how to properly calculate current limits.
     public static final int kDrivingMotorCurrentLimit = 35; // amps
-    public static final int kTurningMotorCurrentLimit = 20; // amps
+    public static final int kTurningMotorCurrentLimit = 35; // amps
   }
 
   public static final class HeadingConstants {
@@ -159,7 +159,7 @@ public final class Constants {
     
     // Position of the speaker on the field (in meters)
     public static final Translation2d kSpeakerPosition = new Translation2d(
-      0, 5.53 
+      0, 5.54 
     );
     // Height to the bottom lip of speaker
     public static final double kSpeakerHeightInches = 78.129;
@@ -260,7 +260,7 @@ public final class Constants {
     /*           Constants for pivot positions:            */
 
     public static final double kIntakeDownPosition = -126.7;
-    public static final double kIntakeDeckPosition = -65;
+    public static final double kIntakeDeckPosition = -68;
     public static final double kIntakeInPosition = -25;
   }
 
@@ -349,7 +349,7 @@ public final class Constants {
     public static final double kDistanceFromPivotToShooter = Math.hypot(kShooterVerticalOffset, kShooterHorizontalOffset);
 
     // How far upwards to aim up into the speaker (in inches)
-    public static final double kSpeakerAimHeightInches = 10; // Adjust as needed
+    public static final double kSpeakerAimHeightInches = 27; // Adjust as needed
 
   }
 
@@ -372,7 +372,7 @@ public final class Constants {
     public static final double kPivotMinAngle = 0; // Degrees
     public static final double kPivotMaxAngle = 70; // Degrees
 
-    public static final double kAngleTolerance = 2;
+    public static final double kAngleTolerance = 5;
     
     public static final IdleMode kTurningMotorIdleMode = IdleMode.kBrake;
     public static final int kTurningMotorCurrentLimit = 30; // amps
@@ -401,7 +401,7 @@ public final class Constants {
 
   public static final class ShooterIndexConstants {
     public static final int kMotorCanID = 10;
-    public static final int kMotorCurrentLimit = 20; 
+    public static final int kMotorCurrentLimit = 25; 
 
     public static final int kDigitalSensorPin = 8; 
 
@@ -409,7 +409,7 @@ public final class Constants {
     public static final boolean kInvertMotor = false;
     public static final boolean kSensorInverted = true;
     
-    public static final double kIndexIntakeSpeed = .5;
+    public static final double kIndexIntakeSpeed = .3;
   }
 
   public static final class AmpFlapConstants {

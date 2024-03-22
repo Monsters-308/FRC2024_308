@@ -37,31 +37,38 @@
           }
         },
         {
-          "type": "sequential",
+          "type": "named",
+          "data": {
+            "name": "Index Note"
+          }
+        },
+        {
+          "type": "deadline",
           "data": {
             "commands": [
               {
-                "type": "named",
+                "type": "sequential",
                 "data": {
-                  "name": "Index Note"
+                  "commands": [
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 0.5
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Launch Note"
+                      }
+                    }
+                  ]
                 }
               },
               {
                 "type": "named",
                 "data": {
                   "name": "adjustToSpeaker"
-                }
-              },
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 0.5
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Launch Note"
                 }
               }
             ]
