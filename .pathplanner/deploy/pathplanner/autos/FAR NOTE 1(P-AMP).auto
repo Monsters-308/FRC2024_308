@@ -1,0 +1,75 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 0.88,
+      "y": 4.34
+    },
+    "rotation": 114.23
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "deadline",
+          "data": {
+            "commands": [
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 3.2
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Intake Note"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "SPEAKER TO FAR NOTE 1(P-AMP)"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "NOTE 1 TO SPEAKER(P-AMP)"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Index Note"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 1.0
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Launch Note"
+          }
+        }
+      ]
+    }
+  },
+  "folder": "AMP (PRIMAL)",
+  "choreoAuto": false
+}

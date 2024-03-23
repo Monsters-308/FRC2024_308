@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.0,
-        "y": 0.0
+        "x": 8.297461331764769,
+        "y": 5.7732087393999345
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.1180339887498945,
-        "y": 0.0
+        "x": 7.018160947199089,
+        "y": 6.874609128867381
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.0,
-        "y": 0.0
+        "x": 2.4789001597005584,
+        "y": 6.688334136763285
       },
       "prevControl": {
-        "x": 0.4793093674254445,
-        "y": 0.0
+        "x": 3.8135627411545214,
+        "y": 6.9840332402187375
       },
       "nextControl": null,
       "isLocked": false,
@@ -34,16 +34,19 @@
   "globalConstraints": {
     "maxVelocity": 3.0,
     "maxAcceleration": 3.0,
-    "maxAngularVelocity": 540.0,
+    "maxAngularVelocity": 360.0,
     "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 180.0,
+    "rotation": -142.43140797117255,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "Noah's shit",
-  "previewStartingState": null,
-  "useDefaultConstraints": false
+  "folder": "AMP SIDE",
+  "previewStartingState": {
+    "rotation": 180.0,
+    "velocity": 0
+  },
+  "useDefaultConstraints": true
 }
