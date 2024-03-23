@@ -1,18 +1,12 @@
 {
   "version": 1.0,
-  "startingPose": {
-    "position": {
-      "x": 4.16,
-      "y": 6.68
-    },
-    "rotation": -153.58
-  },
+  "startingPose": null,
   "command": {
     "type": "sequential",
     "data": {
       "commands": [
         {
-          "type": "deadline",
+          "type": "race",
           "data": {
             "commands": [
               {
@@ -22,15 +16,22 @@
                 }
               },
               {
-                "type": "named",
+                "type": "parallel",
                 "data": {
-                  "name": "Intake Note"
-                }
-              },
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "Transition to Fetch RIng(AMP) 1"
+                  "commands": [
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "Transition to Fetch RIng(AMP) 1"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Intake Note"
+                      }
+                    }
+                  ]
                 }
               }
             ]
@@ -45,6 +46,12 @@
                 "data": {
                   "pathName": "MID POSITION(AMP)"
                 }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Index Note"
+                }
               }
             ]
           }
@@ -53,12 +60,6 @@
           "type": "sequential",
           "data": {
             "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "Index Note"
-                }
-              },
               {
                 "type": "parallel",
                 "data": {

@@ -66,29 +66,37 @@ public class ShooterUtils {
     public static double shooterAngleToFacePoint(Translation2d robotPosition, Translation2d goalPosition, double goalHeight){
 
         // The horizontal distance in inches between the center of the robot and the target
-        double robotDistance = Units.metersToInches(OdometryUtils.getDistancePosToPos(robotPosition, goalPosition)); // (Birds-eye view)
+        double robotDistance = OdometryUtils.getDistancePosToPos(robotPosition, goalPosition); // (Birds-eye view)
+
+        SmartDashboard.putNumber("Auto Aim distance", robotDistance);
         
         //turns into distacne between pivot and target
         //Y axis now represents height (horizontal view)
         //returning the X and Y distacnes as a translation2d object
-        Translation2d goalRelativeToPivot = new Translation2d(
-            robotDistance-ShooterPivotConstants.kPivotCenterOffsetInches, goalHeight
-        );
+        // Translation2d goalRelativeToPivot = new Translation2d(
+        //     robotDistance-ShooterPivotConstants.kPivotCenterOffsetInches, goalHeight
+        // );
 
-        // Calculates angle between pivot and goal (horizontal view)
-        double pivotAngle = pivotAngleToFacePoint(goalRelativeToPivot);
+        // // Calculates angle between pivot and goal (horizontal view)
+        // double pivotAngle = pivotAngleToFacePoint(goalRelativeToPivot);
 
-        SmartDashboard.putNumber("Shooter Angle From Pivot", Math.toDegrees(pivotAngle)); // DEBUG
+        // SmartDashboard.putNumber("Shooter Angle From Pivot", Math.toDegrees(pivotAngle)); // DEBUG
 
-        // Calculate hypotenuse between pivot and goal (horizontal view)
-        double pivotDistance = pivotDistanceToPoint(goalRelativeToPivot);
+        // // Calculate hypotenuse between pivot and goal (horizontal view)
+        // double pivotDistance = pivotDistanceToPoint(goalRelativeToPivot);
 
-        // Epic math to adjust angle (horizontal view)
-        double adjustmentAngle = Math.asin(ShooterConstants.kShooterVerticalOffset / pivotDistance);
+        // // Epic math to adjust angle (horizontal view)
+        // double adjustmentAngle = Math.asin(ShooterConstants.kShooterVerticalOffset / pivotDistance);
 
-        SmartDashboard.putNumber("Adjusted Shooter Angle", Math.toDegrees(pivotAngle + adjustmentAngle)); // DEBUG
+        // SmartDashboard.putNumber("Adjusted Shooter Angle", Math.toDegrees(pivotAngle + adjustmentAngle)); // DEBUG
 
-        return pivotAngle + adjustmentAngle;
+        // return pivotAngle + adjustmentAngle;
+
+        double desiredAngle = 93.3 - 27.5*robotDistance + 3.16 * Math.pow(robotDistance, 2);
+
+        SmartDashboard.putNumber("Desired Pivot Angle", desiredAngle);
+
+        return desiredAngle;
     }
     
 }
