@@ -1,58 +1,46 @@
 {
   "version": 1.0,
-  "startingPose": {
-    "position": {
-      "x": 3.66,
-      "y": 2.99
-    },
-    "rotation": 144.16
-  },
+  "startingPose": null,
   "command": {
     "type": "sequential",
     "data": {
       "commands": [
         {
-          "type": "deadline",
+          "type": "race",
           "data": {
             "commands": [
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 3.5
+                  "waitTime": 2.0
                 }
               },
               {
-                "type": "named",
+                "type": "parallel",
                 "data": {
-                  "name": "Intake Note"
-                }
-              },
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "MID RIGHT TO NOTE 2"
+                  "commands": [
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "LZ 2"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Intake Note"
+                      }
+                    }
+                  ]
                 }
               }
             ]
           }
         },
         {
-          "type": "parallel",
+          "type": "named",
           "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "NOTE 2 TO CENTER(SOURCE)"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Index Note"
-                }
-              }
-            ]
+            "name": "Index Note"
           }
         },
         {
@@ -61,6 +49,23 @@
             "commands": [
               {
                 "type": "sequential",
+<<<<<<< Updated upstream
+                "data": {
+                  "commands": [
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 0.5
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Launch Note"
+                      }
+                    }
+                  ]
+=======
                 "data": {
                   "commands": [
                     {
@@ -82,6 +87,7 @@
                 "type": "named",
                 "data": {
                   "name": "faceSpeaker"
+>>>>>>> Stashed changes
                 }
               },
               {
@@ -96,6 +102,6 @@
       ]
     }
   },
-  "folder": "SOURCE SIDE",
+  "folder": "CENTER SIDE",
   "choreoAuto": false
 }

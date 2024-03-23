@@ -27,21 +27,30 @@ public class CompleteIntake extends SequentialCommandGroup  {
 
             // Get the shooter pivot started early
             new InstantCommand(() -> shooterPivotSubsystem.setPosition(ShooterPivotConstants.kShooterPivotDeckPosition)),
+
+            // Put intake down and run intake until a note is detected
             new ParallelCommandGroup(
                 new SetIntakeAngle(intakePivotSubsystem, IntakePivotConstants.kIntakeDownPosition),
                 new RunIntake(intakeSubsystem, 1)
                     .until(() -> intakeSubsystem.gamePieceDetected())
             ),
+
             new setLED(LEDsubsystem, LEDsubsystem::yellow),
+
+            // Bring intake up
             new SetIntakeAngle(intakePivotSubsystem, IntakePivotConstants.kIntakeDeckPosition),
 
+            // Make sure shooter is fully pivoted up
             new WaitUntilCommand(() -> shooterPivotSubsystem.inPosition()),
 
+            // Put note in indexer
             new ParallelDeadlineGroup(
                 new IndexNoteGood(shooterIndexSubsystem), 
                 new RunIntake(intakeSubsystem, IntakeConstants.kIntakeSpeed) 
             ),
-            new InstantCommand(() -> shooterPivotSubsystem.setPosition(ShooterPivotConstants.kShooterPivotPoduim), shooterPivotSubsystem),
+
+            // Automatically start putting shooter up again
+            new InstantCommand(() -> shooterPivotSubsystem.setPosition(ShooterPivotConstants.kShooterPivotSpeakerPosition), shooterPivotSubsystem),
 
             // Add an InstantCommand to reset the LED state after the command group finishes
             new InstantCommand(() -> LEDsubsystem.setLEDFunction(LEDsubsystem::rainbow))

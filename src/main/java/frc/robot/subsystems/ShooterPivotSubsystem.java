@@ -59,13 +59,17 @@ public class ShooterPivotSubsystem extends SubsystemBase {
 
     pivotTab.addBoolean("Encoder Connected", () -> m_shooterPivotMotorEncoder.isConnected());
 
-    pivotTab.add("Speaker Position", new InstantCommand(() -> setPosition(ShooterPivotConstants.kShooterPivotSpeakerPosition)));
+    pivotTab.add("Speaker Position", new InstantCommand(() -> setPosition(ShooterPivotConstants.kShooterPivotSpeakerPosition), this));
     
-    pivotTab.add("Set flat", new InstantCommand(() -> setPosition(0)));
+    pivotTab.add("Set flat", new InstantCommand(() -> setPosition(0), this));
 
-    pivotTab.add("Set 20", new InstantCommand(() -> setPosition(20)));
+    pivotTab.add("Set 20", new InstantCommand(() -> setPosition(20), this));
     
-    pivotTab.add("Set 40", new InstantCommand(() -> setPosition(40)));
+    pivotTab.add("Set 40", new InstantCommand(() -> setPosition(40), this));
+    
+    pivotTab.add("Decrease", new InstantCommand(() -> setPosition(getPosition().getDegrees() - 1), this));
+    
+    pivotTab.add("Increase", new InstantCommand(() -> setPosition(getPosition().getDegrees() + 1), this));
   }
 
   /**

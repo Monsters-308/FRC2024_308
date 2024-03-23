@@ -37,7 +37,7 @@ public class DynamicPivotToSpeaker extends Command {
         FieldUtils.flipRed(FieldConstants.kSpeakerPosition), 
         FieldConstants.kSpeakerHeightInches + ShooterConstants.kSpeakerAimHeightInches);
 
-    m_shooterPivotSubsystem.setPosition(Math.toDegrees(anglePivot));
+    m_shooterPivotSubsystem.setPosition(anglePivot);
   }
 
   // public void shooterPivotToCrosshair(){

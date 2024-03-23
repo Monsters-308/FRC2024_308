@@ -129,10 +129,10 @@ public final class Constants {
 
     // This is used for making the robot face a certain direction
     // TODO: look make sure you test these
-    public static final double kHeadingP = 0.05;
+    public static final double kHeadingP = 0.025;
     public static final double kHeadingI = 0;
     public static final double kHeadingD = 0.001;
-    public static final double kHeadingMaxOutput = 0.5; // Percent
+    public static final double kHeadingMaxOutput = 0.8; // Percent
     public static final double kHeadingTolerance = 1; // Degrees
 
     // TODO: remove the old auton constants and put these in there
@@ -349,7 +349,7 @@ public final class Constants {
     public static final double kDistanceFromPivotToShooter = Math.hypot(kShooterVerticalOffset, kShooterHorizontalOffset);
 
     // How far upwards to aim up into the speaker (in inches)
-    public static final double kSpeakerAimHeightInches = 27; // Adjust as needed
+    public static final double kSpeakerAimHeightInches = 28; // Adjust as needed
 
   }
 

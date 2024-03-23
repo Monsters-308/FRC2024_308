@@ -11,6 +11,7 @@ import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -23,6 +24,7 @@ import frc.robot.commands.auton.AutonShootNote;
 import frc.robot.commands.commandGroups.intake.CompleteIntake;
 import frc.robot.commands.commandGroups.intake.CompleteIntakeReverse;
 import frc.robot.commands.commandGroups.shooter.LaunchNote;
+import frc.robot.commands.commandGroups.shooter.ampFlapDown;
 import frc.robot.commands.drive.AutoAimDynamic;
 import frc.robot.commands.drive.RobotGotoAngle;
 import frc.robot.commands.drive.TurningMotorsTest;
@@ -33,7 +35,6 @@ import frc.robot.commands.intake.RunIntake;
 import frc.robot.commands.intakePivot.SetIntakeAngle;
 import frc.robot.commands.shooter.RevWheels;
 import frc.robot.commands.shooterIndex.IndexNoteGood;
-import frc.robot.commands.shooterIndex.RunShooterIndexer;
 import frc.robot.commands.shooterPivot.DynamicPivotToSpeaker;
 import frc.robot.commands.shooterPivot.PivotGoToPose;
 import frc.robot.commands.vision.DefaultLimelightPipeline;
@@ -83,6 +84,7 @@ public class RobotContainer {
   // Controllers
   final XboxController m_driverController = new XboxController(OIConstants.kDriverControllerPort);
   final XboxController m_coDriverController = new XboxController(OIConstants.kCoDriverControllerPort);
+  final Joystick m_buttonBox = new Joystick(2);
 
   private final LEDSubsystem m_LEDSubsystem = new LEDSubsystem(() -> m_driverController.getLeftY(), () -> m_shooterIndexSubsystem.gamePieceDetected(), () -> m_visionSubsystem.getTargets());
 
@@ -141,7 +143,7 @@ public class RobotContainer {
       new SequentialCommandGroup(
         new SetIntakeAngle(m_intakePivotSubsystem, IntakePivotConstants.kIntakeDeckPosition),
 
-        new InstantCommand(() -> m_shooterPivotSubsystem.setPosition(ShooterPivotConstants.kShooterPivotDeckPosition)),
+        new InstantCommand(() -> m_shooterPivotSubsystem.setPosition(ShooterPivotConstants.kShooterPivotDeckPosition), m_shooterPivotSubsystem),
         new WaitUntilCommand(() -> m_shooterPivotSubsystem.inPosition()),
 
         new ParallelDeadlineGroup(
@@ -155,7 +157,7 @@ public class RobotContainer {
     // Launch note only if there's actually a note to shoot
     NamedCommands.registerCommand("Launch Note",
       new AutonShootNote(m_shooterIndexSubsystem, m_LEDSubsystem)
-        .onlyIf(() -> m_shooterIndexSubsystem.gamePieceDetected())
+        //.onlyIf(() -> m_shooterIndexSubsystem.gamePieceDetected())
     );
 
     NamedCommands.registerCommand("ShooterPivotSpeaker",
@@ -184,10 +186,16 @@ public class RobotContainer {
         new AutoAimDynamic(m_visionSubsystem, m_driveSubsystem, () -> 0, () -> 0)
     );
 
+    // Rev Shooter Wheels
+    NamedCommands.registerCommand("Rev Shooter",
+        new RevWheels(m_shooterSubsystem)
+    );
+
     // Startup option
     m_autonStartup.setDefaultOption("Dynamic", 
       new ParallelDeadlineGroup(
         new SequentialCommandGroup(
+          new InstantCommand(() -> m_shooterSubsystem.setPercent(1)),
           new WaitCommand(1),
           new AutonShootNote(m_shooterIndexSubsystem, m_LEDSubsystem)
         ),
@@ -196,8 +204,9 @@ public class RobotContainer {
       )
     );
     
-    m_autonStartup.setDefaultOption("Static", 
+    m_autonStartup.addOption("Static", 
       new SequentialCommandGroup(
+        new InstantCommand(() -> m_shooterSubsystem.setPercent(1)),
         new WaitCommand(1),
         new AutonShootNote(m_shooterIndexSubsystem, m_LEDSubsystem)
       )
@@ -396,9 +405,23 @@ public class RobotContainer {
           new InstantCommand(
             () -> m_shooterSubsystem.setTopShooterSpeed(7), m_shooterSubsystem),
           new InstantCommand(
-            () -> m_shooterPivotSubsystem.setPosition(60)
+            () -> m_shooterPivotSubsystem.setPosition(60), m_shooterPivotSubsystem
           )
-
+        ))
+      .onFalse(
+        new InstantCommand(
+            m_shooterSubsystem::stopRollers, m_shooterSubsystem)
+      );
+    new JoystickButton(m_buttonBox, 5)
+      .onTrue(
+        new SequentialCommandGroup(
+          new InstantCommand(
+            () -> m_shooterSubsystem.setBottomShooterSpeed(10), m_shooterSubsystem),
+          new InstantCommand(
+            () -> m_shooterSubsystem.setTopShooterSpeed(7), m_shooterSubsystem),
+          new InstantCommand(
+            () -> m_shooterPivotSubsystem.setPosition(60), m_shooterPivotSubsystem
+          )
         ))
       .onFalse(
         new InstantCommand(
@@ -406,6 +429,16 @@ public class RobotContainer {
     
     // Y button: Intake note
     new JoystickButton(m_coDriverController, Button.kY.value)
+      .toggleOnTrue(
+        new CompleteIntake(m_intakeSubsystem, m_shooterPivotSubsystem, m_shooterIndexSubsystem, m_intakePivotSubsystem, m_LEDSubsystem)
+          .andThen(
+            new ParallelCommandGroup(
+              new SetIntakeAngle(m_intakePivotSubsystem, IntakePivotConstants.kIntakeInPosition),
+              new InstantCommand(() -> m_LEDSubsystem.setLEDFunction(m_LEDSubsystem::rainbow))
+            )
+          )
+      );
+    new JoystickButton(m_buttonBox, 2)
       .toggleOnTrue(
         new CompleteIntake(m_intakeSubsystem, m_shooterPivotSubsystem, m_shooterIndexSubsystem, m_intakePivotSubsystem, m_LEDSubsystem)
           .andThen(
@@ -433,16 +466,24 @@ public class RobotContainer {
 
     // Dpad up: Amp flap forwards
     new POVButton(m_coDriverController, 0)
-        .onTrue(
-          new RunShooterIndexer(m_shooterIndexSubsystem, 0.5).withTimeout(0.3)
-        );
+      .onTrue(
+          new InstantCommand(() -> m_ampFlapSubsystem.setSpeed(0.2), m_ampFlapSubsystem))
+      .onFalse(
+          new InstantCommand(() -> m_ampFlapSubsystem.setSpeed(0), m_ampFlapSubsystem));
 
     // Dpad down: Amp flap backwards
     new POVButton(m_coDriverController, 180)
       .onTrue(
-        new InstantCommand(() -> m_ampFlapSubsystem.setSpeed(-0.1), m_ampFlapSubsystem))
+          new InstantCommand(() -> m_ampFlapSubsystem.setSpeed(-0.2), m_ampFlapSubsystem))
       .onFalse(
           new InstantCommand(() -> m_ampFlapSubsystem.setSpeed(0), m_ampFlapSubsystem));
+
+    // Button box flap
+    new JoystickButton(m_buttonBox, 6)
+      .onTrue(
+        new InstantCommand(() -> m_ampFlapSubsystem.setSpeed(0.2), m_ampFlapSubsystem))
+      .onFalse(
+        new ampFlapDown(m_ampFlapSubsystem));
 
     // POV left: podium static pivot angle
     new POVButton(m_coDriverController, 270)
@@ -464,15 +505,29 @@ public class RobotContainer {
         .whileTrue(
             new RaiseBothArms(
                 m_hangingSubsystem));
+    new JoystickButton(m_buttonBox, 7)
+        .whileTrue(
+            new RaiseBothArms(
+                m_hangingSubsystem));
 
     // Right bumper: lower hanging arms
     new JoystickButton(m_coDriverController, Button.kLeftBumper.value)
         .whileTrue(
             new LowerBothArms(
                 m_hangingSubsystem));
+    new JoystickButton(m_buttonBox, 8)
+        .whileTrue(
+            new LowerBothArms(
+                m_hangingSubsystem));
 
     // Right trigger: shoot note 
     new Trigger(() -> m_coDriverController.getRightTriggerAxis() > OIConstants.kTriggerDeadband)
+      .toggleOnTrue(
+        new LaunchNote(m_shooterIndexSubsystem, m_LEDSubsystem).andThen(
+          new InstantCommand(() -> m_shooterIndexSubsystem.setSpeed(0), m_shooterIndexSubsystem)
+        )
+      );
+    new JoystickButton(m_buttonBox, 4)
       .toggleOnTrue(
         new LaunchNote(m_shooterIndexSubsystem, m_LEDSubsystem).andThen(
           new InstantCommand(() -> m_shooterIndexSubsystem.setSpeed(0), m_shooterIndexSubsystem)
@@ -485,6 +540,11 @@ public class RobotContainer {
         new InstantCommand(() -> m_shooterSubsystem.setPercent(1), m_shooterSubsystem))
       .onFalse(
         new InstantCommand(m_shooterSubsystem::stopRollers, m_shooterSubsystem));
+    new JoystickButton(m_buttonBox, 1)
+      .onTrue(
+        new InstantCommand(() -> m_shooterSubsystem.setPercent(1), m_shooterSubsystem))
+      .onFalse(
+        new InstantCommand(m_shooterSubsystem::stopRollers, m_shooterSubsystem));
   }
 
   /**
@@ -493,19 +553,22 @@ public class RobotContainer {
    */
   private void applyCommands(SendableChooser<Command> autonChooser){
     autonChooser.setDefaultOption("Do Nothing", new WaitCommand(15));
-    autonChooser.addOption("Close Note Middle", new PathPlannerAuto("(Super) Close NOTE(CENTER SIDE)"));
-    autonChooser.addOption("Close Note Amp", new PathPlannerAuto("Close Note(AMP SIDE)"));
-    autonChooser.addOption("Close Note Source", new PathPlannerAuto("Close Note(SOURCE SIDE)"));
-    autonChooser.addOption("Far Note Middle", new PathPlannerAuto("Far Note(CENTER)"));
-    autonChooser.addOption("Far Note Amp", new PathPlannerAuto("Far Note(AMP SIDE)"));
-    autonChooser.addOption("Far Note Source", new PathPlannerAuto("Far Note(SOURCE SIDE)"));
-    autonChooser.addOption("(Test) One Meter", new PathPlannerAuto("Move One Meter"));
-    autonChooser.addOption("(Test) Middle Test", new PathPlannerAuto("Simple Middle Test"));
-    autonChooser.addOption("Close note Amp", new PathPlannerAuto("(Super) Close NOTE(AMP SIDE)"));
-    autonChooser.addOption("far ring 1", new PathPlannerAuto("(SUPER) FAR RING(AMP SIDE) 1"));
-    autonChooser.addOption("far ring 2", new PathPlannerAuto("(SUPER) FAR RING(AMP SIDE) 2"));
-    autonChooser.addOption("far ring 3", new PathPlannerAuto("(SUPER) FAR RING(AMP SIDE) 3"));
-    autonChooser.addOption("far ring 4", new PathPlannerAuto("(SUPER) FAR RING(CENTER) 4"));
+    autonChooser.addOption("Close Note Middle", new PathPlannerAuto("AutoAim Close NOTE(CENTER SIDE)"));
+    // //autonChooser.addOption("Close Note Amp", new PathPlannerAuto("Close Note(AMP SIDE)"));
+    // // //autonChooser.addOption("Close Note Source", new PathPlannerAuto("Close Note(SOURCE SIDE)"));
+    // // //autonChooser.addOption("Far Note Middle", new PathPlannerAuto("Far Note(CENTER)"));
+    // // //autonChooser.addOption("Far Note Amp", new PathPlannerAuto("Far Note(AMP SIDE)"));
+    // // //autonChooser.addOption("Far Note Source", new PathPlannerAuto("Far Note(SOURCE SIDE)"));
+    // // //autonChooser.addOption("(Test) One Meter", new PathPlannerAuto("Move One Meter"));
+    // // //autonChooser.addOption("(Test) Middle Test", new PathPlannerAuto("Simple Middle Test"));
+    // // autonChooser.addOption("Close note Amp", new PathPlannerAuto("AutoAim Close NOTE(AMP SIDE)"));
+    // // autonChooser.addOption("source side 2 far", new PathPlannerAuto("AutoAim FAR RING(SOURCE SIDE) 2"));
+    // autonChooser.addOption("source side 1 far", new PathPlannerAuto("AutoAim FAR RING(SOURCE SIDE) 1"));
+    // autonChooser.addOption("source side far", new PathPlannerAuto("AutoAim FAR RING(SOURCE SIDE)"));
+    //autonChooser.addOption("far ring 1", new PathPlannerAuto("AutoAim FAR RING(AMP SIDE) 1"));
+    //autonChooser.addOption("far ring 2", new PathPlannerAuto("AutoAim FAR RING(AMP SIDE) 2"));
+    //autonChooser.addOption("far ring 3", new PathPlannerAuto("AutoAim FAR RING(AMP SIDE) 3"));
+    //autonChooser.addOption("far ring 4", new PathPlannerAuto("AutoAim FAR RING(CENTER) 4"));
   }
 
   /**
@@ -514,15 +577,15 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return new ParallelCommandGroup(
-      new RevWheels(m_shooterSubsystem),
-      new SequentialCommandGroup(
-        m_autonStartup.getSelected(),
-        m_autonFirstAction.getSelected(), 
-        m_autonSecondAction.getSelected(),
-        m_autonThirdAction.getSelected(),
-        m_autonFourthAction.getSelected()
-      )
-    );
+      return new SequentialCommandGroup(
+        // m_autonStartup.getSelected(),
+        // m_autonFirstAction.getSelected(), 
+        // m_autonSecondAction.getSelected(),
+        // m_autonThirdAction.getSelected(),
+        // m_autonFourthAction.getSelected()
+        new AutonShootNote(m_shooterIndexSubsystem, m_LEDSubsystem),
+        new PathPlannerAuto("AutoAim Close NOTE(CENTER SIDE)"),
+        new PathPlannerAuto("AutoAim Close NOTE(AMP SIDE)")
+      );
   }
 }

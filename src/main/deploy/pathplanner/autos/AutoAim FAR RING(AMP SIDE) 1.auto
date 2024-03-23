@@ -1,36 +1,37 @@
 {
   "version": 1.0,
-  "startingPose": {
-    "position": {
-      "x": 2.88,
-      "y": 6.98
-    },
-    "rotation": -179.5459900085515
-  },
+  "startingPose": null,
   "command": {
     "type": "sequential",
     "data": {
       "commands": [
         {
-          "type": "deadline",
+          "type": "race",
           "data": {
             "commands": [
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 3.0
+                  "waitTime": 5.0
                 }
               },
               {
-                "type": "named",
+                "type": "parallel",
                 "data": {
-                  "name": "Intake Note"
-                }
-              },
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "Transition to Fetch RIng(AMP) 1"
+                  "commands": [
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "Transition to Fetch RIng(AMP) 1"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Intake Note"
+                      }
+                    }
+                  ]
                 }
               }
             ]
@@ -56,38 +57,38 @@
           }
         },
         {
-          "type": "deadline",
+          "type": "sequential",
           "data": {
             "commands": [
               {
-                "type": "sequential",
+                "type": "parallel",
                 "data": {
                   "commands": [
                     {
-                      "type": "wait",
+                      "type": "named",
                       "data": {
-                        "waitTime": 1.0
+                        "name": "faceSpeaker"
                       }
                     },
                     {
                       "type": "named",
                       "data": {
-                        "name": "Launch Note"
+                        "name": "adjustToSpeaker"
                       }
                     }
                   ]
                 }
               },
               {
-                "type": "named",
+                "type": "wait",
                 "data": {
-                  "name": "faceSpeaker"
+                  "waitTime": 1.0
                 }
               },
               {
                 "type": "named",
                 "data": {
-                  "name": "adjustToSpeaker"
+                  "name": "Launch Note"
                 }
               }
             ]
