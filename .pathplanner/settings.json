@@ -4,14 +4,18 @@
   "holonomicMode": true,
   "pathFolders": [
     "AMP SIDE",
+    "AMP SIDE (PRIMAL)",
+    "CENTER SIDE (PRIMAL)",
     "CENTER SIDE",
+    "SOURCE SIDE (PRIMAL)",
     "SOURCE SIDE"
   ],
   "autoFolders": [
     "AMP SIDE",
     "CENTER SIDE",
-    "TEST",
-    "SOURCE SIDE"
+    "AMP (PRIMAL)",
+    "SOURCE SIDE",
+    "TEST"
   ],
   "defaultMaxVel": 3.0,
   "defaultMaxAccel": 3.0,

@@ -18,7 +18,7 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 0.0
+                  "waitTime": 4.0
                 }
               },
               {
@@ -30,7 +30,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": null
+                  "pathName": "SPEAKER TO NOTE 3(P-AMP)"
                 }
               }
             ]
@@ -43,7 +43,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": null
+                  "pathName": "NOTE 3 TO SPEAKER(P-AMP)"
                 }
               },
               {
@@ -56,46 +56,20 @@
           }
         },
         {
-          "type": "deadline",
+          "type": "wait",
           "data": {
-            "commands": [
-              {
-                "type": "sequential",
-                "data": {
-                  "commands": [
-                    {
-                      "type": "wait",
-                      "data": {
-                        "waitTime": 1.0
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "Launch Note"
-                      }
-                    }
-                  ]
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "faceSpeaker"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "adjustToSpeaker"
-                }
-              }
-            ]
+            "waitTime": 1.0
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Launch Note"
           }
         }
       ]
     }
   },
-  "folder": null,
+  "folder": "AMP (PRIMAL)",
   "choreoAuto": false
 }
