@@ -1,0 +1,25 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 0.8796215838045712,
+      "y": 4.34
+    },
+    "rotation": 110.46466441672341
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "JUST LEAVE (SOURCE) "
+          }
+        }
+      ]
+    }
+  },
+  "folder": "SOURCE SIDE",
+  "choreoAuto": false
+}

@@ -28,12 +28,6 @@
                 }
               },
               {
-                "type": "named",
-                "data": {
-                  "name": "Index Note"
-                }
-              },
-              {
                 "type": "path",
                 "data": {
                   "pathName": "Leave Zone (SOURCE) 1"
@@ -43,19 +37,44 @@
           }
         },
         {
-          "type": "parallel",
+          "type": "named",
+          "data": {
+            "name": "Index Note"
+          }
+        },
+        {
+          "type": "deadline",
           "data": {
             "commands": [
               {
-                "type": "named",
+                "type": "sequential",
                 "data": {
-                  "name": "adjustToSpeaker"
+                  "commands": [
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 1.0
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Launch Note"
+                      }
+                    }
+                  ]
                 }
               },
               {
                 "type": "named",
                 "data": {
-                  "name": "Launch Note"
+                  "name": "faceSpeaker"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "adjustToSpeaker"
                 }
               }
             ]

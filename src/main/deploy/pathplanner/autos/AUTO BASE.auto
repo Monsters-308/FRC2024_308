@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 3.26,
-      "y": 2.99
+      "x": 2.88,
+      "y": 5.55
     },
-    "rotation": 144.16
+    "rotation": 180.0
   },
   "command": {
     "type": "sequential",
@@ -18,7 +18,7 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 3.5
+                  "waitTime": 0.0
                 }
               },
               {
@@ -30,7 +30,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "MID RIGHT TO NOTE 5 (AMP)"
+                  "pathName": null
                 }
               }
             ]
@@ -43,7 +43,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "NOTE 5 TO MID RIGHT"
+                  "pathName": null
                 }
               },
               {
@@ -96,6 +96,6 @@
       ]
     }
   },
-  "folder": "AMP SIDE",
+  "folder": null,
   "choreoAuto": false
 }

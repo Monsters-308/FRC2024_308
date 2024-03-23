@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 4.16,
-      "y": 6.68
+      "x": 2.88,
+      "y": 6.98
     },
-    "rotation": -153.58
+    "rotation": -179.5459900085515
   },
   "command": {
     "type": "sequential",
@@ -18,7 +18,7 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 5.0
+                  "waitTime": 3.0
                 }
               },
               {
@@ -45,49 +45,49 @@
                 "data": {
                   "pathName": "MID POSITION(AMP)"
                 }
-              }
-            ]
-          }
-        },
-        {
-          "type": "sequential",
-          "data": {
-            "commands": [
+              },
               {
                 "type": "named",
                 "data": {
                   "name": "Index Note"
                 }
-              },
+              }
+            ]
+          }
+        },
+        {
+          "type": "deadline",
+          "data": {
+            "commands": [
               {
-                "type": "parallel",
+                "type": "sequential",
                 "data": {
                   "commands": [
                     {
-                      "type": "named",
+                      "type": "wait",
                       "data": {
-                        "name": "faceSpeaker"
+                        "waitTime": 1.0
                       }
                     },
                     {
                       "type": "named",
                       "data": {
-                        "name": "adjustToSpeaker"
+                        "name": "Launch Note"
                       }
                     }
                   ]
                 }
               },
               {
-                "type": "wait",
+                "type": "named",
                 "data": {
-                  "waitTime": 1.0
+                  "name": "faceSpeaker"
                 }
               },
               {
                 "type": "named",
                 "data": {
-                  "name": "Launch Note"
+                  "name": "adjustToSpeaker"
                 }
               }
             ]

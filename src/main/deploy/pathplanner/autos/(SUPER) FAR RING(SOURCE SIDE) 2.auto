@@ -18,19 +18,13 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 5.0
+                  "waitTime": 3.5
                 }
               },
               {
                 "type": "named",
                 "data": {
                   "name": "Intake Note"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Index Note"
                 }
               },
               {
@@ -51,24 +45,49 @@
                 "data": {
                   "pathName": "NOTE 2 TO CENTER(SOURCE)"
                 }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Index Note"
+                }
               }
             ]
           }
         },
         {
-          "type": "parallel",
+          "type": "deadline",
           "data": {
             "commands": [
               {
-                "type": "named",
+                "type": "sequential",
                 "data": {
-                  "name": "adjustToSpeaker"
+                  "commands": [
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 1.0
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Launch Note"
+                      }
+                    }
+                  ]
                 }
               },
               {
                 "type": "named",
                 "data": {
-                  "name": "Launch Note"
+                  "name": "faceSpeaker"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "adjustToSpeaker"
                 }
               }
             ]

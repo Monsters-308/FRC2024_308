@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 3.26,
-      "y": 2.99
+      "x": 2.88,
+      "y": 5.55
     },
-    "rotation": 144.16
+    "rotation": 180.0
   },
   "command": {
     "type": "sequential",
@@ -30,7 +30,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "MID RIGHT TO NOTE 5 (AMP)"
+                  "pathName": "FIRST NOTE TO BOTTOM MIDDLE NOTE"
                 }
               }
             ]
@@ -43,7 +43,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "NOTE 5 TO MID RIGHT"
+                  "pathName": "BOTTOM MIDDLE NOTE TO CENTER"
                 }
               },
               {
@@ -96,6 +96,6 @@
       ]
     }
   },
-  "folder": "AMP SIDE",
+  "folder": "CENTER SIDE",
   "choreoAuto": false
 }
