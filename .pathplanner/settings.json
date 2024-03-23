@@ -11,9 +11,10 @@
     "SOURCE SIDE"
   ],
   "autoFolders": [
+    "AMP (PRIMAL)",
     "AMP SIDE",
     "CENTER SIDE",
-    "AMP (PRIMAL)",
+    "SOURCE (PRIMAL)",
     "SOURCE SIDE",
     "TEST"
   ],
