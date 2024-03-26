@@ -29,7 +29,7 @@ public final class Constants {
   public static final class DriveConstants {
     // Driving Parameters - Note that these are not the maximum capable speeds of
     // the robot, rather the allowed maximum speeds
-    public static final double kMaxSpeedMetersPerSecond = 5;
+    public static final double kMaxSpeedMetersPerSecond = 5.5;
     public static final double kMaxAngularSpeed = 2 * Math.PI; // radians per second
 
     public static final double kMagnitudeSlewRate = 5 * kMaxSpeedMetersPerSecond; // meters per second^2
@@ -51,14 +51,14 @@ public final class Constants {
     public static final double kBackRightChassisAngularOffset = 0;
 
     // SPARK MAX CAN IDs
-    public static final int kFrontLeftDrivingCanId = 8;
+    public static final int kFrontLeftDrivingCanId = 2;
     public static final int kRearLeftDrivingCanId = 6;
-    public static final int kFrontRightDrivingCanId = 2;
+    public static final int kFrontRightDrivingCanId = 8;
     public static final int kRearRightDrivingCanId = 4;
 
-    public static final int kFrontLeftTurningCanId = 9;
+    public static final int kFrontLeftTurningCanId = 3;
     public static final int kRearLeftTurningCanId = 7;
-    public static final int kFrontRightTurningCanId = 3;
+    public static final int kFrontRightTurningCanId = 9;
     public static final int kRearRightTurningCanId = 5;
   }
 
@@ -260,8 +260,8 @@ public final class Constants {
     /*           Constants for pivot positions:            */
 
     public static final double kIntakeDownPosition = -126.7;
-    public static final double kIntakeDeckPosition = -68;
-    public static final double kIntakeInPosition = -25;
+    public static final double kIntakeDeckPosition = -64;
+    public static final double kIntakeInPosition = -25; 
   }
 
   public static final class HangingConstants {

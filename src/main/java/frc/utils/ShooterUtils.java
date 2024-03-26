@@ -68,7 +68,7 @@ public class ShooterUtils {
         // The horizontal distance in inches between the center of the robot and the target
         double robotDistance = OdometryUtils.getDistancePosToPos(robotPosition, goalPosition); // (Birds-eye view)
 
-        SmartDashboard.putNumber("Auto Aim distance", robotDistance);
+        //SmartDashboard.putNumber("Auto Aim distance", robotDistance); // DEBUG
         
         //turns into distacne between pivot and target
         //Y axis now represents height (horizontal view)
@@ -92,9 +92,10 @@ public class ShooterUtils {
 
         // return pivotAngle + adjustmentAngle;
 
+        // Equation for pivot angle
         double desiredAngle = 93.3 - 27.5*robotDistance + 3.16 * Math.pow(robotDistance, 2);
 
-        SmartDashboard.putNumber("Desired Pivot Angle", desiredAngle);
+        SmartDashboard.putNumber("Desired Pivot Angle", desiredAngle); // DEBUG
 
         return desiredAngle;
     }

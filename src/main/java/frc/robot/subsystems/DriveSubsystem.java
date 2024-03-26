@@ -141,12 +141,12 @@ public class DriveSubsystem extends SubsystemBase {
     swerveTab.add("Field", m_field)
       .withSize(6, 3);
     
-    swerveTab.addDouble("robot X", () -> getPose().getX());
-    swerveTab.addDouble("robot Y", () -> getPose().getY());
+    // swerveTab.addDouble("robot X", () -> getPose().getX());
+    // swerveTab.addDouble("robot Y", () -> getPose().getY());
 
-    // Gyro values for testing
-    swerveTab.addDouble("gyro pitch", () -> m_gyro.getPitch());
-    swerveTab.addDouble("gyro roll", () -> m_gyro.getRoll());
+    // // Gyro values for testing
+    // swerveTab.addDouble("gyro pitch", () -> m_gyro.getPitch());
+    // swerveTab.addDouble("gyro roll", () -> m_gyro.getRoll());
     
     // Configure the AutoBuilder
     AutoBuilder.configureHolonomic(

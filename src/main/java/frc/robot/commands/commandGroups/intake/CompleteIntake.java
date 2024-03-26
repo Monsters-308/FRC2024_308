@@ -50,11 +50,15 @@ public class CompleteIntake extends SequentialCommandGroup  {
             ),
 
             // Automatically start putting shooter up again
-            new InstantCommand(() -> shooterPivotSubsystem.setPosition(ShooterPivotConstants.kShooterPivotSpeakerPosition), shooterPivotSubsystem),
+            //new InstantCommand(() -> shooterPivotSubsystem.setPosition(ShooterPivotConstants.kShooterPivotSpeakerPosition), shooterPivotSubsystem),
 
             // Add an InstantCommand to reset the LED state after the command group finishes
             new InstantCommand(() -> LEDsubsystem.setLEDFunction(LEDsubsystem::rainbow))
         );
     }
 
+    @Override
+    public InterruptionBehavior getInterruptionBehavior(){
+        return InterruptionBehavior.kCancelIncoming;
+    }
 }

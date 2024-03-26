@@ -12,7 +12,7 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 5.0
+                  "waitTime": 3.0
                 }
               },
               {
@@ -22,7 +22,7 @@
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "TRANSITION TO FETCH RING 1(SOURCE)"
+                        "pathName": "closeNoteSource"
                       }
                     },
                     {
@@ -38,22 +38,9 @@
           }
         },
         {
-          "type": "parallel",
+          "type": "named",
           "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "NOTE 1 TO MID RIGHT (SOURCE)"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Index Note"
-                }
-              }
-            ]
+            "name": "Index Note"
           }
         },
         {
@@ -67,7 +54,7 @@
                     {
                       "type": "wait",
                       "data": {
-                        "waitTime": 1.0
+                        "waitTime": 0.7
                       }
                     },
                     {

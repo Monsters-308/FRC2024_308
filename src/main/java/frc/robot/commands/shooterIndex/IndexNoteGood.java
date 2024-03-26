@@ -20,7 +20,7 @@ public class IndexNoteGood extends SequentialCommandGroup {
 
             // Reverse indexer until game piece not detected
             new RunShooterIndexer(shooterIndexSubsystem, 0.3)
-                .withTimeout(0.1)
+                .withTimeout(0.05)
         );
     }
 }

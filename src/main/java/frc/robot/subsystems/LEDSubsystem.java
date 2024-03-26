@@ -136,9 +136,9 @@ public class LEDSubsystem extends SubsystemBase {
       green();
     }
 
-    else if (Math.abs(controllerX.getAsDouble()) > .8){
-      police();    
-    }
+    // else if (Math.abs(controllerX.getAsDouble()) > .8){
+    //   police();    
+    // }
 
     else{
       // For every pixel

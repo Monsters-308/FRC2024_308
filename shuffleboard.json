@@ -142,6 +142,32 @@
               "_glyph": 148,
               "_showGlyph": false
             }
+          },
+          "9,1": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Auto Aim distance",
+              "_title": "Auto Aim distance",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "0,2": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Desired Pivot Angle",
+              "_title": "Desired Pivot Angle",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
           }
         }
       }
@@ -285,6 +311,6 @@
     "x": 0.0,
     "y": 0.0,
     "width": 1536.0,
-    "height": 824.0
+    "height": 632.0
   }
 }

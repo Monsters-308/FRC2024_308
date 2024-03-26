@@ -67,9 +67,9 @@ public class ShooterPivotSubsystem extends SubsystemBase {
     
     pivotTab.add("Set 40", new InstantCommand(() -> setPosition(40), this));
     
-    pivotTab.add("Decrease", new InstantCommand(() -> setPosition(getPosition().getDegrees() - 1), this));
+    // pivotTab.add("Decrease", new InstantCommand(() -> setPosition(m_desiredAngleDegrees - 1), this));
     
-    pivotTab.add("Increase", new InstantCommand(() -> setPosition(getPosition().getDegrees() + 1), this));
+    // pivotTab.add("Increase", new InstantCommand(() -> setPosition(m_desiredAngleDegrees + 1), this));
   }
 
   /**

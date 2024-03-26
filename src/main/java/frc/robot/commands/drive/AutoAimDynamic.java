@@ -14,6 +14,7 @@ import frc.robot.Constants.HeadingConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.LEDSubsystem;
 
 //Import subsystem(s) this command interacts with below
 
@@ -26,6 +27,7 @@ public class AutoAimDynamic extends Command {
     //Import any instance variables that are passed into the file below here, such as the subsystem(s) your command interacts with.
     final VisionSubsystem m_visionSubsystem;
     final DriveSubsystem m_driveSubsystem;
+    final LEDSubsystem m_LedSubsystem;
      
     private final PIDController angleController = new PIDController(HeadingConstants.kHeadingP, 
                                                                   HeadingConstants.kHeadingI, 
@@ -44,7 +46,7 @@ public class AutoAimDynamic extends Command {
      * @param xSpeed
      * @param ySpeed
      */
-    public AutoAimDynamic(VisionSubsystem visionSubsystem, DriveSubsystem driveSubsystem, DoubleSupplier xSpeed, DoubleSupplier ySpeed){
+    public AutoAimDynamic(VisionSubsystem visionSubsystem, DriveSubsystem driveSubsystem, DoubleSupplier xSpeed, DoubleSupplier ySpeed, LEDSubsystem ledSubsystem){
         m_driveSubsystem = driveSubsystem;
         m_visionSubsystem = visionSubsystem;
         m_xSpeed = xSpeed;
@@ -52,6 +54,8 @@ public class AutoAimDynamic extends Command {
 
         angleController.enableContinuousInput(-180, 180);
         angleController.setTolerance(HeadingConstants.kHeadingTolerance);
+
+        m_LedSubsystem = ledSubsystem;
 
         //If your command interacts with any subsystem(s), you should pass them into "addRequirements()"
         //This function makes it so your command will only run once these subsystem(s) are free from other commands.
@@ -69,6 +73,7 @@ public class AutoAimDynamic extends Command {
         m_visionSubsystem.setPipeline(VisionConstants.kAprilTagPipeline);
         angleController.reset();
         m_complete = false;
+        m_LedSubsystem.setLEDFunction(m_LedSubsystem::purple);
     }
 
     /*This function is called repeatedly when the schedueler's "run()" function is called.
@@ -111,7 +116,7 @@ public class AutoAimDynamic extends Command {
      */
     @Override
     public void end(boolean interrupted){
-    
+        m_LedSubsystem.setLEDFunction(m_LedSubsystem::rainbow);
     }
 
     @Override

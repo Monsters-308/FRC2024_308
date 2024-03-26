@@ -11,7 +11,7 @@ public class AutonShootNote extends SequentialCommandGroup{
     
     public AutonShootNote(ShooterIndexSubsystem shooterIndexSubsystem, LEDSubsystem ledSubsystem){ 
         addCommands(
-            new WaitCommand(0.5),
+            new WaitCommand(1),
             new LaunchNote(shooterIndexSubsystem, ledSubsystem)
         );
     }
