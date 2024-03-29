@@ -128,7 +128,6 @@ public final class Constants {
     public static final boolean kGyroReversed = true;
 
     // This is used for making the robot face a certain direction
-    // TODO: look make sure you test these
     public static final double kHeadingP = 0.025;
     public static final double kHeadingI = 0;
     public static final double kHeadingD = 0.001;
@@ -159,7 +158,7 @@ public final class Constants {
     
     // Position of the speaker on the field (in meters)
     public static final Translation2d kSpeakerPosition = new Translation2d(
-      0, 5.54 
+      0, 5.45 
     );
     // Height to the bottom lip of speaker
     public static final double kSpeakerHeightInches = 78.129;
@@ -261,7 +260,7 @@ public final class Constants {
 
     public static final double kIntakeDownPosition = -126.7;
     public static final double kIntakeDeckPosition = -64;
-    public static final double kIntakeInPosition = -25; 
+    public static final double kIntakeInPosition = -30; 
   }
 
   public static final class HangingConstants {

@@ -9,6 +9,7 @@ public class IntakeHumanPlayer extends Command {
   private final ShooterPivotSubsystem m_shooterPivotSubsystem; 
   private final ShooterIndexSubsystem m_shooterIndexSubsystem;
 
+  /** Emergency intaking for when our intake breaks and we need to intake directly from the human player station. */
   public IntakeHumanPlayer(ShooterPivotSubsystem shooterPivotSubsystem, ShooterIndexSubsystem shooterIndexSubsystem) {
     m_shooterPivotSubsystem = shooterPivotSubsystem; 
     m_shooterIndexSubsystem = shooterIndexSubsystem;

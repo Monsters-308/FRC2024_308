@@ -1,40 +1,26 @@
 package frc.robot.commands.shooterIndex;
 
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants.ShooterIndexConstants;
 import frc.robot.subsystems.ShooterIndexSubsystem;
-import edu.wpi.first.wpilibj2.command.Command;
 
-public class IndexNote extends Command {
-  private final ShooterIndexSubsystem m_shooterIndexSubsystem;
+public class IndexNote extends SequentialCommandGroup {
+    
+    /**
+     * Runs the shooter indexer until the light sensor detects a note,
+     * and then runs the indexer for a little longer to ensure that the 
+     * note is fully in the shooter.
+     * @param shooterIndexSubsystem
+     */
+    public IndexNote(ShooterIndexSubsystem shooterIndexSubsystem){
+        addCommands(
+            // Run indexer until game piece detected
+            new RunShooterIndexer(shooterIndexSubsystem, ShooterIndexConstants.kIndexIntakeSpeed)
+                .until(() -> shooterIndexSubsystem.gamePieceDetected()),
 
-  /** Runs the shooter indexer untill a note is detected by the light sensor */
-  public IndexNote(ShooterIndexSubsystem indexSubsystem) {
-    m_shooterIndexSubsystem = indexSubsystem;
-
-    addRequirements(m_shooterIndexSubsystem);
-  }
-
-  // Called when the command is initially scheduled.
-  @Override
-  public void initialize() {
-
-  }
-
-  // Called every time the scheduler runs while the command is scheduled.
-  @Override
-  public void execute() {
-    m_shooterIndexSubsystem.setSpeed(ShooterIndexConstants.kIndexIntakeSpeed);
-  }
-
-  // Called once the command ends or is interrupted.
-  @Override
-  public void end(boolean interrupted) {
-    m_shooterIndexSubsystem.setSpeed(0);
-  }
-
-  // Returns true when the command should end.
-  @Override
-  public boolean isFinished() {
-    return m_shooterIndexSubsystem.gamePieceDetected();
-  }
+            // Run indexer just a little longer
+            new RunShooterIndexer(shooterIndexSubsystem, 0.3)
+                .withTimeout(0.05)
+        );
+    }
 }

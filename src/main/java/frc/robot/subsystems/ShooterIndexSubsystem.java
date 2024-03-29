@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ShooterIndexConstants;
-import frc.robot.commands.shooterIndex.IndexNoteGood;
+import frc.robot.commands.shooterIndex.IndexNote;
 import frc.robot.commands.shooterIndex.RunShooterIndexer;
 
 import com.revrobotics.CANSparkLowLevel.MotorType;
@@ -40,7 +40,7 @@ public class ShooterIndexSubsystem extends SubsystemBase {
         
         shooterTab.add("Run Indexer", new RunShooterIndexer(this, 0.5));
 
-        shooterTab.add("Index Note", new IndexNoteGood(this));
+        shooterTab.add("Index Note", new IndexNote(this));
     }
 
     /**

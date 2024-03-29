@@ -10,15 +10,15 @@ public class TurningMotorsTest extends Command {
   private final DriveSubsystem m_driveSubsystem;
   private double m_moduleAngle = 0;
 
-  /**
-   * Creates a new TurningMotorsTest.
-   *
-   * @param subsystem The subsystem used by this command.
+  /** 
+   * Makes all of the wheels on the drivetrain spin around.
+   * Useful for testing if any of the turning motors are broken.
+   * @param subsystem
    */
-  public TurningMotorsTest(DriveSubsystem subsystem) {
-    m_driveSubsystem = subsystem;
+  public TurningMotorsTest(DriveSubsystem driveSubsystem) {
+    m_driveSubsystem = driveSubsystem;
     
-    addRequirements(subsystem);
+    addRequirements(driveSubsystem);
   }
 
   // Called when the command is initially scheduled.

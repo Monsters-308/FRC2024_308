@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
 public class LaunchNote extends SequentialCommandGroup {
 
+    /** Launches a note from the shooter index into the shooter wheels. */
     public LaunchNote(ShooterIndexSubsystem shooterIndexSubsystem, LEDSubsystem ledSubsystem){
         addCommands(
             new setLED(ledSubsystem, ledSubsystem::purple),

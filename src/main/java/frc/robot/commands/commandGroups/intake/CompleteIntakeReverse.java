@@ -16,7 +16,7 @@ import frc.robot.subsystems.ShooterPivotSubsystem;
 
 public class CompleteIntakeReverse extends SequentialCommandGroup  {
 
-    /** Intakes a note from the ground and then puts it into the shooter index */
+    /** runs all of the intaking procedure in reverse. */
     public CompleteIntakeReverse(IntakeSubsystem intakeSubsystem, ShooterIndexSubsystem shooterIndexSubsystem, ShooterPivotSubsystem m_shooterPivotSubsystem, 
                                  LEDSubsystem LEDsubsystem){
         addCommands(

@@ -14,10 +14,12 @@ public class DefaultLimelightPipeline extends Command {
     //Import any instance variables that are passed into the file below here, such as the subsystem(s) your command interacts with.
     final VisionSubsystem m_visionSubsystem;
 
-    //If you want to contoll whether or not the command has ended, you should store it in some sort of variable:
-    private boolean m_complete = false;
-
-    //Class Constructor
+    /** 
+     * Default command for vision subsystem. 
+     * This command makes it so that when no other command is using the vision subsystem, the pipeline will automatically switch
+     * back to the default pipeline.
+     * This year we are only using one pipeline, so this command is kinda useless.
+    */
     public DefaultLimelightPipeline(VisionSubsystem visionSubsystem){
         m_visionSubsystem = visionSubsystem;
         
@@ -27,43 +29,13 @@ public class DefaultLimelightPipeline extends Command {
         addRequirements(m_visionSubsystem);
     }
 
-    /*Like Robot.java, there are a series of functions that you can override to give the command functionality. */
-    
-
-    /*This function is called once when the command is schedueled.
-     * If you are overriding "isFinished()", you should probably use this to set m_complete to false in case a command object is 
-     * called a second time.
-     */
-    //When not overridden, this function is blank.
+    // This function is called once when the command is schedueled.
     @Override
     public void initialize(){
         if(m_visionSubsystem.getPipeline() != VisionConstants.kDefaultPipeline){
             m_visionSubsystem.setPipeline(VisionConstants.kDefaultPipeline);
         }
     }
-
-    /*This function is called repeatedly when the schedueler's "run()" function is called.
-     * Once you want the function to end, you should set m_complete to true.
-     */
-    @Override
-    public void execute(){
-    }
-
-    /*This function is called once when the command ends.
-     * A command ends either when you tell it to end with the "isFinished()" function below, or when it is interupted.
-     * Whether a command is interrupted or not is determined by "boolean interrupted."
-     * Things initialized in "initialize()" should be closed here.
-     */
-    @Override
-    public void end(boolean interrupted){
-
-    }
-
-    @Override
-    public boolean isFinished(){
-        return m_complete;
-    }
-
 
     @Override
     public boolean runsWhenDisabled(){

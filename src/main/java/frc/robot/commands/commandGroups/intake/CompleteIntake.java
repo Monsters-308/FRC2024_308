@@ -11,7 +11,7 @@ import frc.robot.Constants.ShooterPivotConstants;
 import frc.robot.commands.LED.setLED;
 import frc.robot.commands.intake.RunIntake;
 import frc.robot.commands.intakePivot.SetIntakeAngle;
-import frc.robot.commands.shooterIndex.IndexNoteGood;
+import frc.robot.commands.shooterIndex.IndexNote;
 import frc.robot.subsystems.IntakePivotSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.LEDSubsystem;
@@ -26,7 +26,7 @@ public class CompleteIntake extends SequentialCommandGroup  {
             new setLED(LEDsubsystem, LEDsubsystem::red),
 
             // Get the shooter pivot started early
-            new InstantCommand(() -> shooterPivotSubsystem.setPosition(ShooterPivotConstants.kShooterPivotDeckPosition)),
+            new InstantCommand(() -> shooterPivotSubsystem.setPosition(ShooterPivotConstants.kShooterPivotDeckPosition), shooterPivotSubsystem),
 
             // Put intake down and run intake until a note is detected
             new ParallelCommandGroup(
@@ -45,7 +45,7 @@ public class CompleteIntake extends SequentialCommandGroup  {
 
             // Put note in indexer
             new ParallelDeadlineGroup(
-                new IndexNoteGood(shooterIndexSubsystem), 
+                new IndexNote(shooterIndexSubsystem), 
                 new RunIntake(intakeSubsystem, IntakeConstants.kIntakeSpeed) 
             ),
 
@@ -55,10 +55,5 @@ public class CompleteIntake extends SequentialCommandGroup  {
             // Add an InstantCommand to reset the LED state after the command group finishes
             new InstantCommand(() -> LEDsubsystem.setLEDFunction(LEDsubsystem::rainbow))
         );
-    }
-
-    @Override
-    public InterruptionBehavior getInterruptionBehavior(){
-        return InterruptionBehavior.kCancelIncoming;
     }
 }

@@ -34,8 +34,9 @@ import frc.robot.commands.hanging.RaiseBothArms;
 import frc.robot.commands.intake.IntakeNote;
 import frc.robot.commands.intake.RunIntake;
 import frc.robot.commands.intakePivot.SetIntakeAngle;
+import frc.robot.commands.shooter.CoolRevWheels;
 import frc.robot.commands.shooter.RevWheels;
-import frc.robot.commands.shooterIndex.IndexNoteGood;
+import frc.robot.commands.shooterIndex.IndexNote;
 import frc.robot.commands.shooterPivot.DynamicPivotToSpeaker;
 import frc.robot.commands.shooterPivot.PivotGoToPose;
 import frc.robot.commands.vision.DefaultLimelightPipeline;
@@ -49,6 +50,7 @@ import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.ShooterPivotSubsystem;
 import frc.robot.subsystems.ShooterIndexSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Command.InterruptionBehavior;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
@@ -147,7 +149,7 @@ public class RobotContainer {
         new WaitUntilCommand(() -> m_shooterPivotSubsystem.inPosition()),
 
         new ParallelDeadlineGroup(
-            new IndexNoteGood(m_shooterIndexSubsystem), 
+            new IndexNote(m_shooterIndexSubsystem), 
             new RunIntake(m_intakeSubsystem, IntakeConstants.kIntakeSpeed) 
         ),
         new InstantCommand(() -> m_shooterPivotSubsystem.setPosition(ShooterPivotConstants.kShooterPivotPoduim), m_shooterPivotSubsystem)
@@ -372,7 +374,7 @@ public class RobotContainer {
     new JoystickButton(m_coDriverController, Button.kX.value)
         .whileTrue(
           new ParallelCommandGroup(
-            new IndexNoteGood(m_shooterIndexSubsystem),
+            new IndexNote(m_shooterIndexSubsystem),
             new RunIntake(m_intakeSubsystem, 1)
           )
         );
@@ -422,11 +424,13 @@ public class RobotContainer {
       .toggleOnTrue(
         new CompleteIntake(m_intakeSubsystem, m_shooterPivotSubsystem, m_shooterIndexSubsystem, m_intakePivotSubsystem, m_LEDSubsystem)
           .andThen(
-            new ParallelCommandGroup(
-              new SetIntakeAngle(m_intakePivotSubsystem, IntakePivotConstants.kIntakeInPosition),
-              new InstantCommand(() -> m_LEDSubsystem.setLEDFunction(m_LEDSubsystem::rainbow))
-            )
+            new SetIntakeAngle(m_intakePivotSubsystem, IntakePivotConstants.kIntakeInPosition)
           )
+          .finallyDo(() -> {
+            new SetIntakeAngle(m_intakePivotSubsystem, IntakePivotConstants.kIntakeInPosition).schedule();
+            m_LEDSubsystem.setLEDFunction(m_LEDSubsystem::rainbow);
+          }
+          ).withInterruptBehavior(InterruptionBehavior.kCancelIncoming)
       );
     // Button box equivalent
     new JoystickButton(m_buttonBox, 2)
@@ -435,7 +439,11 @@ public class RobotContainer {
           .andThen(
             new SetIntakeAngle(m_intakePivotSubsystem, IntakePivotConstants.kIntakeInPosition)
           )
-          .finallyDo(() -> m_LEDSubsystem.setLEDFunction(m_LEDSubsystem::rainbow))
+          .finallyDo(() -> {
+            new SetIntakeAngle(m_intakePivotSubsystem, IntakePivotConstants.kIntakeInPosition).schedule();
+            m_LEDSubsystem.setLEDFunction(m_LEDSubsystem::rainbow);
+          }
+          ).withInterruptBehavior(InterruptionBehavior.kCancelIncoming)
       );
 
     // DEBUG:
@@ -536,16 +544,14 @@ public class RobotContainer {
 
     // Left trigger: charge up wheels 
     new Trigger(() -> m_coDriverController.getLeftTriggerAxis() > OIConstants.kTriggerDeadband)
-      .onTrue(
-        new InstantCommand(() -> m_shooterSubsystem.setPercent(1), m_shooterSubsystem))
-      .onFalse(
-        new InstantCommand(m_shooterSubsystem::stopRollers, m_shooterSubsystem));
+      .whileTrue(
+        new CoolRevWheels(m_shooterSubsystem, m_coDriverController)
+      );
     // Button box equivalent
     new JoystickButton(m_buttonBox, 1)
-      .onTrue(
-        new InstantCommand(() -> m_shooterSubsystem.setPercent(1), m_shooterSubsystem))
-      .onFalse(
-        new InstantCommand(m_shooterSubsystem::stopRollers, m_shooterSubsystem));
+      .whileTrue(
+        new CoolRevWheels(m_shooterSubsystem, m_coDriverController)
+      );
   }
 
   /**

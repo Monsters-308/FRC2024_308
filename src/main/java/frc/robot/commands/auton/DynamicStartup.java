@@ -16,6 +16,10 @@ import frc.robot.subsystems.LEDSubsystem;
 
 public class DynamicStartup extends SequentialCommandGroup{
     
+    /** 
+     * Command for launching first note in auton.
+     * Unlike static startup, this uses auto aim features so the robot can start anywhere on the field.
+     */
     public DynamicStartup(ShooterSubsystem m_shooterSubsystem, ShooterIndexSubsystem m_shooterIndexSubsystem, LEDSubsystem m_LEDSubsystem,
                         ShooterPivotSubsystem m_shooterPivotSubsystem, VisionSubsystem m_visionSubsystem, DriveSubsystem m_driveSubsystem,
                         LEDSubsystem mLedSubsystem){ 

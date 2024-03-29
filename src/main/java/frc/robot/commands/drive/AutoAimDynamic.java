@@ -108,7 +108,6 @@ public class AutoAimDynamic extends Command {
             
     }
 
-
     /*This function is called once when the command ends.
      * A command ends either when you tell it to end with the "isFinished()" function below, or when it is interupted.
      * Whether a command is interrupted or not is determined by "boolean interrupted."
