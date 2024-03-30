@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.IntakePivotConstants;
 import frc.robot.Constants.OIConstants;
@@ -28,6 +29,7 @@ import frc.robot.commands.commandGroups.shooter.LaunchNote;
 import frc.robot.commands.commandGroups.shooter.ampFlapDown;
 import frc.robot.commands.drive.AutoAimDynamic;
 import frc.robot.commands.drive.RobotGotoAngle;
+import frc.robot.commands.drive.RobotGotoFieldPos;
 import frc.robot.commands.drive.TurningMotorsTest;
 import frc.robot.commands.hanging.LowerBothArms;
 import frc.robot.commands.hanging.RaiseBothArms;
@@ -86,7 +88,7 @@ public class RobotContainer {
   // Controllers
   final XboxController m_driverController = new XboxController(OIConstants.kDriverControllerPort);
   final XboxController m_coDriverController = new XboxController(OIConstants.kCoDriverControllerPort);
-  final Joystick m_buttonBox = new Joystick(2);
+  // final Joystick m_buttonBox = new Joystick(OIConstants.kButtonBoxPort);
 
   private final LEDSubsystem m_LEDSubsystem = new LEDSubsystem(() -> m_driverController.getLeftY(), () -> m_shooterIndexSubsystem.gamePieceDetected(), () -> m_visionSubsystem.getTargets());
 
@@ -95,9 +97,9 @@ public class RobotContainer {
 
   // The second note to pick up and score
   SendableChooser<Command> m_autonFirstAction = new SendableChooser<>();
-  SendableChooser<Command> m_autonSecondAction = new SendableChooser<>();
-  SendableChooser<Command> m_autonThirdAction = new SendableChooser<>();
-  SendableChooser<Command> m_autonFourthAction = new SendableChooser<>();
+  // SendableChooser<Command> m_autonSecondAction = new SendableChooser<>();
+  // SendableChooser<Command> m_autonThirdAction = new SendableChooser<>();
+  // SendableChooser<Command> m_autonFourthAction = new SendableChooser<>();
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -206,13 +208,13 @@ public class RobotContainer {
  
     // Adding options to the sendable chooser
     applyCommands(m_autonFirstAction);
-    applyCommands(m_autonSecondAction);
-    applyCommands(m_autonThirdAction);
-    applyCommands(m_autonFourthAction);
+    // applyCommands(m_autonSecondAction);
+    // applyCommands(m_autonThirdAction);
+    // applyCommands(m_autonFourthAction);
 
     // Put choosers on the dashboard
-    // Shuffleboard.getTab("Autonomous").add("Launch First Note?", m_autonStartup).withSize(2, 1);
-    // Shuffleboard.getTab("Autonomous").add("First Action", m_autonFirstAction).withSize(2, 1);
+    Shuffleboard.getTab("Autonomous").add("Launch First Note?", m_autonStartup).withSize(2, 1);
+    Shuffleboard.getTab("Autonomous").add("First Action", m_autonFirstAction).withSize(2, 1);
     // Shuffleboard.getTab("Autonomous").add("Second Action", m_autonSecondAction).withSize(2, 1);
     // Shuffleboard.getTab("Autonomous").add("Third Action", m_autonThirdAction).withSize(2, 1);
     // Shuffleboard.getTab("Autonomous").add("Fourth Action", m_autonFourthAction).withSize(2, 1);
@@ -304,14 +306,10 @@ public class RobotContainer {
             )
           );
 
-    // // Auto Aim Amp
-    // new JoystickButton(m_driverController, Button.kB.value)
-    //     .toggleOnTrue(
-    //         new autoAmp(
-    //             m_driveSubsystem,
-    //             m_shooterPivotSubsystem,
-    //             m_shooterSubsystem
-    //             ));
+    // Auto Aim Amp
+    new JoystickButton(m_driverController, Button.kB.value)
+        .whileTrue(
+            new RobotGotoFieldPos(m_driveSubsystem, FieldConstants.kAmpScoringPosition, true));
     
     // // Auto Aim trap
     // new JoystickButton(m_driverController, Button.kY.value)
@@ -394,7 +392,7 @@ public class RobotContainer {
           new InstantCommand(
             () -> m_shooterSubsystem.setBottomShooterSpeed(13), m_shooterSubsystem),
           new InstantCommand(
-            () -> m_shooterSubsystem.setTopShooterSpeed(10), m_shooterSubsystem),
+            () -> m_shooterSubsystem.setTopShooterSpeed(8), m_shooterSubsystem),
           new InstantCommand(
             () -> m_shooterPivotSubsystem.setPosition(60), m_shooterPivotSubsystem
           )
@@ -404,20 +402,20 @@ public class RobotContainer {
             m_shooterSubsystem::stopRollers, m_shooterSubsystem)
       );
     // Button box equivalent
-    new JoystickButton(m_buttonBox, 5)
-      .onTrue(
-        new SequentialCommandGroup(
-          new InstantCommand(
-            () -> m_shooterSubsystem.setBottomShooterSpeed(13), m_shooterSubsystem),
-          new InstantCommand(
-            () -> m_shooterSubsystem.setTopShooterSpeed(10), m_shooterSubsystem),
-          new InstantCommand(
-            () -> m_shooterPivotSubsystem.setPosition(60), m_shooterPivotSubsystem
-          )
-        ))
-      .onFalse(
-        new InstantCommand(
-            m_shooterSubsystem::stopRollers, m_shooterSubsystem));
+    // new JoystickButton(m_buttonBox, 5)
+    //   .onTrue(
+    //     new SequentialCommandGroup(
+    //       new InstantCommand(
+    //         () -> m_shooterSubsystem.setBottomShooterSpeed(13), m_shooterSubsystem),
+    //       new InstantCommand(
+    //         () -> m_shooterSubsystem.setTopShooterSpeed(10), m_shooterSubsystem),
+    //       new InstantCommand(
+    //         () -> m_shooterPivotSubsystem.setPosition(60), m_shooterPivotSubsystem
+    //       )
+    //     ))
+    //   .onFalse(
+    //     new InstantCommand(
+    //         m_shooterSubsystem::stopRollers, m_shooterSubsystem));
     
     // Y button: Intake note
     new JoystickButton(m_coDriverController, Button.kY.value)
@@ -425,26 +423,25 @@ public class RobotContainer {
         new CompleteIntake(m_intakeSubsystem, m_shooterPivotSubsystem, m_shooterIndexSubsystem, m_intakePivotSubsystem, m_LEDSubsystem)
           .andThen(
             new SetIntakeAngle(m_intakePivotSubsystem, IntakePivotConstants.kIntakeInPosition)
-          )
+          ).withInterruptBehavior(InterruptionBehavior.kCancelIncoming)
           .finallyDo(() -> {
             new SetIntakeAngle(m_intakePivotSubsystem, IntakePivotConstants.kIntakeInPosition).schedule();
             m_LEDSubsystem.setLEDFunction(m_LEDSubsystem::rainbow);
-          }
-          ).withInterruptBehavior(InterruptionBehavior.kCancelIncoming)
+          })
       );
     // Button box equivalent
-    new JoystickButton(m_buttonBox, 2)
-      .toggleOnTrue(
-        new CompleteIntake(m_intakeSubsystem, m_shooterPivotSubsystem, m_shooterIndexSubsystem, m_intakePivotSubsystem, m_LEDSubsystem)
-          .andThen(
-            new SetIntakeAngle(m_intakePivotSubsystem, IntakePivotConstants.kIntakeInPosition)
-          )
-          .finallyDo(() -> {
-            new SetIntakeAngle(m_intakePivotSubsystem, IntakePivotConstants.kIntakeInPosition).schedule();
-            m_LEDSubsystem.setLEDFunction(m_LEDSubsystem::rainbow);
-          }
-          ).withInterruptBehavior(InterruptionBehavior.kCancelIncoming)
-      );
+    // new JoystickButton(m_buttonBox, 2)
+    //   .toggleOnTrue(
+    //     new CompleteIntake(m_intakeSubsystem, m_shooterPivotSubsystem, m_shooterIndexSubsystem, m_intakePivotSubsystem, m_LEDSubsystem)
+    //       .andThen(
+    //         new SetIntakeAngle(m_intakePivotSubsystem, IntakePivotConstants.kIntakeInPosition)
+    //       )
+    //       .finallyDo(() -> {
+    //         new SetIntakeAngle(m_intakePivotSubsystem, IntakePivotConstants.kIntakeInPosition).schedule();
+    //         m_LEDSubsystem.setLEDFunction(m_LEDSubsystem::rainbow);
+    //       }
+    //       ).withInterruptBehavior(InterruptionBehavior.kCancelIncoming)
+    //   );
 
     // DEBUG:
     // // Dpad up: shooter pivot up
@@ -476,11 +473,11 @@ public class RobotContainer {
           new InstantCommand(() -> m_ampFlapSubsystem.setSpeed(0), m_ampFlapSubsystem));
 
     // Button box flap: Go forwards when pressed, go backwards when not pressed
-    new JoystickButton(m_buttonBox, 6)
-      .onTrue(
-        new InstantCommand(() -> m_ampFlapSubsystem.setSpeed(0.2), m_ampFlapSubsystem))
-      .onFalse(
-        new ampFlapDown(m_ampFlapSubsystem));
+    // new JoystickButton(m_buttonBox, 6)
+    //   .onTrue(
+    //     new InstantCommand(() -> m_ampFlapSubsystem.setSpeed(0.2), m_ampFlapSubsystem))
+    //   .onFalse(
+    //     new ampFlapDown(m_ampFlapSubsystem));
 
     // POV left: reverse intake
     new POVButton(m_coDriverController, 270)
@@ -491,13 +488,13 @@ public class RobotContainer {
               m_shooterPivotSubsystem, m_LEDSubsystem
               ));
     // Button box equivalent
-    new JoystickButton(m_buttonBox, 3)
-      .whileTrue(
-          new RunIntake(m_intakeSubsystem, -1)
-          .alongWith(new SetIntakeAngle(m_intakePivotSubsystem, IntakePivotConstants.kIntakeDownPosition)))
-      .onFalse(
-        new SetIntakeAngle(m_intakePivotSubsystem, IntakePivotConstants.kIntakeInPosition)
-      );
+    // new JoystickButton(m_buttonBox, 3)
+    //   .whileTrue(
+    //       new RunIntake(m_intakeSubsystem, -1)
+    //       .alongWith(new SetIntakeAngle(m_intakePivotSubsystem, IntakePivotConstants.kIntakeDownPosition)))
+    //   .onFalse(
+    //     new SetIntakeAngle(m_intakePivotSubsystem, IntakePivotConstants.kIntakeInPosition)
+    //   );
 
     // Dpad right: bring intake in
     new POVButton(m_coDriverController, 90)
@@ -511,10 +508,10 @@ public class RobotContainer {
             new RaiseBothArms(
                 m_hangingSubsystem));
     // Button box equivalent
-    new JoystickButton(m_buttonBox, 7)
-        .whileTrue(
-            new RaiseBothArms(
-                m_hangingSubsystem));
+    // new JoystickButton(m_buttonBox, 7)
+    //     .whileTrue(
+    //         new RaiseBothArms(
+    //             m_hangingSubsystem));
 
     // Right bumper: lower hanging arms
     new JoystickButton(m_coDriverController, Button.kLeftBumper.value)
@@ -522,10 +519,10 @@ public class RobotContainer {
             new LowerBothArms(
                 m_hangingSubsystem));
     // Button box equivalent
-    new JoystickButton(m_buttonBox, 8)
-        .whileTrue(
-            new LowerBothArms(
-                m_hangingSubsystem));
+    // new JoystickButton(m_buttonBox, 8)
+    //     .whileTrue(
+    //         new LowerBothArms(
+    //             m_hangingSubsystem));
 
     // Right trigger: shoot note 
     new Trigger(() -> m_coDriverController.getRightTriggerAxis() > OIConstants.kTriggerDeadband)
@@ -535,12 +532,12 @@ public class RobotContainer {
         )
       );
     // Button box equivalent
-    new JoystickButton(m_buttonBox, 4)
-      .toggleOnTrue(
-        new LaunchNote(m_shooterIndexSubsystem, m_LEDSubsystem).andThen(
-          new InstantCommand(() -> m_shooterIndexSubsystem.setSpeed(0), m_shooterIndexSubsystem)
-        )
-      );
+    // new JoystickButton(m_buttonBox, 4)
+    //   .toggleOnTrue(
+    //     new LaunchNote(m_shooterIndexSubsystem, m_LEDSubsystem).andThen(
+    //       new InstantCommand(() -> m_shooterIndexSubsystem.setSpeed(0), m_shooterIndexSubsystem)
+    //     )
+    //   );
 
     // Left trigger: charge up wheels 
     new Trigger(() -> m_coDriverController.getLeftTriggerAxis() > OIConstants.kTriggerDeadband)
@@ -548,10 +545,10 @@ public class RobotContainer {
         new CoolRevWheels(m_shooterSubsystem, m_coDriverController)
       );
     // Button box equivalent
-    new JoystickButton(m_buttonBox, 1)
-      .whileTrue(
-        new CoolRevWheels(m_shooterSubsystem, m_coDriverController)
-      );
+    // new JoystickButton(m_buttonBox, 1)
+    //   .whileTrue(
+    //     new CoolRevWheels(m_shooterSubsystem, m_coDriverController)
+    //   );
   }
 
   /**
@@ -584,8 +581,11 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
+
+      Command foo = m_autonStartup.getSelected();
+      System.out.println(foo);
       return new SequentialCommandGroup(
-        // m_autonStartup.getSelected(),
+        foo
         // m_autonFirstAction.getSelected(), 
         // m_autonSecondAction.getSelected(),
         // m_autonThirdAction.getSelected(),
@@ -593,15 +593,15 @@ public class RobotContainer {
 
         //first shots
         //new DynamicStartup(m_shooterSubsystem, m_shooterIndexSubsystem, m_LEDSubsystem, m_shooterPivotSubsystem, m_visionSubsystem, m_driveSubsystem, m_LEDSubsystem),
-        new WaitCommand(0.5),
-        new SequentialCommandGroup(
-          new InstantCommand(() -> m_shooterSubsystem.setPercent(1)),
-          new WaitCommand(1),
-          new AutonShootNote(m_shooterIndexSubsystem, m_LEDSubsystem)
-        ),
+        // new WaitCommand(0.5),
+        // new SequentialCommandGroup(
+        //   new InstantCommand(() -> m_shooterSubsystem.setPercent(1)),
+        //   new WaitCommand(1),
+        //   new AutonShootNote(m_shooterIndexSubsystem, m_LEDSubsystem)
+        // ),
 
-        //middle notes
-        new PathPlannerAuto("Close NOTE(CENTER SIDE)") //CENTETR SIDE 
+        // //middle notes
+        // new PathPlannerAuto("Close NOTE(CENTER SIDE)") //CENTETR SIDE 
         //new PathPlannerAuto("AutoAim Close NOTE(AMP SIDE)"), //AMP SIDE 
         //new PathPlannerAuto("AutoAim Close NOTE(SOURCE SIDE)"), //SOURCE SIDE 
 

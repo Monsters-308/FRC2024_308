@@ -145,6 +145,7 @@ public final class Constants {
   public static final class OIConstants {
     public static final int kDriverControllerPort = 0;
     public static final int kCoDriverControllerPort = 1;
+    public static final int kButtonBoxPort = 2;
     
     public static final double kJoystickDeadband = 0.05;
     public static final double kTriggerDeadband = 0.5;
@@ -260,7 +261,7 @@ public final class Constants {
 
     public static final double kIntakeDownPosition = -126.7;
     public static final double kIntakeDeckPosition = -64;
-    public static final double kIntakeInPosition = -30; 
+    public static final double kIntakeInPosition = -40; 
   }
 
   public static final class HangingConstants {

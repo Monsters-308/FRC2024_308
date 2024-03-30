@@ -10,7 +10,7 @@ import java.util.function.DoubleSupplier;
 public class LEDSubsystem extends SubsystemBase {
 
   public final class LEDConstants {
-    public static final int ledLength = 110;
+    public static final int ledLength = 42;
     public static final int ledPort = 9;
   }
  
@@ -143,7 +143,7 @@ public class LEDSubsystem extends SubsystemBase {
     else{
       // For every pixel
       for (var i = 0; i < m_ledBuffer.getLength(); i++) {
-        m_ledBuffer.setHSV(i, (m_rainbowFirstPixelHue + i) % 180, 255, 255);
+        m_ledBuffer.setHSV(i, (m_rainbowFirstPixelHue + i) % 180, 255, 10);
       }
 
       // Increase by to make the rainbow "move"

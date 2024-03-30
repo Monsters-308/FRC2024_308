@@ -128,7 +128,7 @@ public class RobotGotoFieldPos extends Command {
     // When not overridden, this function is blank.
     @Override
     public void end(boolean interrupted) {
-
+        m_driveSubsystem.drive(0, 0, 0, false, false);
     }
 
     /*
