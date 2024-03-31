@@ -20,11 +20,9 @@ import java.util.function.Supplier;
 
 import com.kauailabs.navx.frc.AHRS;
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
-import com.pathplanner.lib.util.PIDConstants;
-import com.pathplanner.lib.util.ReplanningConfig;
 
 import edu.wpi.first.wpilibj.SPI;
+import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.HeadingConstants;
 import frc.robot.Constants.ModuleConstants;
@@ -151,19 +149,11 @@ public class DriveSubsystem extends SubsystemBase {
     // Configure the AutoBuilder
     AutoBuilder.configureHolonomic(
         () -> FieldUtils.flipGlobalBlue(getPose()), // Robot pose supplier
-        (Pose2d thing) -> resetOdometry(FieldUtils.flipGlobalBlue(thing)), // Method to reset odometry (will be called if your auto has a starting pose)
+        (Pose2d newPose) -> resetOdometry(FieldUtils.flipGlobalBlue(newPose)), // Method to reset odometry (will be called if your auto has a starting pose)
         this::getRobotRelativeSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
         this::driveRobotRelative, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
-        new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
-            new PIDConstants(HeadingConstants.kTranslationP, HeadingConstants.kTranslationI, HeadingConstants.kTranslationD), // Translation PID constants
-            new PIDConstants(5.0, 0.0, 0.0), // Rotation PID constants
-            3, // Max module speed, in m/s
-            // Using pythagoras's theorem to find distance from robot center to module
-            Math.hypot(DriveConstants.kTrackWidth / 2, DriveConstants.kWheelBase / 2), // Drive base radius in meters. Distance from robot center to furthest module.
-            new ReplanningConfig() // Default path replanning config. See the API for the options here
-        ),
-        // Parameter for whether to invert the paths for red alliance (returns false if alliance is invalid)
-        () -> FieldUtils.isRedAlliance(), 
+        AutoConstants.kPathPlannerConfig, // Path planner configuration for holonomic drive.
+        () -> FieldUtils.isRedAlliance(), // Parameter for whether to invert the paths for red alliance (returns false if alliance is invalid)
         this // Reference to this subsystem to set requirements
     );
 

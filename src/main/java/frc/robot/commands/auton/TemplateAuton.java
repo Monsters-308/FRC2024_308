@@ -10,6 +10,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import frc.robot.Constants.AutoConstants;
@@ -17,11 +18,21 @@ import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.DriveSubsystem;
 
 public class TemplateAuton extends SequentialCommandGroup {
+
+    public static final double kPXController = 1;
+    public static final double kPYController = 1;
+    public static final double kPThetaController = 1;
+    public static final double kMaxAccelerationMetersPerSecondSquared = 5 * AutoConstants.kAutoMaxSpeedMetersPerSecond;
+    public static final double kMaxAngularSpeedRadiansPerSecondSquared = Math.PI;
+
+    // Constraint for the motion profiled robot angle controller
+    public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(
+        AutoConstants.kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
     
     public TemplateAuton(DriveSubsystem m_robotDrive) {
         TrajectoryConfig config = new TrajectoryConfig(
-            AutoConstants.kMaxSpeedMetersPerSecond,
-            AutoConstants.kMaxAccelerationMetersPerSecondSquared)
+            AutoConstants.kAutoMaxSpeedMetersPerSecond,
+            kMaxAccelerationMetersPerSecondSquared)
             // Add kinematics to ensure max speed is actually obeyed
             .setKinematics(DriveConstants.kDriveKinematics);
 
@@ -36,7 +47,7 @@ public class TemplateAuton extends SequentialCommandGroup {
             config);
 
         ProfiledPIDController thetaController = new ProfiledPIDController(
-            AutoConstants.kPThetaController, 0, 0, AutoConstants.kThetaControllerConstraints);
+            kPThetaController, 0, 0, kThetaControllerConstraints);
         thetaController.enableContinuousInput(-Math.PI, Math.PI);
 
         SwerveControllerCommand swerveControllerCommand = new SwerveControllerCommand(
@@ -45,8 +56,8 @@ public class TemplateAuton extends SequentialCommandGroup {
             DriveConstants.kDriveKinematics,
 
             // Position controllers
-            new PIDController(AutoConstants.kPXController, 0, 0),
-            new PIDController(AutoConstants.kPYController, 0, 0),
+            new PIDController(kPXController, 0, 0),
+            new PIDController(kPYController, 0, 0),
             thetaController,
             m_robotDrive::setModuleStates,
             m_robotDrive);

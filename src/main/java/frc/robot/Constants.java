@@ -4,13 +4,15 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
+import com.pathplanner.lib.util.PIDConstants;
+import com.pathplanner.lib.util.ReplanningConfig;
 import com.revrobotics.CANSparkBase.IdleMode;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 
 /**
@@ -134,11 +136,10 @@ public final class Constants {
     public static final double kHeadingMaxOutput = 0.8; // Percent
     public static final double kHeadingTolerance = 1; // Degrees
 
-    // TODO: remove the old auton constants and put these in there
     public static final double kTranslationP = 5;
     public static final double kTranslationI = 0;
     public static final double kTranslationD = 0;
-    public static final double kTranslationMaxOutput = 0.5; // Percent // TODO: remember to set this to 1 after testing
+    public static final double kTranslationMaxOutput = 0.5; // Percent 
     public static final double kTranslationTolerance = Units.inchesToMeters(3); // Meters
   }
 
@@ -199,24 +200,34 @@ public final class Constants {
   }
 
   public static final class AutoConstants {
-    // TODO: these are old example constants. Figure out which to keep and which to get rid of.
-    public static final double kMaxSpeedMetersPerSecond = 3;
-    public static final double kMaxAccelerationMetersPerSecondSquared = 3;
+    public static final double kAutoMaxSpeedMetersPerSecond = 3;
     public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI;
-    public static final double kMaxAngularSpeedRadiansPerSecondSquared = Math.PI;
 
-    public static final double kPXController = 1;
-    public static final double kPYController = 1;
-    public static final double kPThetaController = 1;
+    public static final PIDConstants kAutoTranslationPID = new PIDConstants(
+      HeadingConstants.kTranslationP, 
+      HeadingConstants.kTranslationI, 
+      HeadingConstants.kTranslationD
+    );
 
-    // Constraint for the motion profiled robot angle controller
-    public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(
-        kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
+    public static final PIDConstants kAutoAngularPID = new PIDConstants(
+      5, 
+      0, 
+      0
+    );
 
-    public static final double kWheelSpeedAmp = 80;
-    public static final double kAngleAmp = 60;
-    public static final double kWheelSpeedSpeaker = 100;
-    public static final double kAngleSpeaker = 50;
+    public static final HolonomicPathFollowerConfig kPathPlannerConfig = new HolonomicPathFollowerConfig( 
+      kAutoTranslationPID, // Translation PID constants
+      kAutoAngularPID, // Rotation PID constants
+      kAutoMaxSpeedMetersPerSecond, // Max module speed, in m/s
+      // Using pythagoras's theorem to find distance from robot center to module
+      Math.hypot(DriveConstants.kTrackWidth / 2, DriveConstants.kWheelBase / 2), // Drive base radius in meters. Distance from robot center to furthest module.
+      new ReplanningConfig() // Default path replanning config. See the API for the options here
+    );
+
+    // public static final double kWheelSpeedAmp = 80;
+    // public static final double kAngleAmp = 60;
+    // public static final double kWheelSpeedSpeaker = 100;
+    // public static final double kAngleSpeaker = 50;
   }
 
   public static final class NeoMotorConstants {

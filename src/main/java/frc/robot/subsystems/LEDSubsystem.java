@@ -147,7 +147,7 @@ public class LEDSubsystem extends SubsystemBase {
       }
 
       // Increase by to make the rainbow "move"
-      m_rainbowFirstPixelHue = (m_rainbowFirstPixelHue + 1);
+      m_rainbowFirstPixelHue += 1;
     
       m_led.setData(m_ledBuffer);
     }

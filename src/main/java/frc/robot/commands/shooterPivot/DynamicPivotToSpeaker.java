@@ -1,7 +1,6 @@
 package frc.robot.commands.shooterPivot;
 
 import frc.robot.Constants.FieldConstants;
-import frc.robot.Constants.ShooterConstants;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ShooterPivotSubsystem;
 import frc.utils.FieldUtils;
@@ -34,8 +33,8 @@ public class DynamicPivotToSpeaker extends Command {
   public void execute() {
     double anglePivot = ShooterUtils.shooterAngleToFacePoint(
         m_DriveSubsystem.getPose().getTranslation(),
-        FieldUtils.flipRed(FieldConstants.kSpeakerPosition), 
-        FieldConstants.kSpeakerHeightInches + ShooterConstants.kSpeakerAimHeightInches);
+        FieldUtils.flipRed(FieldConstants.kSpeakerPosition)
+    );
 
     m_shooterPivotSubsystem.setPosition(anglePivot);
   }

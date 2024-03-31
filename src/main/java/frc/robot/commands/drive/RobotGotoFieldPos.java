@@ -113,7 +113,7 @@ public class RobotGotoFieldPos extends Command {
         );
         
         if(pidControllerX.atSetpoint() && pidControllerY.atSetpoint() && pidControllerAngle.atSetpoint()){
-            m_complete = true;
+            //m_complete = true;
         }
     }
 
