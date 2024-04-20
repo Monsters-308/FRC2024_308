@@ -29,8 +29,6 @@ public class LEDSubsystem extends SubsystemBase {
 
   private final BooleanSupplier noteInShooter;
 
-  private int rainbowSunshine = 0;
-
   public LEDSubsystem(DoubleSupplier X, BooleanSupplier noteDetect, DoubleSupplier targetDetect){
     controllerX = X;
     noteInShooter = noteDetect;

@@ -11,10 +11,11 @@ import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Button;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.SimpleWidget;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.IntakeConstants;
@@ -36,6 +37,7 @@ import frc.robot.commands.hanging.RaiseBothArms;
 import frc.robot.commands.intake.IntakeNote;
 import frc.robot.commands.intake.RunIntake;
 import frc.robot.commands.intakePivot.SetIntakeAngle;
+import frc.robot.commands.shooter.AutoShoot;
 import frc.robot.commands.shooter.CoolRevWheels;
 import frc.robot.commands.shooter.RevWheels;
 import frc.robot.commands.shooterIndex.IndexNote;
@@ -85,6 +87,9 @@ public class RobotContainer {
   private final HangingSubsystem m_hangingSubsystem = new HangingSubsystem();
   private final AmpFlapSubsystem m_ampFlapSubsystem = new AmpFlapSubsystem();
 
+  // Shuffleboard toggle for field-oriented
+  private final SimpleWidget m_isFieldOriented;
+
   // Controllers
   final XboxController m_driverController = new XboxController(OIConstants.kDriverControllerPort);
   final XboxController m_coDriverController = new XboxController(OIConstants.kCoDriverControllerPort);
@@ -97,9 +102,6 @@ public class RobotContainer {
 
   // The second note to pick up and score
   SendableChooser<Command> m_autonFirstAction = new SendableChooser<>();
-  // SendableChooser<Command> m_autonSecondAction = new SendableChooser<>();
-  // SendableChooser<Command> m_autonThirdAction = new SendableChooser<>();
-  // SendableChooser<Command> m_autonFourthAction = new SendableChooser<>();
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -115,6 +117,9 @@ public class RobotContainer {
     // Configure limelight default pipeline
     m_visionSubsystem.setDefaultCommand(new DefaultLimelightPipeline(m_visionSubsystem));
 
+    m_isFieldOriented = Shuffleboard.getTab("Swerve").add("Field-Oriented?", true)
+      .withWidget(BuiltInWidgets.kToggleSwitch); 
+
     // Configure default commands
     m_driveSubsystem.setDefaultCommand(
         // The left stick controls translation of the robot.
@@ -124,7 +129,7 @@ public class RobotContainer {
                 -MathUtil.applyDeadband(m_driverController.getLeftY(), OIConstants.kJoystickDeadband),
                 -MathUtil.applyDeadband(m_driverController.getLeftX(), OIConstants.kJoystickDeadband),
                 -MathUtil.applyDeadband(m_driverController.getRightX(), OIConstants.kJoystickDeadband),
-                true, true),
+                m_isFieldOriented.getEntry().getBoolean(false), true),
             m_driveSubsystem));
 
     // "registerCommand" lets pathplanner identify our commands
@@ -208,25 +213,10 @@ public class RobotContainer {
  
     // Adding options to the sendable chooser
     applyCommands(m_autonFirstAction);
-    // applyCommands(m_autonSecondAction);
-    // applyCommands(m_autonThirdAction);
-    // applyCommands(m_autonFourthAction);
 
     // Put choosers on the dashboard
     Shuffleboard.getTab("Autonomous").add("Launch First Note?", m_autonStartup).withSize(2, 1);
     Shuffleboard.getTab("Autonomous").add("First Action", m_autonFirstAction).withSize(2, 1);
-    // Shuffleboard.getTab("Autonomous").add("Second Action", m_autonSecondAction).withSize(2, 1);
-    // Shuffleboard.getTab("Autonomous").add("Third Action", m_autonThirdAction).withSize(2, 1);
-    // Shuffleboard.getTab("Autonomous").add("Fourth Action", m_autonFourthAction).withSize(2, 1);
-
-    // DEBUG: shuffleboard widget for resetting pose. For now I'm using a default
-    // // pose of 0, 0 and a rotation of 0
-    // Shuffleboard.getTab("Swerve").add("Reset Pose", new InstantCommand(() -> m_driveSubsystem.resetOdometry(
-    //     new Pose2d(0, 0, new Rotation2d(0)))));
-
-    // DEBUG: shuffleboard widget for manually setting the odometry equal to the
-    // vision calculation
-    // Shuffleboard.getTab("Vision").add("Update Odometry", new UpdateOdometry(m_driveSubsystem, m_visionSubsystem));
 
     // DEBUG: widgets for testing swerve modules
     Shuffleboard.getTab("Swerve").add("Module Drive Test", new RunCommand(
@@ -284,10 +274,12 @@ public class RobotContainer {
 
     //------------------------------------------- Driver buttons -------------------------------------------
 
-    // Left bumper: sets gyro to 0 degrees
-    new JoystickButton(m_driverController, Button.kLeftBumper.value)
-        .onTrue(new InstantCommand(
-            () -> m_driveSubsystem.zeroHeading()));
+    // // Left bumper: sets gyro to 0 degrees
+    // new JoystickButton(m_driverController, Button.kLeftBumper.value)
+    //     .onTrue(new InstantCommand(
+    //         () -> m_driveSubsystem.zeroHeading()));
+    Shuffleboard.getTab("Swerve").add("Zero Gyro", new InstantCommand(
+        () -> m_driveSubsystem.zeroHeading()));
 
     // Auto Aim speaker
     new JoystickButton(m_driverController, Button.kA.value)
@@ -310,15 +302,6 @@ public class RobotContainer {
     new JoystickButton(m_driverController, Button.kB.value)
         .whileTrue(
             new RobotGotoFieldPos(m_driveSubsystem, FieldConstants.kAmpScoringPosition, true));
-    
-    // // Auto Aim trap
-    // new JoystickButton(m_driverController, Button.kY.value)
-    //     .toggleOnTrue(
-    //         new autoTrapShoot(
-    //             m_driveSubsystem,
-    //             m_shooterPivotSubsystem,
-    //             m_shooterSubsystem
-    //             ));
     
     // Dpad up: makes robot face 0 degrees
     new POVButton(m_driverController, 0)
@@ -364,6 +347,24 @@ public class RobotContainer {
                 () -> m_driverController.getLeftX(),
                 () -> m_driverController.getRightX()));
 
+    // Y button: Intake note
+    new JoystickButton(m_driverController, Button.kY.value)
+      .toggleOnTrue(
+        new CompleteIntake(m_intakeSubsystem, m_shooterPivotSubsystem, m_shooterIndexSubsystem, m_intakePivotSubsystem, m_LEDSubsystem)
+          .andThen(
+            new SetIntakeAngle(m_intakePivotSubsystem, IntakePivotConstants.kIntakeInPosition)
+          ).withInterruptBehavior(InterruptionBehavior.kCancelIncoming)
+          .finallyDo(() -> {
+            new SetIntakeAngle(m_intakePivotSubsystem, IntakePivotConstants.kIntakeInPosition).schedule();
+            m_LEDSubsystem.setLEDFunction(m_LEDSubsystem::rainbow);
+          })
+      );
+    
+    // A button: fire note
+    new JoystickButton(m_driverController, Button.kA.value)
+      .onTrue(
+          new AutoShoot(m_shooterSubsystem, m_shooterPivotSubsystem, m_shooterIndexSubsystem, m_LEDSubsystem)
+      );
 
     //------------------------------------------- coDriver buttons -------------------------------------------
 
@@ -401,21 +402,6 @@ public class RobotContainer {
         new InstantCommand(
             m_shooterSubsystem::stopRollers, m_shooterSubsystem)
       );
-    // Button box equivalent
-    // new JoystickButton(m_buttonBox, 5)
-    //   .onTrue(
-    //     new SequentialCommandGroup(
-    //       new InstantCommand(
-    //         () -> m_shooterSubsystem.setBottomShooterSpeed(13), m_shooterSubsystem),
-    //       new InstantCommand(
-    //         () -> m_shooterSubsystem.setTopShooterSpeed(10), m_shooterSubsystem),
-    //       new InstantCommand(
-    //         () -> m_shooterPivotSubsystem.setPosition(60), m_shooterPivotSubsystem
-    //       )
-    //     ))
-    //   .onFalse(
-    //     new InstantCommand(
-    //         m_shooterSubsystem::stopRollers, m_shooterSubsystem));
     
     // Y button: Intake note
     new JoystickButton(m_coDriverController, Button.kY.value)
@@ -429,19 +415,6 @@ public class RobotContainer {
             m_LEDSubsystem.setLEDFunction(m_LEDSubsystem::rainbow);
           })
       );
-    // Button box equivalent
-    // new JoystickButton(m_buttonBox, 2)
-    //   .toggleOnTrue(
-    //     new CompleteIntake(m_intakeSubsystem, m_shooterPivotSubsystem, m_shooterIndexSubsystem, m_intakePivotSubsystem, m_LEDSubsystem)
-    //       .andThen(
-    //         new SetIntakeAngle(m_intakePivotSubsystem, IntakePivotConstants.kIntakeInPosition)
-    //       )
-    //       .finallyDo(() -> {
-    //         new SetIntakeAngle(m_intakePivotSubsystem, IntakePivotConstants.kIntakeInPosition).schedule();
-    //         m_LEDSubsystem.setLEDFunction(m_LEDSubsystem::rainbow);
-    //       }
-    //       ).withInterruptBehavior(InterruptionBehavior.kCancelIncoming)
-    //   );
 
     // DEBUG:
     // // Dpad up: shooter pivot up
@@ -472,13 +445,6 @@ public class RobotContainer {
       .onFalse(
           new InstantCommand(() -> m_ampFlapSubsystem.setSpeed(0), m_ampFlapSubsystem));
 
-    // Button box flap: Go forwards when pressed, go backwards when not pressed
-    // new JoystickButton(m_buttonBox, 6)
-    //   .onTrue(
-    //     new InstantCommand(() -> m_ampFlapSubsystem.setSpeed(0.2), m_ampFlapSubsystem))
-    //   .onFalse(
-    //     new ampFlapDown(m_ampFlapSubsystem));
-
     // POV left: reverse intake
     new POVButton(m_coDriverController, 270)
       .whileTrue(
@@ -487,14 +453,6 @@ public class RobotContainer {
               m_shooterIndexSubsystem,
               m_shooterPivotSubsystem, m_LEDSubsystem
               ));
-    // Button box equivalent
-    // new JoystickButton(m_buttonBox, 3)
-    //   .whileTrue(
-    //       new RunIntake(m_intakeSubsystem, -1)
-    //       .alongWith(new SetIntakeAngle(m_intakePivotSubsystem, IntakePivotConstants.kIntakeDownPosition)))
-    //   .onFalse(
-    //     new SetIntakeAngle(m_intakePivotSubsystem, IntakePivotConstants.kIntakeInPosition)
-    //   );
 
     // Dpad right: bring intake in
     new POVButton(m_coDriverController, 90)
@@ -507,22 +465,12 @@ public class RobotContainer {
         .whileTrue(
             new RaiseBothArms(
                 m_hangingSubsystem));
-    // Button box equivalent
-    // new JoystickButton(m_buttonBox, 7)
-    //     .whileTrue(
-    //         new RaiseBothArms(
-    //             m_hangingSubsystem));
 
     // Right bumper: lower hanging arms
     new JoystickButton(m_coDriverController, Button.kLeftBumper.value)
         .whileTrue(
             new LowerBothArms(
                 m_hangingSubsystem));
-    // Button box equivalent
-    // new JoystickButton(m_buttonBox, 8)
-    //     .whileTrue(
-    //         new LowerBothArms(
-    //             m_hangingSubsystem));
 
     // Right trigger: shoot note 
     new Trigger(() -> m_coDriverController.getRightTriggerAxis() > OIConstants.kTriggerDeadband)
@@ -531,24 +479,12 @@ public class RobotContainer {
           new InstantCommand(() -> m_shooterIndexSubsystem.setSpeed(0), m_shooterIndexSubsystem)
         )
       );
-    // Button box equivalent
-    // new JoystickButton(m_buttonBox, 4)
-    //   .toggleOnTrue(
-    //     new LaunchNote(m_shooterIndexSubsystem, m_LEDSubsystem).andThen(
-    //       new InstantCommand(() -> m_shooterIndexSubsystem.setSpeed(0), m_shooterIndexSubsystem)
-    //     )
-    //   );
 
     // Left trigger: charge up wheels 
     new Trigger(() -> m_coDriverController.getLeftTriggerAxis() > OIConstants.kTriggerDeadband)
       .whileTrue(
         new CoolRevWheels(m_shooterSubsystem, m_coDriverController)
       );
-    // Button box equivalent
-    // new JoystickButton(m_buttonBox, 1)
-    //   .whileTrue(
-    //     new CoolRevWheels(m_shooterSubsystem, m_coDriverController)
-    //   );
   }
 
   /**
@@ -581,41 +517,6 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-
-      Command foo = m_autonStartup.getSelected();
-      System.out.println(foo);
-      return new SequentialCommandGroup(
-        foo
-        // m_autonFirstAction.getSelected(), 
-        // m_autonSecondAction.getSelected(),
-        // m_autonThirdAction.getSelected(),
-        // m_autonFourthAction.getSelected()
-
-        //first shots
-        //new DynamicStartup(m_shooterSubsystem, m_shooterIndexSubsystem, m_LEDSubsystem, m_shooterPivotSubsystem, m_visionSubsystem, m_driveSubsystem, m_LEDSubsystem),
-        // new WaitCommand(0.5),
-        // new SequentialCommandGroup(
-        //   new InstantCommand(() -> m_shooterSubsystem.setPercent(1)),
-        //   new WaitCommand(1),
-        //   new AutonShootNote(m_shooterIndexSubsystem, m_LEDSubsystem)
-        // ),
-
-        // //middle notes
-        // new PathPlannerAuto("Close NOTE(CENTER SIDE)") //CENTETR SIDE 
-        //new PathPlannerAuto("AutoAim Close NOTE(AMP SIDE)"), //AMP SIDE 
-        //new PathPlannerAuto("AutoAim Close NOTE(SOURCE SIDE)"), //SOURCE SIDE 
-
-        //middle with center start
-        //new PathPlannerAuto("AutoAim Close NOTE(CENTER SIDE)"), //CENTETR SIDE 
-        //new PathPlannerAuto("autoAimCloseAmp"), //AMP SIDE 
-        //new PathPlannerAuto("autoAimCloseSource") //SOURCE SIDE 
-        //far notes
-        //new PathPlannerAuto("AutoAim FAR RING(SOURCE SIDE) 1") //SOURCE SIDE
-        //new PathPlannerAuto("AutoAim FAR RING(AMP SIDE) 1") // AMP SIDE
-
-        //AMP
-        // new PathPlannerAuto("AutoAim FAR RING(AMP SIDE) 1")
-        // new PathPlannerAuto("AutoAim Close NOTE(AMP SIDE)")
-      );
+      return new WaitCommand(15);
   }
 }

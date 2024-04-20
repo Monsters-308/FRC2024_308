@@ -31,8 +31,8 @@ public final class Constants {
   public static final class DriveConstants {
     // Driving Parameters - Note that these are not the maximum capable speeds of
     // the robot, rather the allowed maximum speeds
-    public static final double kMaxSpeedMetersPerSecond = 5.5;
-    public static final double kMaxAngularSpeed = 2 * Math.PI; // radians per second
+    public static final double kMaxSpeedMetersPerSecond = 1;
+    public static final double kMaxAngularSpeed = 0.7 * Math.PI; // radians per second
 
     public static final double kMagnitudeSlewRate = 5 * kMaxSpeedMetersPerSecond; // meters per second^2
     public static final double kRotationalSlewRate = 5 * kMaxAngularSpeed;        // radians per second^2
@@ -346,7 +346,7 @@ public final class Constants {
     // Speed to rev the shooter to when shooting
     public static final double kWheelRevSpeed = 30; //Meters per second
     // Idle speed that shooter defaults to
-    public static final double kIdleRevSpeed = 0.3; //Precent
+    public static final double kIdleRevSpeed = 0; //Precent
 
     
     //                ************* Super important constants for math **************
