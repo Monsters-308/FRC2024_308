@@ -11,13 +11,13 @@ import frc.robot.subsystems.ShooterSubsystem;
 
 public class AutoShoot extends SequentialCommandGroup  {
 
-    /** Moves the robot in front of the amp  */
+    /** Moves the robot in front of the amp  wheel speed 10*/
     public AutoShoot(ShooterSubsystem shooterSubsystem, ShooterPivotSubsystem shooterPivotSubsystem, ShooterIndexSubsystem shooterIndexSubsystem, 
-                    LEDSubsystem ledSubsystem){
+                    LEDSubsystem ledSubsystem, double wheelSpeed){
         addCommands(
             new SequentialCommandGroup(
                 new InstantCommand(() -> shooterPivotSubsystem.setPosition(ShooterPivotConstants.kShooterPivotSpeakerPosition), shooterPivotSubsystem),
-                new InstantCommand(() -> shooterSubsystem.setBothSpeeds(10), shooterSubsystem)
+                new InstantCommand(() -> shooterSubsystem.setBothSpeeds(wheelSpeed), shooterSubsystem)
             ),
             new WaitCommand(0.7),
             new LaunchNote(shooterIndexSubsystem, ledSubsystem),

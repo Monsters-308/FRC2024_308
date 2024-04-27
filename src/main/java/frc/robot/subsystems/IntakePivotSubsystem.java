@@ -4,10 +4,13 @@ import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.IntakePivotConstants;
 import frc.robot.commands.intakePivot.SetIntakeAngle;
@@ -21,6 +24,16 @@ public class IntakePivotSubsystem extends SubsystemBase {
   private final DutyCycleEncoder m_intakePivotMotorEncoder = new DutyCycleEncoder(IntakePivotConstants.kEncoderPort);
 
   private final ShuffleboardTab m_Tab = Shuffleboard.getTab("Intake");
+  
+
+  private final PIDController m_angleController = new PIDController(IntakePivotConstants.kPivotP, 
+                                                                    IntakePivotConstants.kPivotI, 
+                                                                    IntakePivotConstants.kPivotD);
+
+  private double m_desiredAngleDegrees = IntakePivotConstants.kIntakeInPosition;
+
+  private boolean m_pidMode = false;
+
 
   /** 
    * Controls the motors that rotate the intake down and up, along with the absolute
@@ -85,12 +98,54 @@ public class IntakePivotSubsystem extends SubsystemBase {
 
   /** This function is for testing purposes */
   public void setSpeed(double speed){
+    m_pidMode = false;
     m_masterMotor.set(speed);
+  }
+
+  /** This function is for testing purposes */
+  public void setPosition(double positionDegrees){
+    m_pidMode = true;
+    m_desiredAngleDegrees = MathUtil.clamp(positionDegrees, IntakePivotConstants.kPivotMinAngle, IntakePivotConstants.kPivotMaxAngle);
+  }
+
+  /**
+   * Returns whether the shooter pivot is at its desired position within an amount of tolerance.
+   * @return true if in its desired position.
+   */
+  public boolean inPosition(){
+    double currentAngleDegrees = getPosition().getDegrees();
+    
+    return Math.abs(currentAngleDegrees - m_desiredAngleDegrees) < IntakePivotConstants.kAngleTolerance;
+  }
+
+  /** Stops pivot movement by setting the desired angle to the current angle. */
+  public void stopMovement(){
+    m_desiredAngleDegrees = getPosition().getDegrees();
   }
 
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run 
+    if (m_pidMode){
+      // This method will be called once per scheduler run 
+      m_angleController.setSetpoint(m_desiredAngleDegrees);
+
+      double currentAngleDegrees = getPosition().getDegrees();
+
+      double currentAngleRadians = getPosition().getRadians();
+
+
+      // Sinusoidal profiling to adjust for gravity
+      double gravityOffset = Math.sin(currentAngleRadians) * IntakePivotConstants.kGravityOffsetMultiplier;
+
+      // Total motor output with PID and gravity adjustment
+      double totalMotorOutput = m_angleController.calculate(currentAngleDegrees) + gravityOffset;
+
+      // DEBUG: display motor output to make sure we're not stalling it too much
+      SmartDashboard.putNumber("intakeGravity", totalMotorOutput);
+
+      m_masterMotor.set(totalMotorOutput);
+    }
+
   }
 
 }

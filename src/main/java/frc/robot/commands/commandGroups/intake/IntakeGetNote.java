@@ -20,13 +20,24 @@ import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.subsystems.ShooterIndexSubsystem;
 import frc.robot.subsystems.ShooterPivotSubsystem;
 
-public class CompleteIntake extends SequentialCommandGroup  {
+public class IntakeGetNote extends SequentialCommandGroup  {
 
     /** Intakes a note from the ground and then puts it into the shooter index */
-    public CompleteIntake(IntakeSubsystem intakeSubsystem, ShooterPivotSubsystem shooterPivotSubsystem, ShooterIndexSubsystem shooterIndexSubsystem, IntakePivotSubsystem intakePivotSubsystem, LEDSubsystem LEDsubsystem){
+    public IntakeGetNote(IntakeSubsystem intakeSubsystem, ShooterPivotSubsystem shooterPivotSubsystem, ShooterIndexSubsystem shooterIndexSubsystem, IntakePivotSubsystem intakePivotSubsystem, LEDSubsystem LEDsubsystem){
         addCommands(
-            new IntakeGetNote(intakeSubsystem,shooterPivotSubsystem,shooterIndexSubsystem, intakePivotSubsystem, LEDsubsystem),
-            new IntakeIndexNote(intakeSubsystem,shooterPivotSubsystem,shooterIndexSubsystem, intakePivotSubsystem, LEDsubsystem)
+            new setLED(LEDsubsystem, LEDsubsystem::red),
+
+            // Get the shooter pivot started early
+            new InstantCommand(() -> shooterPivotSubsystem.setPosition(ShooterPivotConstants.kShooterPivotDeckPosition), shooterPivotSubsystem),
+
+            // Put intake down and run intake until a note is detected
+            new ParallelCommandGroup(
+                new IntakeGoStatic(intakePivotSubsystem, IntakePivotConstants.kIntakeDownPosition),
+                new RunIntake(intakeSubsystem, 1)
+                    .until(() -> intakeSubsystem.gamePieceDetected())
+            ),
+
+            new setLED(LEDsubsystem, LEDsubsystem::yellow)
         );
     }
 }

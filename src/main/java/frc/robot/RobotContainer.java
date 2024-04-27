@@ -126,9 +126,9 @@ public class RobotContainer {
         // Turning is controlled by the X axis of the right stick.
         new RunCommand(
             () -> m_driveSubsystem.drive(
-                -MathUtil.applyDeadband(m_driverController.getLeftY(), OIConstants.kJoystickDeadband),
-                -MathUtil.applyDeadband(m_driverController.getLeftX(), OIConstants.kJoystickDeadband),
-                -MathUtil.applyDeadband(m_driverController.getRightX(), OIConstants.kJoystickDeadband),
+                -MathUtil.applyDeadband(m_driverController.getLeftY()*0.25, OIConstants.kJoystickDeadband),
+                -MathUtil.applyDeadband(m_driverController.getLeftX()*0.25, OIConstants.kJoystickDeadband),
+                -MathUtil.applyDeadband(m_driverController.getRightX()*0.65, OIConstants.kJoystickDeadband),
                 m_isFieldOriented.getEntry().getBoolean(false), true),
             m_driveSubsystem));
 
@@ -305,14 +305,13 @@ public class RobotContainer {
     
     // Dpad up: makes robot face 0 degrees
     new POVButton(m_driverController, 0)
-        .toggleOnTrue(
-            new RobotGotoAngle(
-                m_driveSubsystem,
-                0,
-                false,
-                () -> m_driverController.getLeftY(),
-                () -> m_driverController.getLeftX(),
-                () -> m_driverController.getRightX()));
+    .toggleOnTrue(new RunCommand(
+      () -> m_driveSubsystem.drive(
+          -MathUtil.applyDeadband(m_driverController.getLeftY(), OIConstants.kJoystickDeadband),
+          -MathUtil.applyDeadband(m_driverController.getLeftX(), OIConstants.kJoystickDeadband),
+          -MathUtil.applyDeadband(m_driverController.getRightX(), OIConstants.kJoystickDeadband),
+          m_isFieldOriented.getEntry().getBoolean(false), true),
+      m_driveSubsystem));
 
     // Dpad right: makes robot face 90 degrees to the right
     new POVButton(m_driverController, 90)
@@ -363,7 +362,13 @@ public class RobotContainer {
     // A button: fire note
     new JoystickButton(m_driverController, Button.kA.value)
       .onTrue(
-          new AutoShoot(m_shooterSubsystem, m_shooterPivotSubsystem, m_shooterIndexSubsystem, m_LEDSubsystem)
+          new AutoShoot(m_shooterSubsystem, m_shooterPivotSubsystem, m_shooterIndexSubsystem, m_LEDSubsystem, 10)
+      );
+
+    // X button: fast mode
+    new JoystickButton(m_driverController, Button.kX.value)
+      .onTrue(
+          new AutoShoot(m_shooterSubsystem, m_shooterPivotSubsystem, m_shooterIndexSubsystem, m_LEDSubsystem, 30)
       );
 
     //------------------------------------------- coDriver buttons -------------------------------------------
@@ -405,7 +410,7 @@ public class RobotContainer {
     
     // Y button: Intake note
     new JoystickButton(m_coDriverController, Button.kY.value)
-      .toggleOnTrue(
+      .whileTrue(
         new CompleteIntake(m_intakeSubsystem, m_shooterPivotSubsystem, m_shooterIndexSubsystem, m_intakePivotSubsystem, m_LEDSubsystem)
           .andThen(
             new SetIntakeAngle(m_intakePivotSubsystem, IntakePivotConstants.kIntakeInPosition)
@@ -433,10 +438,10 @@ public class RobotContainer {
 
     // Dpad up: Amp flap forwards
     new POVButton(m_coDriverController, 0)
-      .onTrue(
-          new InstantCommand(() -> m_ampFlapSubsystem.setSpeed(0.2), m_ampFlapSubsystem))
-      .onFalse(
-          new InstantCommand(() -> m_ampFlapSubsystem.setSpeed(0), m_ampFlapSubsystem));
+    .whileTrue(
+      new AutoShoot(m_shooterSubsystem, m_shooterPivotSubsystem, m_shooterIndexSubsystem, m_LEDSubsystem, 30)
+      );
+
 
     // Dpad down: Amp flap backwards
     new POVButton(m_coDriverController, 180)

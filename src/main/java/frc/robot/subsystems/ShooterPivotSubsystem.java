@@ -22,7 +22,7 @@ public class ShooterPivotSubsystem extends SubsystemBase {
 
   private final DutyCycleEncoder m_shooterPivotMotorEncoder = new DutyCycleEncoder(ShooterPivotConstants.kEncoderPort);
 
-  private double m_desiredAngleDegrees = ShooterPivotConstants.kShooterPivotSpeakerPosition;
+    private double m_desiredAngleDegrees = ShooterPivotConstants.kShooterPivotSpeakerPosition;
 
   private final PIDController m_angleController = new PIDController(ShooterPivotConstants.kPivotP, 
                                                                     ShooterPivotConstants.kPivotI, 
