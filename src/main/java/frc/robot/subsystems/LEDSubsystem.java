@@ -141,7 +141,7 @@ public class LEDSubsystem extends SubsystemBase {
     else{
       // For every pixel
       for (var i = 0; i < m_ledBuffer.getLength(); i++) {
-        m_ledBuffer.setHSV(i, (m_rainbowFirstPixelHue + i) % 180, 255, 10);
+        m_ledBuffer.setHSV(i, (m_rainbowFirstPixelHue + i) % 180, 255, 255);
       }
 
       // Increase by to make the rainbow "move"

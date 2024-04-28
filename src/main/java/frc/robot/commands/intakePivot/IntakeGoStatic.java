@@ -1,4 +1,4 @@
-package frc.robot.commands.intake;
+package frc.robot.commands.intakePivot;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.IntakePivotSubsystem;
@@ -7,11 +7,9 @@ public class IntakeGoStatic extends Command {
   private final IntakePivotSubsystem m_intakePivotSubsystem;
   private final double m_position;
 
-  /**
-   * Runs the intake rollers at a specified speed.
-   * NOTE: this is equivalent to new InstantCommand(() -> m_intakeSubsystem.setSpeed(speed), m_intakeSubsystem) 
-   * except it stops the motor when interrupted.
-   * @param intakeSubsystem
+  /** 
+   * Sets the intake pivot to a specific angle using PID control.
+   * Once the pivot is in position, it disables PID control and the command ends.
    */
   public IntakeGoStatic(IntakePivotSubsystem intakeSubsystem, double position) {
     m_intakePivotSubsystem = intakeSubsystem;
@@ -20,9 +18,9 @@ public class IntakeGoStatic extends Command {
     addRequirements(m_intakePivotSubsystem);
   }
 
-  // Called every time the scheduler runs while the command is scheduled.
+  // Called when the command is initially scheduled.
   @Override
-  public void execute() {
+  public void initialize() {
    m_intakePivotSubsystem.setPosition(m_position);
   }
 

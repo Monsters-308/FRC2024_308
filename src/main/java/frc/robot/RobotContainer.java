@@ -17,8 +17,6 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.SimpleWidget;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import frc.robot.Constants.FieldConstants;
-import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.IntakePivotConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.ShooterPivotConstants;
@@ -26,16 +24,16 @@ import frc.robot.commands.auton.AutonShootNote;
 import frc.robot.commands.auton.DynamicStartup;
 import frc.robot.commands.commandGroups.intake.CompleteIntake;
 import frc.robot.commands.commandGroups.intake.CompleteIntakeReverse;
+import frc.robot.commands.commandGroups.intake.IntakeGetNote;
+import frc.robot.commands.commandGroups.intake.IntakeIndexNote;
 import frc.robot.commands.commandGroups.shooter.LaunchNote;
 import frc.robot.commands.commandGroups.shooter.ampFlapDown;
 import frc.robot.commands.drive.AutoAimDynamic;
-import frc.robot.commands.drive.RobotGotoAngle;
-import frc.robot.commands.drive.RobotGotoFieldPos;
 import frc.robot.commands.drive.TurningMotorsTest;
 import frc.robot.commands.hanging.LowerBothArms;
 import frc.robot.commands.hanging.RaiseBothArms;
-import frc.robot.commands.intake.IntakeNote;
 import frc.robot.commands.intake.RunIntake;
+import frc.robot.commands.intakePivot.IntakeGoStatic;
 import frc.robot.commands.intakePivot.SetIntakeAngle;
 import frc.robot.commands.shooter.AutoShoot;
 import frc.robot.commands.shooter.CoolRevWheels;
@@ -57,11 +55,9 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Command.InterruptionBehavior;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -141,26 +137,13 @@ public class RobotContainer {
 
     // First part: getting note in intake
     NamedCommands.registerCommand("Intake Note",
-      new ParallelCommandGroup(
-        new SetIntakeAngle(m_intakePivotSubsystem, IntakePivotConstants.kIntakeDownPosition),
-        new IntakeNote(m_intakeSubsystem)
-      )
+      new IntakeGetNote(m_intakeSubsystem, m_shooterPivotSubsystem, m_shooterIndexSubsystem, m_intakePivotSubsystem, m_LEDSubsystem)
     );
 
     // Second part: putting note in shooter (Only if there's a note in the intake)
     NamedCommands.registerCommand("Index Note",
-      new SequentialCommandGroup(
-        new SetIntakeAngle(m_intakePivotSubsystem, IntakePivotConstants.kIntakeDeckPosition),
-
-        new InstantCommand(() -> m_shooterPivotSubsystem.setPosition(ShooterPivotConstants.kShooterPivotDeckPosition), m_shooterPivotSubsystem),
-        new WaitUntilCommand(() -> m_shooterPivotSubsystem.inPosition()),
-
-        new ParallelDeadlineGroup(
-            new IndexNote(m_shooterIndexSubsystem), 
-            new RunIntake(m_intakeSubsystem, IntakeConstants.kIntakeSpeed) 
-        ),
-        new InstantCommand(() -> m_shooterPivotSubsystem.setPosition(ShooterPivotConstants.kShooterPivotPoduim), m_shooterPivotSubsystem)
-      ).onlyIf(() -> m_intakeSubsystem.gamePieceDetected())
+      new IntakeIndexNote(m_intakeSubsystem, m_shooterPivotSubsystem, m_shooterIndexSubsystem, m_intakePivotSubsystem, m_LEDSubsystem)
+      .onlyIf(() -> m_intakeSubsystem.gamePieceDetected())
     );
  
     // Launch note only if there's actually a note to shoot
@@ -274,87 +257,44 @@ public class RobotContainer {
 
     //------------------------------------------- Driver buttons -------------------------------------------
 
-    // // Left bumper: sets gyro to 0 degrees
-    // new JoystickButton(m_driverController, Button.kLeftBumper.value)
-    //     .onTrue(new InstantCommand(
-    //         () -> m_driveSubsystem.zeroHeading()));
+    // Use a shuffleboard widget to reset gyro instead of a button so kids don't accidentally press it
     Shuffleboard.getTab("Swerve").add("Zero Gyro", new InstantCommand(
         () -> m_driveSubsystem.zeroHeading()));
 
     // Auto Aim speaker
-    new JoystickButton(m_driverController, Button.kA.value)
-        .whileTrue(
-            new ParallelCommandGroup(
-              new AutoAimDynamic(
-                m_visionSubsystem, 
-                m_driveSubsystem, 
-                () -> m_driverController.getLeftY(),
-                () -> m_driverController.getLeftX(),
-                m_LEDSubsystem),
+    // new JoystickButton(m_driverController, Button.kA.value)
+    //     .whileTrue(
+    //         new ParallelCommandGroup(
+    //           new AutoAimDynamic(
+    //             m_visionSubsystem, 
+    //             m_driveSubsystem, 
+    //             () -> m_driverController.getLeftY(),
+    //             () -> m_driverController.getLeftX(),
+    //             m_LEDSubsystem),
 
-              new DynamicPivotToSpeaker(
-                m_shooterPivotSubsystem, 
-                m_driveSubsystem)
-            )
-          );
-
-    // Auto Aim Amp
-    new JoystickButton(m_driverController, Button.kB.value)
-        .whileTrue(
-            new RobotGotoFieldPos(m_driveSubsystem, FieldConstants.kAmpScoringPosition, true));
+    //           new DynamicPivotToSpeaker(
+    //             m_shooterPivotSubsystem, 
+    //             m_driveSubsystem)
+    //         )
+    //       );
     
-    // Dpad up: makes robot face 0 degrees
+    // Dpad up: toggle turbo mode
     new POVButton(m_driverController, 0)
-    .toggleOnTrue(new RunCommand(
-      () -> m_driveSubsystem.drive(
-          -MathUtil.applyDeadband(m_driverController.getLeftY(), OIConstants.kJoystickDeadband),
-          -MathUtil.applyDeadband(m_driverController.getLeftX(), OIConstants.kJoystickDeadband),
-          -MathUtil.applyDeadband(m_driverController.getRightX(), OIConstants.kJoystickDeadband),
-          m_isFieldOriented.getEntry().getBoolean(false), true),
-      m_driveSubsystem));
-
-    // Dpad right: makes robot face 90 degrees to the right
-    new POVButton(m_driverController, 90)
-        .toggleOnTrue(
-            new RobotGotoAngle(
-                m_driveSubsystem,
-                -90,
-                false,
-                () -> m_driverController.getLeftY(),
-                () -> m_driverController.getLeftX(),
-                () -> m_driverController.getRightX()));
-
-    // Dpad down: makes robot face 180 degrees
-    new POVButton(m_driverController, 180)
-        .toggleOnTrue(
-            new RobotGotoAngle(
-                m_driveSubsystem,
-                180,
-                false,
-                () -> m_driverController.getLeftY(),
-                () -> m_driverController.getLeftX(),
-                () -> m_driverController.getRightX()));
-                
-    // Dpad left: makes robot face 90 degrees to the left
-    new POVButton(m_driverController, 270)
-        .toggleOnTrue(
-            new RobotGotoAngle(
-                m_driveSubsystem,
-                90,
-                false,
-                () -> m_driverController.getLeftY(),
-                () -> m_driverController.getLeftX(),
-                () -> m_driverController.getRightX()));
+      .toggleOnTrue(new RunCommand(
+        () -> m_driveSubsystem.drive(
+            -MathUtil.applyDeadband(m_driverController.getLeftY(), OIConstants.kJoystickDeadband),
+            -MathUtil.applyDeadband(m_driverController.getLeftX(), OIConstants.kJoystickDeadband),
+            -MathUtil.applyDeadband(m_driverController.getRightX(), OIConstants.kJoystickDeadband),
+            m_isFieldOriented.getEntry().getBoolean(false), true),
+        m_driveSubsystem));
 
     // Y button: Intake note
     new JoystickButton(m_driverController, Button.kY.value)
       .toggleOnTrue(
         new CompleteIntake(m_intakeSubsystem, m_shooterPivotSubsystem, m_shooterIndexSubsystem, m_intakePivotSubsystem, m_LEDSubsystem)
-          .andThen(
-            new SetIntakeAngle(m_intakePivotSubsystem, IntakePivotConstants.kIntakeInPosition)
-          ).withInterruptBehavior(InterruptionBehavior.kCancelIncoming)
+          //.withInterruptBehavior(InterruptionBehavior.kCancelIncoming)
           .finallyDo(() -> {
-            new SetIntakeAngle(m_intakePivotSubsystem, IntakePivotConstants.kIntakeInPosition).schedule();
+            new IntakeGoStatic(m_intakePivotSubsystem, IntakePivotConstants.kIntakeInPosition).schedule();
             m_LEDSubsystem.setLEDFunction(m_LEDSubsystem::rainbow);
           })
       );

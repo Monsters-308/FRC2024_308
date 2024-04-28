@@ -257,8 +257,8 @@ public final class Constants {
 
     public static final boolean kTurningMotorEncoderInverted = false;
     public static final int kEncoderPort = 1;
-    public static final double kAngleTolerance = 5;
-    public static final double kAngleOffset = -224; //add 23
+    public static final double kAngleTolerance = 4;
+    public static final double kAngleOffset = -224;
 
     public static final double kShooterEncoderPositionFactor = 360; 
 
@@ -267,18 +267,19 @@ public final class Constants {
     public static final double kPivotMaxAngle = 37.7;
 
     public static final double kPivotSpeed = 1;
+    
+    // PID constants
+    public static final double kPivotP = 0.05;
+    public static final double kPivotI = 0;
+    public static final double kPivotD = 0;
+    
+    public static final double kGravityOffsetMultiplier = 0.3;
 
     /*           Constants for pivot positions:            */
 
     public static final double kIntakeDownPosition = -103.7;
     public static final double kIntakeDeckPosition = -41;
     public static final double kIntakeInPosition = -17; 
-
-    public static final double kGravityOffsetMultiplier = 0.1;
-
-    public static final double kPivotP = 0.005;
-    public static final double kPivotI = 0;
-    public static final double kPivotD = 0;
   }
 
   public static final class HangingConstants {
