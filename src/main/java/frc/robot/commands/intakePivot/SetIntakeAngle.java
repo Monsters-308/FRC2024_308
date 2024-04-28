@@ -9,7 +9,7 @@ public class SetIntakeAngle extends Command {
   private final double m_desiredAngle;
 
   /**
-   * Moves the intake pivot to a specific angle. 
+   * (Defunct) Moves the intake pivot to a specific angle. 
    * This command ends once the arm has reached its desired angle.
    * @param intakePivotSubsystem
    */

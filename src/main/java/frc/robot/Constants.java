@@ -257,22 +257,29 @@ public final class Constants {
 
     public static final boolean kTurningMotorEncoderInverted = false;
     public static final int kEncoderPort = 1;
-    public static final double kAngleTolerance = 5;
-    public static final double kAngleOffset = -247;
+    public static final double kAngleTolerance = 4;
+    public static final double kAngleOffset = -224;
 
     public static final double kShooterEncoderPositionFactor = 360; 
 
     // Safety: prevent pivot from going beyond its minimum and maximum
-    public static final Rotation2d kPivotMinAngle = Rotation2d.fromDegrees(-126.7);
-    public static final Rotation2d kPivotMaxAngle = Rotation2d.fromDegrees(14.7);
+    public static final double kPivotMinAngle = -103.7;
+    public static final double kPivotMaxAngle = 37.7;
 
     public static final double kPivotSpeed = 1;
+    
+    // PID constants
+    public static final double kPivotP = 0.05;
+    public static final double kPivotI = 0;
+    public static final double kPivotD = 0;
+    
+    public static final double kGravityOffsetMultiplier = 0.3;
 
     /*           Constants for pivot positions:            */
 
-    public static final double kIntakeDownPosition = -126.7;
-    public static final double kIntakeDeckPosition = -64;
-    public static final double kIntakeInPosition = -40; 
+    public static final double kIntakeDownPosition = -103.7;
+    public static final double kIntakeDeckPosition = -41;
+    public static final double kIntakeInPosition = -17; 
   }
 
   public static final class HangingConstants {

@@ -11,13 +11,11 @@ import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import frc.robot.Constants.FieldConstants;
-import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.IntakePivotConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.ShooterPivotConstants;
@@ -25,6 +23,8 @@ import frc.robot.commands.auton.AutonShootNote;
 import frc.robot.commands.auton.DynamicStartup;
 import frc.robot.commands.commandGroups.intake.CompleteIntake;
 import frc.robot.commands.commandGroups.intake.CompleteIntakeReverse;
+import frc.robot.commands.commandGroups.intake.IntakeGetNote;
+import frc.robot.commands.commandGroups.intake.IntakeIndexNote;
 import frc.robot.commands.commandGroups.shooter.LaunchNote;
 import frc.robot.commands.commandGroups.shooter.ampFlapDown;
 import frc.robot.commands.drive.AutoAimDynamic;
@@ -33,12 +33,10 @@ import frc.robot.commands.drive.RobotGotoFieldPos;
 import frc.robot.commands.drive.TurningMotorsTest;
 import frc.robot.commands.hanging.LowerBothArms;
 import frc.robot.commands.hanging.RaiseBothArms;
-import frc.robot.commands.intake.IntakeNote;
-import frc.robot.commands.intake.RunIntake;
-import frc.robot.commands.intakePivot.SetIntakeAngle;
+import frc.robot.commands.intakePivot.IntakeGoDynamic;
+import frc.robot.commands.intakePivot.IntakeGoStatic;
 import frc.robot.commands.shooter.CoolRevWheels;
 import frc.robot.commands.shooter.RevWheels;
-import frc.robot.commands.shooterIndex.IndexNote;
 import frc.robot.commands.shooterPivot.DynamicPivotToSpeaker;
 import frc.robot.commands.shooterPivot.PivotGoToPose;
 import frc.robot.commands.vision.DefaultLimelightPipeline;
@@ -54,12 +52,9 @@ import frc.robot.subsystems.ShooterIndexSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Command.InterruptionBehavior;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -136,32 +131,18 @@ public class RobotContainer {
 
     // First part: getting note in intake
     NamedCommands.registerCommand("Intake Note",
-      new ParallelCommandGroup(
-        new SetIntakeAngle(m_intakePivotSubsystem, IntakePivotConstants.kIntakeDownPosition),
-        new IntakeNote(m_intakeSubsystem)
-      )
+      new IntakeGetNote(m_intakeSubsystem, m_shooterPivotSubsystem, m_intakePivotSubsystem, m_LEDSubsystem)
     );
 
     // Second part: putting note in shooter (Only if there's a note in the intake)
     NamedCommands.registerCommand("Index Note",
-      new SequentialCommandGroup(
-        new SetIntakeAngle(m_intakePivotSubsystem, IntakePivotConstants.kIntakeDeckPosition),
-
-        new InstantCommand(() -> m_shooterPivotSubsystem.setPosition(ShooterPivotConstants.kShooterPivotDeckPosition), m_shooterPivotSubsystem),
-        new WaitUntilCommand(() -> m_shooterPivotSubsystem.inPosition()),
-
-        new ParallelDeadlineGroup(
-            new IndexNote(m_shooterIndexSubsystem), 
-            new RunIntake(m_intakeSubsystem, IntakeConstants.kIntakeSpeed) 
-        ),
-        new InstantCommand(() -> m_shooterPivotSubsystem.setPosition(ShooterPivotConstants.kShooterPivotPoduim), m_shooterPivotSubsystem)
-      ).onlyIf(() -> m_intakeSubsystem.gamePieceDetected())
+      new IntakeIndexNote(m_intakeSubsystem, m_shooterPivotSubsystem, m_shooterIndexSubsystem, m_intakePivotSubsystem, m_LEDSubsystem)
+      .onlyIf(() -> m_intakeSubsystem.gamePieceDetected())
     );
  
-    // Launch note only if there's actually a note to shoot
+    // Launch note
     NamedCommands.registerCommand("Launch Note",
       new AutonShootNote(m_shooterIndexSubsystem, m_LEDSubsystem)
-        //.onlyIf(() -> m_shooterIndexSubsystem.gamePieceDetected())
     );
 
     // Bring shooter pivot to speaker position
@@ -205,7 +186,11 @@ public class RobotContainer {
 
     // Off: do nothing
     m_autonStartup.addOption("Off", new WaitCommand(0.1));
- 
+    
+
+    /* NOTE: due to strange issues we're having with autonomous, a lot of the autonomous code has been commented out for testing. */
+
+
     // Adding options to the sendable chooser
     applyCommands(m_autonFirstAction);
     // applyCommands(m_autonSecondAction);
@@ -219,15 +204,6 @@ public class RobotContainer {
     // Shuffleboard.getTab("Autonomous").add("Third Action", m_autonThirdAction).withSize(2, 1);
     // Shuffleboard.getTab("Autonomous").add("Fourth Action", m_autonFourthAction).withSize(2, 1);
 
-    // DEBUG: shuffleboard widget for resetting pose. For now I'm using a default
-    // // pose of 0, 0 and a rotation of 0
-    // Shuffleboard.getTab("Swerve").add("Reset Pose", new InstantCommand(() -> m_driveSubsystem.resetOdometry(
-    //     new Pose2d(0, 0, new Rotation2d(0)))));
-
-    // DEBUG: shuffleboard widget for manually setting the odometry equal to the
-    // vision calculation
-    // Shuffleboard.getTab("Vision").add("Update Odometry", new UpdateOdometry(m_driveSubsystem, m_visionSubsystem));
-
     // DEBUG: widgets for testing swerve modules
     Shuffleboard.getTab("Swerve").add("Module Drive Test", new RunCommand(
         () -> m_driveSubsystem.drive(
@@ -238,7 +214,7 @@ public class RobotContainer {
         m_driveSubsystem));
     Shuffleboard.getTab("Swerve").add("Module Turn Test", new TurningMotorsTest(m_driveSubsystem));
 
-    // FAILSAFE: widgets for manually setting robot position in front of notes
+    // FAILSAFE: widgets for manually setting robot position in front of speaker
     Shuffleboard.getTab("Autonomous").add("Set Amp Side",
       new InstantCommand(() -> m_driveSubsystem.resetOdometry(FieldUtils.flipRed(
         new Pose2d(
@@ -292,18 +268,12 @@ public class RobotContainer {
     // Auto Aim speaker
     new JoystickButton(m_driverController, Button.kA.value)
         .whileTrue(
-            new ParallelCommandGroup(
-              new AutoAimDynamic(
-                m_visionSubsystem, 
-                m_driveSubsystem, 
-                () -> m_driverController.getLeftY(),
-                () -> m_driverController.getLeftX(),
-                m_LEDSubsystem),
-
-              new DynamicPivotToSpeaker(
-                m_shooterPivotSubsystem, 
-                m_driveSubsystem)
-            )
+            new AutoAimDynamic(
+              m_visionSubsystem, 
+              m_driveSubsystem, 
+              () -> m_driverController.getLeftY(),
+              () -> m_driverController.getLeftX(),
+              m_LEDSubsystem)
           );
 
     // Auto Aim Amp
@@ -368,18 +338,18 @@ public class RobotContainer {
     //------------------------------------------- coDriver buttons -------------------------------------------
 
 
-    // X button: manual intake
-    new JoystickButton(m_coDriverController, Button.kX.value)
-        .whileTrue(
-          new ParallelCommandGroup(
-            new IndexNote(m_shooterIndexSubsystem),
-            new RunIntake(m_intakeSubsystem, 1)
-          )
-        );
+    // // X button: manual intake
+    // new JoystickButton(m_coDriverController, Button.kX.value)
+    //     .whileTrue(
+    //       new ParallelCommandGroup(
+    //         new IndexNote(m_shooterIndexSubsystem),
+    //         new RunIntake(m_intakeSubsystem, 1)
+    //       )
+    //     );
 
     // A button: aim at speaker
     new JoystickButton(m_coDriverController, Button.kA.value)
-      .toggleOnTrue(
+      .whileTrue(
           new PivotGoToPose(
               m_shooterPivotSubsystem,
               ShooterPivotConstants.kShooterPivotSpeakerPosition
@@ -401,47 +371,30 @@ public class RobotContainer {
         new InstantCommand(
             m_shooterSubsystem::stopRollers, m_shooterSubsystem)
       );
-    // Button box equivalent
-    // new JoystickButton(m_buttonBox, 5)
-    //   .onTrue(
-    //     new SequentialCommandGroup(
-    //       new InstantCommand(
-    //         () -> m_shooterSubsystem.setBottomShooterSpeed(13), m_shooterSubsystem),
-    //       new InstantCommand(
-    //         () -> m_shooterSubsystem.setTopShooterSpeed(10), m_shooterSubsystem),
-    //       new InstantCommand(
-    //         () -> m_shooterPivotSubsystem.setPosition(60), m_shooterPivotSubsystem
-    //       )
-    //     ))
-    //   .onFalse(
-    //     new InstantCommand(
-    //         m_shooterSubsystem::stopRollers, m_shooterSubsystem));
     
-    // Y button: Intake note
+    // Y button: First part of Intaking note
     new JoystickButton(m_coDriverController, Button.kY.value)
       .toggleOnTrue(
-        new CompleteIntake(m_intakeSubsystem, m_shooterPivotSubsystem, m_shooterIndexSubsystem, m_intakePivotSubsystem, m_LEDSubsystem)
-          .andThen(
-            new SetIntakeAngle(m_intakePivotSubsystem, IntakePivotConstants.kIntakeInPosition)
-          ).withInterruptBehavior(InterruptionBehavior.kCancelIncoming)
-          .finallyDo(() -> {
-            new SetIntakeAngle(m_intakePivotSubsystem, IntakePivotConstants.kIntakeInPosition).schedule();
-            m_LEDSubsystem.setLEDFunction(m_LEDSubsystem::rainbow);
+        new IntakeGetNote(m_intakeSubsystem, m_shooterPivotSubsystem, m_intakePivotSubsystem, m_LEDSubsystem)
+          .finallyDo((boolean interrupted) -> {
+            // If the command is interrupted, bring intake in and reset LEDs
+            if(interrupted){
+              new IntakeGoStatic(m_intakePivotSubsystem, IntakePivotConstants.kIntakeInPosition).schedule();
+              m_LEDSubsystem.setLEDFunction(m_LEDSubsystem::rainbow);
+            }
+            // If the command wasn't interrupted, put intake in deck position
+            else {
+              new IntakeGoDynamic(m_intakePivotSubsystem, IntakePivotConstants.kIntakeDeckPosition).schedule();
+            }
           })
       );
-    // Button box equivalent
-    // new JoystickButton(m_buttonBox, 2)
-    //   .toggleOnTrue(
-    //     new CompleteIntake(m_intakeSubsystem, m_shooterPivotSubsystem, m_shooterIndexSubsystem, m_intakePivotSubsystem, m_LEDSubsystem)
-    //       .andThen(
-    //         new SetIntakeAngle(m_intakePivotSubsystem, IntakePivotConstants.kIntakeInPosition)
-    //       )
-    //       .finallyDo(() -> {
-    //         new SetIntakeAngle(m_intakePivotSubsystem, IntakePivotConstants.kIntakeInPosition).schedule();
-    //         m_LEDSubsystem.setLEDFunction(m_LEDSubsystem::rainbow);
-    //       }
-    //       ).withInterruptBehavior(InterruptionBehavior.kCancelIncoming)
-    //   );
+
+    // X button: Second part of Intaking note
+    new JoystickButton(m_coDriverController, Button.kY.value)
+      .toggleOnTrue(
+        new IntakeIndexNote(m_intakeSubsystem, m_shooterPivotSubsystem, m_shooterIndexSubsystem, m_intakePivotSubsystem, m_LEDSubsystem)
+          .withInterruptBehavior(InterruptionBehavior.kCancelIncoming)
+      );
 
     // DEBUG:
     // // Dpad up: shooter pivot up
@@ -472,13 +425,6 @@ public class RobotContainer {
       .onFalse(
           new InstantCommand(() -> m_ampFlapSubsystem.setSpeed(0), m_ampFlapSubsystem));
 
-    // Button box flap: Go forwards when pressed, go backwards when not pressed
-    // new JoystickButton(m_buttonBox, 6)
-    //   .onTrue(
-    //     new InstantCommand(() -> m_ampFlapSubsystem.setSpeed(0.2), m_ampFlapSubsystem))
-    //   .onFalse(
-    //     new ampFlapDown(m_ampFlapSubsystem));
-
     // POV left: reverse intake
     new POVButton(m_coDriverController, 270)
       .whileTrue(
@@ -487,19 +433,11 @@ public class RobotContainer {
               m_shooterIndexSubsystem,
               m_shooterPivotSubsystem, m_LEDSubsystem
               ));
-    // Button box equivalent
-    // new JoystickButton(m_buttonBox, 3)
-    //   .whileTrue(
-    //       new RunIntake(m_intakeSubsystem, -1)
-    //       .alongWith(new SetIntakeAngle(m_intakePivotSubsystem, IntakePivotConstants.kIntakeDownPosition)))
-    //   .onFalse(
-    //     new SetIntakeAngle(m_intakePivotSubsystem, IntakePivotConstants.kIntakeInPosition)
-    //   );
 
     // Dpad right: bring intake in
     new POVButton(m_coDriverController, 90)
         .onTrue(
-          new SetIntakeAngle(m_intakePivotSubsystem, IntakePivotConstants.kIntakeInPosition)
+          new IntakeGoStatic(m_intakePivotSubsystem, IntakePivotConstants.kIntakeInPosition)
         );
 
     // Left bumper: Raise hanging arms
@@ -507,22 +445,12 @@ public class RobotContainer {
         .whileTrue(
             new RaiseBothArms(
                 m_hangingSubsystem));
-    // Button box equivalent
-    // new JoystickButton(m_buttonBox, 7)
-    //     .whileTrue(
-    //         new RaiseBothArms(
-    //             m_hangingSubsystem));
 
     // Right bumper: lower hanging arms
     new JoystickButton(m_coDriverController, Button.kLeftBumper.value)
         .whileTrue(
             new LowerBothArms(
                 m_hangingSubsystem));
-    // Button box equivalent
-    // new JoystickButton(m_buttonBox, 8)
-    //     .whileTrue(
-    //         new LowerBothArms(
-    //             m_hangingSubsystem));
 
     // Right trigger: shoot note 
     new Trigger(() -> m_coDriverController.getRightTriggerAxis() > OIConstants.kTriggerDeadband)
@@ -531,24 +459,12 @@ public class RobotContainer {
           new InstantCommand(() -> m_shooterIndexSubsystem.setSpeed(0), m_shooterIndexSubsystem)
         )
       );
-    // Button box equivalent
-    // new JoystickButton(m_buttonBox, 4)
-    //   .toggleOnTrue(
-    //     new LaunchNote(m_shooterIndexSubsystem, m_LEDSubsystem).andThen(
-    //       new InstantCommand(() -> m_shooterIndexSubsystem.setSpeed(0), m_shooterIndexSubsystem)
-    //     )
-    //   );
 
     // Left trigger: charge up wheels 
     new Trigger(() -> m_coDriverController.getLeftTriggerAxis() > OIConstants.kTriggerDeadband)
       .whileTrue(
         new CoolRevWheels(m_shooterSubsystem, m_coDriverController)
       );
-    // Button box equivalent
-    // new JoystickButton(m_buttonBox, 1)
-    //   .whileTrue(
-    //     new CoolRevWheels(m_shooterSubsystem, m_coDriverController)
-    //   );
   }
 
   /**
