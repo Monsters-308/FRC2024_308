@@ -16,6 +16,8 @@ public class VisionSubsystem extends SubsystemBase {
     final private NetworkTableEntry ty;
     final private NetworkTableEntry tx; 
     final private NetworkTableEntry tv;
+    final private NetworkTableEntry ta;
+
     final private NetworkTable limelightTable = NetworkTableInstance.getDefault().getTable("limelight");
 
     // Field to visualize april tag detection
@@ -31,11 +33,17 @@ public class VisionSubsystem extends SubsystemBase {
         ty = limelightTable.getEntry("ty");
         tx = limelightTable.getEntry("tx");
         tv = limelightTable.getEntry("tv");
+        ta = limelightTable.getEntry("ta");
+
         setPipeline(VisionConstants.kDefaultPipeline);
 
         visionTab.addInteger("Pipeline", () -> getPipeline());
         visionTab.add("Vision Estimates", m_field)
             .withSize(7, 4);
+
+        visionTab.addDouble("Target area", () -> ta.getDouble(0.0));
+        Shuffleboard.getTab("Vision Debug").addDouble("Target area", () -> ta.getDouble(0.0));
+        Shuffleboard.getTab("Vision Debug").addDouble("Distance to target", this::showRobotDistance);
     }
 
     //tv = valid targets
@@ -74,7 +82,8 @@ public class VisionSubsystem extends SubsystemBase {
         return (int)tv.getDouble(0);
     }
 
-    public double getTimeStamp(){
+    /** Returns the latency in calculating the current vision measurement. */
+    private double getLatency(){
         // Check if the limelight is actually viewing an apriltag
         if((getPipeline() == VisionConstants.kAprilTagPipeline) && (getTargets() > 0)) {
 
@@ -91,15 +100,8 @@ public class VisionSubsystem extends SubsystemBase {
         return 0;
     }
 
-    public double getTimeStampEstimator(){
-        // Check if the limelight is actually viewing an apriltag
-        if((getPipeline() == VisionConstants.kAprilTagPipeline) && (getTargets() > 0)) {
-            return (getLastTimeStamp() / 1e6 - getTimeStamp() / 1e3);
-        }
-        return 0;
-    }
-
-    public double getLastTimeStamp(){
+    /** Returns the last time the measurement was changed. */
+    private double getLastTimeStamp(){
         // Check if the limelight is actually viewing an apriltag
         if((getPipeline() == VisionConstants.kAprilTagPipeline) && (getTargets() > 0)) {
 
@@ -110,8 +112,19 @@ public class VisionSubsystem extends SubsystemBase {
                     "botpose_wpiblue"
             ).getLastChange();
 
-            // Turn pose data into pose2d object
-            return (robotLastTimeStamp);
+            return robotLastTimeStamp;
+        }
+        return 0;
+    }
+
+    /**
+     * Returns the timestamp of the most recent vision measurement.
+     * @return The timestamp, or 0 if there's no measurement.
+     */
+    public double getTimeStampEstimator(){
+        // Check if the limelight is actually viewing an apriltag
+        if((getPipeline() == VisionConstants.kAprilTagPipeline) && (getTargets() > 0)) {
+            return (getLastTimeStamp() / 1e6 - getLatency() / 1e3);
         }
         return 0;
     }
@@ -136,6 +149,27 @@ public class VisionSubsystem extends SubsystemBase {
             return new Pose2d(robotPosArrary[0], robotPosArrary[1], Rotation2d.fromDegrees(robotPosArrary[5]));
         }
         return null;
+    }
+    
+    /**
+     * (DEBUG) returns the 3D distance between the robot/limelight(?) and the targets.
+     * @return The distance in meters, or 0 if no targets are in view.
+     */
+    public double showRobotDistance(){
+        // Check if the limelight is actually viewing an apriltag
+        if((getPipeline() == VisionConstants.kAprilTagPipeline) && (getTargets() > 0)) {
+
+            // Get pose data from networktables
+            double[] robotPosArrary = limelightTable.getEntry(
+                FieldUtils.isRedAlliance() ?
+                    "botpose_wpired" :
+                    "botpose_wpiblue"
+            ).getDoubleArray(new double[6]);
+
+        }
+
+        //TODO: finish this
+        return 0;
     }
 
     @Override

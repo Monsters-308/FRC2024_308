@@ -4,6 +4,13 @@
 
 package frc.robot.subsystems;
 
+import java.util.Map;
+import java.util.function.DoubleSupplier;
+import java.util.function.Supplier;
+
+import com.kauailabs.navx.frc.AHRS;
+import com.pathplanner.lib.auto.AutoBuilder;
+
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -12,28 +19,22 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.util.WPIUtilJNI;
-
-import java.util.Map;
-import java.util.function.DoubleSupplier;
-import java.util.function.Supplier;
-
-import com.kauailabs.navx.frc.AHRS;
-import com.pathplanner.lib.auto.AutoBuilder;
-
 import edu.wpi.first.wpilibj.SPI;
-import frc.robot.Constants.AutoConstants;
-import frc.robot.Constants.DriveConstants;
-import frc.robot.Constants.HeadingConstants;
-import frc.robot.Constants.ModuleConstants;
-import frc.utils.FieldUtils;
-import frc.utils.SwerveUtils;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.shuffleboard.SimpleWidget;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.AutoConstants;
+import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.HeadingConstants;
+import frc.robot.Constants.ModuleConstants;
+import frc.utils.FieldUtils;
+import frc.utils.OdometryUtils;
+import frc.utils.SwerveUtils;
 
 public class DriveSubsystem extends SubsystemBase {
   // Create Swerve Modules
@@ -80,6 +81,12 @@ public class DriveSubsystem extends SubsystemBase {
   // Widget for toggling limelight data
   private final SimpleWidget m_useLimelightData;
 
+  // (DEBUG) Manually adjust the standard deviation
+  private final SimpleWidget m_sdX = Shuffleboard.getTab("Vision Debug").add("StDs", 2);
+
+  // (DEBUG) track the robot's previous estimated position
+  private Pose2d m_prevPose = new Pose2d();
+
   // Suppliers for pose estimation with vision data
   private final Supplier<Pose2d> m_visionPose;
   private final DoubleSupplier m_visionTimestamp;
@@ -99,7 +106,7 @@ public class DriveSubsystem extends SubsystemBase {
        * VecBuilder -> Standard deviations of model states. Increase these numbers to trust your model's state estimates less. This
        * matrix is in the form [x, y, theta]ᵀ, with units in meters and radians.
       */
-      VecBuilder.fill(0.1, 0.1, .05),
+      VecBuilder.fill(0.02, 0.02, .05),
       /**
        * Standard deviations of the vision measurements. Increase these numbers to trust global measurements from vision
        * less. This matrix is in the form [x, y, theta]ᵀ, with units in meters and radians.
@@ -159,10 +166,16 @@ public class DriveSubsystem extends SubsystemBase {
 
     m_useLimelightData = swerveTab.add("Limelight Data", true)
       .withWidget(BuiltInWidgets.kToggleSwitch); 
+
+    Shuffleboard.getTab("Vision Debug").addDouble("Pose Fuzziness", this::poseFuzziness);
   }
 
   @Override
   public void periodic() {
+
+    // Set previous pose before changing current pose
+    m_prevPose = getPose();
+
     // Update pose estimation with odometry data
     m_odometry.update(
       Rotation2d.fromDegrees(getGyroAngle()),
@@ -178,7 +191,11 @@ public class DriveSubsystem extends SubsystemBase {
     Pose2d pose = m_visionPose.get();
     
     if((pose != null) && (m_useLimelightData.getEntry().getBoolean(true))){
-      m_odometry.addVisionMeasurement(pose, timestamp);
+      // Use the Shuffleboard Standard deviations instead of the default deviations
+      m_odometry.addVisionMeasurement(pose, timestamp, VecBuilder.fill(
+        m_sdX.getEntry().getDouble(2), 
+        m_sdX.getEntry().getDouble(2), 
+        3));
     }
     
     // Update field widget
@@ -413,5 +430,17 @@ public class DriveSubsystem extends SubsystemBase {
           speeds.omegaRadiansPerSecond / DriveConstants.kMaxAngularSpeed, 
           false, 
           false);
+  }
+
+  /**
+   * (DEBUG) A supplier for a shuffleboard widget.
+   * @return The distance between the current estimated position and the 
+   * previously estimated position (in inches).
+   */
+  private double poseFuzziness(){
+    return Units.metersToInches(
+      OdometryUtils.getDistancePosToPos(getPose().getTranslation(), 
+                                        m_prevPose.getTranslation())
+    );
   }
 }
